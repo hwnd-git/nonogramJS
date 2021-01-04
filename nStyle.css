@@ -5,7 +5,7 @@
 }
 
 :root {
-    --cell-size: 25px;
+    --cell-size: 50px;
     --expander-size: 50px;
     --legend-h-size: 5;
     --legend-v-size: 2;
@@ -16,6 +16,9 @@
     --game-height: calc(var(--cell-size) * var(--stage-v-size));
     --legend-width: calc(var(--cell-size) * var(--legend-v-size));
     --legend-height: calc(var(--cell-size) * var(--legend-h-size));
+
+    --inner-border: 4px;
+    --inner-border-color: #000;
 }
 
 #main-container {
@@ -28,7 +31,7 @@
 #outer-grid {
     display: grid;
     position: relative;
-    border: solid 5px black;
+    border: solid 2px black;
     /* height: 50vmin;
     width: 50vmin; */
     /* height: 500px; */
@@ -43,37 +46,53 @@
 
 #blank {
     grid-area: blank;
-    background-color: rgb(119, 119, 119, 50%);
+    background-color: #f0f0f0;
     /* height: 100%;
     width: 100%; */
+    border: solid var(--inner-border-color) var(--inner-border);
+    border-bottom: solid var(--inner-border-color) calc(var(--inner-border)/2);
+    border-right: solid var(--inner-border-color) calc(var(--inner-border)/2);
+}
+
+.legend {
+    background-color: #dadada;
 }
 
 #legend-horizontal {
     display: grid;
-    grid-template-columns: repeat(var(--stage-h-size), 1fr);
-    grid-template-rows: repeat(var(--legend-h-size), 1fr);
+    /* grid-template-columns: repeat(var(--stage-h-size), 1fr); */
+    /* grid-template-rows: repeat(var(--legend-h-size), 1fr); */
     grid-area: legend-h;
-    background-color: aqua;
-    height: var(--legend-height);
+    /* background-color: aqua; */
+    /* height: var(--legend-height); */
     /* width: 100%; */
+    border: solid var(--inner-border-color) var(--inner-border);
+    border-bottom: solid var(--inner-border-color) calc(var(--inner-border)/2);
+    border-left: solid var(--inner-border-color) calc(var(--inner-border)/2);
 }
 
 #legend-vertical {
     display: grid;
-    grid-template-columns: repeat(var(--legend-v-size), 1fr);
-    grid-template-rows: repeat(var(--stage-v-size), 1fr);
+    /* grid-template-columns: repeat(var(--legend-v-size), 1fr); */
+    /* grid-template-rows: repeat(var(--stage-v-size), 1fr); */
     grid-area: legend-v;
-    background-color: rgb(0, 153, 255);
+    /* background-color: rgb(0, 153, 255); */
     /* height: 100%; */
-    width: var(--legend-width);
+    /* width: var(--legend-width); */
+    border: solid var(--inner-border-color) var(--inner-border);
+    border-top: solid var(--inner-border-color) calc(var(--inner-border)/2);
+    border-right: solid var(--inner-border-color) calc(var(--inner-border)/2);
 }
 
 #game-grid {
+    display: grid;
     grid-area: game-grid;
-    background-color: rgb(216, 79, 79);
-    height: var(--game-height);
-    width: var(--game-width);
-    border: solid yellow 2px;
+    background-color: #fff;
+    /* height: var(--game-height); */
+    /* width: var(--game-width); */
+    border: solid var(--inner-border-color) var(--inner-border);
+    border-top: solid var(--inner-border-color) calc(var(--inner-border)/2);
+    border-left: solid var(--inner-border-color) calc(var(--inner-border)/2);
 }
 
 .expander {
@@ -126,8 +145,13 @@
 .cell {
     height: var(--cell-size);
     width: var(--cell-size);
+    border: solid #808080 4px;
 }
 
 .cell-legend {
-    border: solid #555 1px;
+    /* border: solid #555 1px; */
+}
+
+.cell-game {
+    /* border: solid rgb(212, 128, 128) 1px; */
 }

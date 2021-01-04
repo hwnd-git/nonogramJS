@@ -13,6 +13,7 @@ function ready() {
 function populateGrids() {
     populateTopLegend();
     populateSideLegend();
+    populateGameGrid();
 }
 
 function populateTopLegend() {
@@ -47,6 +48,25 @@ function populateSideLegend() {
             cell.className = 'cell cell-legend';
             cell.id = `row${rowNo}-${colNo}`;
             cell.style.gridColumnStart = `${no}`;
+            cell.style.gridRowStart = `${rowNo}`;
+            legendElement.appendChild(cell);
+        }
+    }
+}
+
+function populateGameGrid() {
+    const width = utils.getCSSVariable('--stage-h-size');
+    const height = utils.getCSSVariable('--stage-v-size');
+
+    const legendElement = document.getElementById('game-grid')
+
+    for (let colNo = 1; colNo <= width; colNo++) {
+        for (let rowNo = 1; rowNo <= height; rowNo++) {
+            let cell = document.createElement('div');
+            //let no = height - rowNo + 1;
+            cell.className = 'cell cell-game';
+            cell.id = `cell${colNo}-${rowNo}`;
+            cell.style.gridColumnStart = `${colNo}`;
             cell.style.gridRowStart = `${rowNo}`;
             legendElement.appendChild(cell);
         }
