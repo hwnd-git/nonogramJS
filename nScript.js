@@ -19,6 +19,8 @@ function populateGrids() {
 function populateTopLegend() {
     const columnsQty = utils.getCSSVariable('--stage-h-size');
     const gridHeight = utils.getCSSVariable('--legend-h-size');
+    const borderWidthString = utils.getCSSVariable('--cell-border');
+    let borderWidthNumeric = parseInt(borderWidthString, 10);
 
     const legendElement = document.getElementById('legend-horizontal')
 
@@ -30,9 +32,9 @@ function populateTopLegend() {
             cell.id = `col${colNo}-${rowNo}`;
             cell.style.gridColumnStart = `${colNo}`;
             cell.style.gridRowStart = `${no}`;
-            // if (colNo == 1) {
-            //     cell.classList.add('cell-left');
-            // }
+
+            translateCellToRemoveDoubleBorder(cell, borderWidthNumeric, true, false);
+
             legendElement.appendChild(cell);
         }
     }
@@ -41,6 +43,8 @@ function populateTopLegend() {
 function populateSideLegend() {
     const rowsQty = utils.getCSSVariable('--stage-v-size');
     const gridWidth = utils.getCSSVariable('--legend-v-size');
+    const borderWidthString = utils.getCSSVariable('--cell-border');
+    let borderWidthNumeric = parseInt(borderWidthString, 10);
 
     const legendElement = document.getElementById('legend-vertical')
 
@@ -49,12 +53,13 @@ function populateSideLegend() {
             let cell = document.createElement('div');
             let no = gridWidth - colNo + 1;
             cell.className = 'cell cell-legend';
-            cell.id = `row${rowNo}-${colNo}`;
+            // cell.id = `row${rowNo}-${colNo}`;
+            cell.id = `${colNo}-row${rowNo}`;
             cell.style.gridColumnStart = `${no}`;
             cell.style.gridRowStart = `${rowNo}`;
-            // if (colNo == 1) {
-            //     cell.classList.add('cell-left');
-            // }
+            
+            translateCellToRemoveDoubleBorder(cell, borderWidthNumeric, false, true);
+
             legendElement.appendChild(cell);
         }
     }
@@ -63,6 +68,8 @@ function populateSideLegend() {
 function populateGameGrid() {
     const width = utils.getCSSVariable('--stage-h-size');
     const height = utils.getCSSVariable('--stage-v-size');
+    const borderWidthString = utils.getCSSVariable('--cell-border');
+    let borderWidthNumeric = parseInt(borderWidthString, 10);
 
     const legendElement = document.getElementById('game-grid')
 
@@ -74,10 +81,28 @@ function populateGameGrid() {
             cell.id = `cell${colNo}-${rowNo}`;
             cell.style.gridColumnStart = `${colNo}`;
             cell.style.gridRowStart = `${rowNo}`;
-            // if (colNo == 1) {
-            //     cell.classList.add('cell-left');
-            // }
+
+            translateCellToRemoveDoubleBorder(cell, borderWidthNumeric);
+
             legendElement.appendChild(cell);
         }
+    
+    //TODO: zmniejszyć wielkośc grida (przeliczać) po translacji komórek
+    }
+}
+
+function translateCellToRemoveDoubleBorder(cellDiv, translationValue, translateLeft = true, translateUp = true) {
+    const colNo = utils.getColumnNo(cellDiv);
+    const rowNo = utils.getRowNo(cellDiv);
+
+    const left = translateLeft ? -1 : 1;
+    const up = translateUp ? -1 : 1;
+
+    if (colNo > 1 && rowNo > 1) {
+        cellDiv.style.transform = `translate(${left * translationValue * (colNo - 1)}px, ${up * translationValue * (rowNo - 1)}px)`
+    } else if (colNo > 1 && rowNo == 1) {
+        cellDiv.style.transform = `translate(${left * translationValue * (colNo - 1)}px, 0)`
+    } else if (rowNo > 1 && colNo == 1) {
+        cellDiv.style.transform = `translate(0, ${up * translationValue * (rowNo - 1)}px)`
     }
 }
