@@ -5,10 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Example Nonogram</title>
     <link rel="stylesheet" href="nStyle.css">
+    <script src="nScript.js" defer type="module"></script>
 </head>
 <body>
     <div id="main-container">
-        
+        <div id="outer-grid">
+            <div id="blank"></div>
+            <div id="legend-horizontal" class="legend legend-h"></div>
+            <div id="legend-vertical" class="legend legend-v"></div>
+            <div id="game-grid"></div>
+
+            <div id="expand-horizontal" class="expander"></div>
+            <div id="expand-vertical" class="expander"></div>
+            <div id="expand-diagonal" class="expander"></div>
+        </div>
     </div>
 </body>
 </html>
