@@ -30,6 +30,9 @@ function populateTopLegend() {
             cell.id = `col${colNo}-${rowNo}`;
             cell.style.gridColumnStart = `${colNo}`;
             cell.style.gridRowStart = `${no}`;
+            // if (colNo == 1) {
+            //     cell.classList.add('cell-left');
+            // }
             legendElement.appendChild(cell);
         }
     }
@@ -49,6 +52,9 @@ function populateSideLegend() {
             cell.id = `row${rowNo}-${colNo}`;
             cell.style.gridColumnStart = `${no}`;
             cell.style.gridRowStart = `${rowNo}`;
+            // if (colNo == 1) {
+            //     cell.classList.add('cell-left');
+            // }
             legendElement.appendChild(cell);
         }
     }
@@ -68,6 +74,9 @@ function populateGameGrid() {
             cell.id = `cell${colNo}-${rowNo}`;
             cell.style.gridColumnStart = `${colNo}`;
             cell.style.gridRowStart = `${rowNo}`;
+            // if (colNo == 1) {
+            //     cell.classList.add('cell-left');
+            // }
             legendElement.appendChild(cell);
         }
     }
