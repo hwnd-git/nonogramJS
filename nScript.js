@@ -33,7 +33,7 @@ function populateTopLegend() {
             cell.style.gridColumnStart = `${colNo}`;
             cell.style.gridRowStart = `${no}`;
 
-            translateCellToRemoveDoubleBorder(cell, borderWidthNumeric, true, false);
+            //translateCellToRemoveDoubleBorder(cell, borderWidthNumeric, true, false);
 
             legendElement.appendChild(cell);
         }
@@ -58,7 +58,7 @@ function populateSideLegend() {
             cell.style.gridColumnStart = `${no}`;
             cell.style.gridRowStart = `${rowNo}`;
             
-            translateCellToRemoveDoubleBorder(cell, borderWidthNumeric, false, true);
+            //translateCellToRemoveDoubleBorder(cell, borderWidthNumeric, false, true);
 
             legendElement.appendChild(cell);
         }
@@ -82,7 +82,7 @@ function populateGameGrid() {
             cell.style.gridColumnStart = `${colNo}`;
             cell.style.gridRowStart = `${rowNo}`;
 
-            translateCellToRemoveDoubleBorder(cell, borderWidthNumeric);
+            //translateCellToRemoveDoubleBorder(cell, borderWidthNumeric);
 
             legendElement.appendChild(cell);
         }
@@ -90,7 +90,7 @@ function populateGameGrid() {
     }
 
     const vShrink = (height - 1) * borderWidthNumeric;
-    
+
 }
 
 function translateCellToRemoveDoubleBorder(cellDiv, translationValue, translateLeft = true, translateUp = true) {
