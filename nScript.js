@@ -86,9 +86,11 @@ function populateGameGrid() {
 
             legendElement.appendChild(cell);
         }
-    
     //TODO: zmniejszyć wielkośc grida (przeliczać) po translacji komórek
     }
+
+    const vShrink = (height - 1) * borderWidthNumeric;
+    
 }
 
 function translateCellToRemoveDoubleBorder(cellDiv, translationValue, translateLeft = true, translateUp = true) {

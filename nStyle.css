@@ -20,6 +20,11 @@
     --legend-width: calc(var(--cell-size) * var(--legend-v-size));
     --legend-height: calc(var(--cell-size) * var(--legend-h-size));
 
+    --shrink-game-h: calc((var(--stage-h-size) - 1 ) * var(--cell-border));
+    --shrink-game-v: calc((var(--stage-v-size) - 1 ) * var(--cell-border));
+    --shrink-left-h: calc((var(--legend-v-size) - 1 ) * var(--cell-border));
+    --shrink-top-v: calc((var(--legend-h-size) - 1 ) * var(--cell-border));
+
     --wrapper-border: 3px;
     --wrapper-border-color: #000;
 }
@@ -28,7 +33,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    /* height: 100vh; */
 }
 
 #outer-grid {
@@ -50,8 +54,8 @@
 #blank {
     grid-area: blank;
     background-color: #f0f0f0;
-    /* height: 100%;
-    width: 100%; */
+    height: 80%;
+    width: 80%;
     border: solid var(--wrapper-border-color) var(--wrapper-border);
     border-bottom: solid var(--wrapper-border-color) calc(var(--wrapper-border)/2);
     border-right: solid var(--wrapper-border-color) calc(var(--wrapper-border)/2);
@@ -72,6 +76,9 @@
     border-bottom: solid var(--wrapper-border-color) calc(var(--wrapper-border)/2);
     border-left: solid var(--wrapper-border-color) calc(var(--wrapper-border)/2);
     /* width: 80%; */
+    width: calc(100% - var(--shrink-game-h));
+    height: calc(100% - var(--shrink-top-v));
+    overflow: hidden;
 }
 
 #legend-horizontal {
@@ -93,6 +100,7 @@
     border-left: solid var(--wrapper-border-color) calc(var(--wrapper-border)/2); */
     /* border-left: solid var(--cell-border-color) var(--cell-border);
     border-top: solid var(--cell-border-color) var(--cell-border); */
+    transform: translateY(calc(var(--shrink-top-v)*-1));
 }
 
 #wrapper-left {
@@ -100,6 +108,11 @@
     border: solid var(--wrapper-border-color) var(--wrapper-border);
     border-top: solid var(--wrapper-border-color) calc(var(--wrapper-border)/2);
     border-right: solid var(--wrapper-border-color) calc(var(--wrapper-border)/2);
+
+    height: calc(100% - var(--shrink-game-v));
+    width: calc(100% - var(--shrink-left-h));
+    transform: translateX(calc(var(--shrink-left-h)));
+    overflow: hidden;
 }
 
 #legend-vertical {
@@ -117,14 +130,19 @@
     border-right: solid var(--wrapper-border-color) calc(var(--wrapper-border)/2); */
     /* border-left: solid var(--cell-border-color) var(--cell-border);
     border-top: solid var(--cell-border-color) var(--cell-border); */
+
+    transform: translateX(calc(var(--shrink-left-h)*-1));
 }
 
-#wrapper-main {
+#wrapper-game {
     grid-area: game-grid;
     border: solid var(--wrapper-border-color) var(--wrapper-border);
     border-top: solid var(--wrapper-border-color) calc(var(--wrapper-border)/2);
     border-left: solid var(--wrapper-border-color) calc(var(--wrapper-border)/2);
-    /* width: 80%; */
+
+    width: calc(100% - var(--shrink-game-h));
+    height: calc(100% - var(--shrink-game-v));
+    overflow: hidden;
 }
 
 #game-grid {
@@ -218,34 +236,4 @@
 
 .cell-game {
     /* border: solid rgb(212, 128, 128) 1px; */
-}
-
-#test {
-    display: inline-grid;
-    grid-template-columns: 100px 100px;
-    /* grid-auto-columns: min-content; */
-    border: solid 5px green;
-    height: 100px;
-    width: 200px;
-    transition: 0.5s;
-}
-
-#t1 {
-    border: solid 10px yellow;
-    height: 100%;
-    width: 100px;
-}
-#t2 {
-    border: solid 10px blue;
-    height: 100%;
-    width: 100px;
-    transition: 0.5s;
-}
-
-#t2:hover {
-    transform: translateX(-50px);
-}
-
-#test:hover {
-    width: 150px;
 }
