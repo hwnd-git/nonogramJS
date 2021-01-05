@@ -5,10 +5,17 @@
 }
 
 :root {
-    --cell-size: 25px;
-    --cell-border: 1px;
+    --cell-size: 50px;
+    --cell-border: 2px;
     --cell-radius: 0px;
     --cell-border-color: #808080;
+    --cell-size-reduced: calc(var(--cell-size) - var(--cell-border));
+
+    --test: var(--cell-radius);
+    --test2: var(--test);
+    --test3: calc(calc(10px + 5px) * calc(2 - calc(6/2)));
+
+    --separator-width: 5px;
 
     --expander-size: 50px;
     --legend-h-size: 5;
@@ -69,8 +76,8 @@
 
 #legend-horizontal {
     display: grid;
-    grid-template-rows: repeat(calc(var(--legend-h-size) - 1), calc(var(--cell-size) - var(--cell-border))) var(--cell-size);
-    grid-template-columns: repeat(calc(var(--stage-h-size) - 1), calc(var(--cell-size) - var(--cell-border))) var(--cell-size);
+    grid-template-rows: repeat(calc(var(--legend-h-size) - 1), var(--cell-size-reduced)) var(--cell-size);
+    /* grid-template-columns: repeat(calc(var(--stage-h-size) - 1), calc(var(--cell-size) - var(--cell-border))) var(--cell-size); */
 }
 
 #wrapper-left {
@@ -82,8 +89,8 @@
 
 #legend-vertical {
     display: grid;
-    grid-template-rows: repeat(calc(var(--stage-v-size) - 1), calc(var(--cell-size) - var(--cell-border))) var(--cell-size);
-    grid-template-columns: repeat(calc(var(--legend-v-size) - 1), calc(var(--cell-size) - var(--cell-border))) var(--cell-size);
+    grid-template-rows: repeat(calc(var(--stage-v-size) - 1), var(--cell-size-reduced)) var(--cell-size);
+    grid-template-columns: repeat(calc(var(--legend-v-size) - 1), var(--cell-size-reduced)) var(--cell-size);
 }
 
 #wrapper-game {
@@ -97,8 +104,8 @@
     display: grid;
     background-color: #fff;
 
-    grid-template-rows: repeat(calc(var(--stage-v-size) - 1), calc(var(--cell-size) - var(--cell-border))) var(--cell-size);
-    grid-template-columns: repeat(calc(var(--stage-h-size) - 1), calc(var(--cell-size) - var(--cell-border))) var(--cell-size);
+    grid-template-rows: repeat(calc(var(--stage-v-size) - 1), var(--cell-size-reduced)) var(--cell-size);
+    grid-template-columns: repeat(calc(var(--stage-h-size) - 1), var(--cell-size-reduced)) var(--cell-size);
 }
 
 .expander {

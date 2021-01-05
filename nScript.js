@@ -19,10 +19,51 @@ function populateGrids() {
 function populateTopLegend() {
     const columnsQty = utils.getCSSVariable('--stage-h-size');
     const gridHeight = utils.getCSSVariable('--legend-h-size');
+
     const borderWidthString = utils.getCSSVariable('--cell-border');
     let borderWidthNumeric = parseInt(borderWidthString, 10);
 
+    const cellFullSize = utils.getCSSVariable('--cell-size');
+    const cellReducedSize = utils.getCSSVariable('--cell-size-reduced');
+    const separatorWidth = utils.getCSSVariable('--separator-width');
+    let columnsStyleString = '';
+    let templateAreasString = '';
+
+    // for (let rowNo = 1; rowNo <= gridHeight; rowNo++) {
+    //     templateAreasString = templateAreasString.concat('"');
+
+    //     for (let colNo = 1; colNo <= columnsQty; colNo++) {
+    //         if (colNo == columnsQty) {
+    //             columnsStyleString = columnsStyleString.concat(`${cellFullSize}`);
+    //             templateAreasString = templateAreasString.concat(`${colNo}-1"`);
+    //         } else {
+    //             columnsStyleString = columnsStyleString.concat(`${cellReducedSize} `);
+    //             templateAreasString = templateAreasString.concat(`${colNo}-${columnsQty - rowNo + 1} `);
+    //         }
+    //     }
+    // }
+    
+
+    //console.log(utils.solveMultipleMinuses('---3'));
+    //utils.solveSingularEquation('-6/--3');
+    //3-2-1-0
+    //3---1
+    //3*--2
+    //3*--2-1
+    //utils.countEquations('3*--2-1');
+
+    utils.solveLayeredEquation('5---2');
+    utils.solveLayeredEquation('(10 + 5)*(2-(6/2))');
+    utils.calcEval(utils.getCSSVariable('--test3'));
+    utils.calcEval('calc(1-2)');
+    let test = utils.evaluateCSSVariable('--test3')
+
+    debugger;
+
+
     const legendElement = document.getElementById('legend-horizontal')
+    //grid-template-columns: repeat(calc(var(--stage-h-size) - 1), calc(var(--cell-size) - var(--cell-border))) var(--cell-size);
+    legendElement.style.gridTemplateColumns = ``;
 
     for (let colNo = 1; colNo <= columnsQty; colNo++) {
         for (let rowNo = 1; rowNo <= gridHeight; rowNo++) {
@@ -57,7 +98,7 @@ function populateSideLegend() {
             cell.id = `${colNo}-row${rowNo}`;
             cell.style.gridColumnStart = `${no}`;
             cell.style.gridRowStart = `${rowNo}`;
-            
+
             //translateCellToRemoveDoubleBorder(cell, borderWidthNumeric, false, true);
 
             legendElement.appendChild(cell);
@@ -86,7 +127,7 @@ function populateGameGrid() {
 
             legendElement.appendChild(cell);
         }
-    //TODO: zmniejszyć wielkośc grida (przeliczać) po translacji komórek
+        //TODO: zmniejszyć wielkośc grida (przeliczać) po translacji komórek
     }
 
     const vShrink = (height - 1) * borderWidthNumeric;
