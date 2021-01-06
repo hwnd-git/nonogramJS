@@ -30,10 +30,10 @@ function populateTopLegend() {
     let columnsStyleString = '';
     let rowsStyleString = '';
     let templateAreasString = '';
-    
+
     //columns template
     for (let colNo = 1; colNo <= columnsQty; colNo++) {
-        
+
         let currentColumnWidth = ''
 
         if (colNo == columnsQty) {
@@ -42,7 +42,6 @@ function populateTopLegend() {
             currentColumnWidth = `${cellReducedSize} `;
         }
 
-        debugger;
         if (colNo % 5 == 0 && colNo != columnsQty) {
             currentColumnWidth = currentColumnWidth.concat(`${separatorWidth} `);
         }
@@ -58,7 +57,7 @@ function populateTopLegend() {
             rowsStyleString = rowsStyleString.concat(`${cellReducedSize} `);
         }
     }
-    
+
     //grid areas
     for (let rowNo = gridHeight; rowNo >= 1; rowNo--) {
         templateAreasString = templateAreasString.concat('"');
@@ -79,8 +78,6 @@ function populateTopLegend() {
             templateAreasString = templateAreasString.concat(currentArea);
         }
     }
-    
-    console.log(templateAreasString);
 
     const legendElement = document.getElementById('legend-horizontal')
     legendElement.style.gridTemplateColumns = columnsStyleString;
@@ -95,7 +92,7 @@ function populateTopLegend() {
             cell.id = `col${colNo}-${rowNo}`;
             cell.style.gridColumnStart = `${colNo}`;
             cell.style.gridRowStart = `${no}`;
-            cell.style.gridArea = `a${colNo}-${no}`;
+            cell.style.gridArea = `a${colNo}-${rowNo}`;
 
             legendElement.appendChild(cell);
         }
@@ -108,21 +105,86 @@ function populateSideLegend() {
     const borderWidthString = utils.getCSSVariable('--cell-border');
     let borderWidthNumeric = parseInt(borderWidthString, 10);
 
+    const cellFullSize = utils.getCSSVariable('--cell-size');
+    const cellReducedSize = utils.getCSSVariable('--cell-size-reduced');
+    const separatorWidth = utils.getCSSVariable('--separator-width');
+    let rowsStyleString = '';
+    let columnsStyleString = '';
+    let templateAreasString = '';
+
+    //rows template
+    for (let rowNo = 1; rowNo <= rowsQty; rowNo++) {
+
+        let currentRowWidth = ''
+
+        if (rowNo == rowsQty) {
+            currentRowWidth = `${cellFullSize}`;
+        } else {
+            currentRowWidth = `${cellReducedSize} `;
+        }
+
+        if (rowNo % 5 == 0 && rowNo != rowsQty) {
+            currentRowWidth = currentRowWidth.concat(`${separatorWidth} `);
+        }
+        rowsStyleString = rowsStyleString.concat(currentRowWidth);
+    }
+
+    //columns template
+    for (let colNo = 1; colNo <= gridWidth; colNo++) {
+        if (colNo == gridWidth) {
+            columnsStyleString = columnsStyleString.concat(`${cellFullSize}`);
+        } else {
+            columnsStyleString = columnsStyleString.concat(`${cellReducedSize} `);
+        }
+    }
+
+    //grid areas
+    for (let rowNo = 1; rowNo <= rowsQty; rowNo++) {
+        templateAreasString = templateAreasString.concat('"');
+        for (let colNo = gridWidth; colNo >= 1; colNo--) {
+            let currentArea = '';
+
+            if (colNo == 1) {
+                currentArea = `a${colNo}-${rowNo}" `;
+            } else {
+                currentArea = `a${colNo}-${rowNo} `;
+            }
+            templateAreasString = templateAreasString.concat(currentArea);
+        }
+
+        if (rowNo % 5 == 0 && rowNo != rowsQty) {
+            let currentArea = '"';
+            let multiplier = rowNo / 5;
+            for (let colNo = gridWidth; colNo >= 1; colNo--) {
+                if (colNo == 1) {
+                    currentArea = currentArea.concat(`s${multiplier}" `);
+                } else {
+                    currentArea = currentArea.concat(`s${multiplier} `);
+                }
+            }
+            templateAreasString = templateAreasString.concat(currentArea);
+        }
+    }
+
+    console.log(templateAreasString);
+
     const legendElement = document.getElementById('legend-vertical')
+    legendElement.style.gridTemplateColumns = columnsStyleString;
+    legendElement.style.gridTemplateRows = rowsStyleString;
+    legendElement.style.gridTemplateAreas = `${templateAreasString}`;
 
     for (let rowNo = 1; rowNo <= rowsQty; rowNo++) {
         for (let colNo = 1; colNo <= gridWidth; colNo++) {
             let cell = document.createElement('div');
             let no = gridWidth - colNo + 1;
             cell.className = 'cell cell-legend';
-            // cell.id = `row${rowNo}-${colNo}`;
             cell.id = `${colNo}-row${rowNo}`;
 
-            cell.style.gridColumnStart = `${no}`;
-            cell.style.gridRowStart = `${rowNo}`;
-            //cell.style.gridArea = `${colNo}-${rowNo}`;
+            // cell.style.gridColumnStart = `${no}`;
+            // cell.style.gridRowStart = `${rowNo}`;
 
-            //translateCellToRemoveDoubleBorder(cell, borderWidthNumeric, false, true);
+            cell.style.gridArea = `a${colNo}-${rowNo}`;
+
             legendElement.appendChild(cell);
         }
     }
