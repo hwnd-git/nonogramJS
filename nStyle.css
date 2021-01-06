@@ -18,10 +18,10 @@
     --separator-width: 5px;
 
     --expander-size: 50px;
-    --legend-h-size: 5;
+    --legend-h-size: 4;
     --legend-v-size: 3;
-    --stage-h-size: 14;
-    --stage-v-size: 11;
+    --stage-h-size: 10;
+    --stage-v-size: 8;
 
     --game-width: calc(var(--cell-size) * var(--stage-h-size));
     --game-height: calc(var(--cell-size) * var(--stage-v-size));
