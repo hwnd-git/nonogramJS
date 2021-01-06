@@ -16,7 +16,7 @@ export function solveBracketsEquation(equationString) {
         let newEquation = solveChainedEquation(leftPart) + rightPart;
         // analyzedEquation = newEquation;
 
-        debugger;
+        // debugger;
         return solveBracketsEquation(newEquation);
     }
     //TODO: dodać obsługę nawiasu, w którym jest po prostu liczba, bez żadnego działania
@@ -210,7 +210,7 @@ function solveMultipleMinuses(multipleMinusesString, preceedingString) {
 
 export function normalizeEquation(equationString) {
     //2+--18
-    debugger;
+    //debugger;
 
     if (equationString.indexOf(' ') >= 0) equationString = equationString.replaceAll(' ', '');
 
@@ -218,35 +218,47 @@ export function normalizeEquation(equationString) {
 
     if (checkedEquation.search(new RegExp('-{2,}', 'g')) < 0) return equationString;
 
-    const nonMinusEquationSigns = equationsOrder.filter(equationSign => equationSign !== '-');
+    //const nonMinusEquationSigns = equationsOrder.filter(equationSign => equationSign !== '-');
     let beforeMinusesString = '';
-    let multipleMinusesString = '';
+    //let multipleMinusesString = '';
+    let minusesString = '';
     let afterMinusesString = '';
     let minusesChainLocation = checkedEquation.search(new RegExp('-{2,}', 'g'));
 
     do {
         console.log('normalizing equation: ', checkedEquation);
         //if (minusesChainLocation >= 0) {
-        afterMinusesString = checkedEquation.substring(minusesChainLocation);
+        //2+1--18*2-5
+
+        // debugger;
         beforeMinusesString = checkedEquation.substring(0, minusesChainLocation);
+        minusesString = checkedEquation.substring(minusesChainLocation);
+        let minusesChaingLength = startingMinusesCount(minusesString);
+        afterMinusesString = minusesString.substring(minusesChaingLength);
+        minusesString = minusesString.substring(0,minusesChaingLength);
 
-        let firstEquationSignLocation = getFirstEquationIndex(equationString, nonMinusEquationSigns);
+        let firstEquationIndexInMinusesPart = getFirstEquationIndex(afterMinusesString);
+        minusesString = minusesString + afterMinusesString.substring(0, firstEquationIndexInMinusesPart);
+        afterMinusesString = afterMinusesString.substring(firstEquationIndexInMinusesPart);
 
-        if (firstEquationSignLocation == -1) {
-            multipleMinusesString = afterMinusesString;
-            afterMinusesString = '';
-        } else {
-            multipleMinusesString = afterMinusesString.substring(0, firstEquationSignLocation);
-            afterMinusesString = afterMinusesString.substring(firstEquationSignLocation);
-        }
-
-        checkedEquation = beforeMinusesString + solveMultipleMinuses(multipleMinusesString, beforeMinusesString) + afterMinusesString;
+        checkedEquation = beforeMinusesString + solveMultipleMinuses(minusesString, beforeMinusesString) + afterMinusesString;
         minusesChainLocation = checkedEquation.search(new RegExp('-{2,}', 'g'));
         //}
 
     } while (minusesChainLocation >= 0)
 
     return checkedEquation;
+}
+
+function startingMinusesCount(string) {
+    let minusesCounter = 0;
+    for(let i = 0; i < string.length; i++) {
+        if (string.charAt(i) === '-') {
+            minusesCounter++;
+        } else {
+            return minusesCounter;
+        }
+    }
 }
 
 function determineEquationType(simpleEquationString) {
