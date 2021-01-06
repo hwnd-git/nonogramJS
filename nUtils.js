@@ -47,13 +47,13 @@ export function solveBracketsEquation(equationString) {
     const firstClosedBracketIndex = equationString.indexOf(')');
 
     if (firstClosedBracketIndex < 0) {
-        solveLayeredEquation('1+5*2-6/3')
+        solveChainedEquation('1+5*2-6/3')
     }
     //TODO: dodać obsługę nawiasu, w którym jest po prostu liczba, bez żadnego działania
     debugger;
 }
 
-export function solveLayeredEquation(equationString) {
+export function solveChainedEquation(equationString, equationId) {
     //1+5*2*-1-6/3
     //---3
     //1+-2
@@ -61,20 +61,49 @@ export function solveLayeredEquation(equationString) {
     //-6/-3
     //6/--3
     //equationString = equationString.replaceAll(' ', '');
+    const equationSigns = ['+', '-', '*', '/'];
 
-    let equationsCount = countEquations(equationString);
+    //debugger;
+
+    // console.log('EQUATION: ', equationString);
+    let equationsCountData = countEquations(equationString);
 
     debugger;
-    if (equationsCount == 1) {
+
+    if (equationsCountData.count == 1) {
         return solveSingularEquation(equationString);
-    } else if (equationsCount < 0) {
-        return solveMultipleMinuses(equationString);
+    } else if (equationsCountData.count == 0) {
+        return equationString;
     } else {
+        //10 + 5*2-6/2
+        //.10. + .5*2.
+        //.10. + .10.
+        //20 - 6/2
 
-        return solveLayeredEquation(equationString);
+        equationSigns.forEach(equationSign => {
+            if (equationsCountData[equationSign] > 0) {
+                //console.log('single: ', solveSingularEquation(equationString, equationSign));
+
+                const equationSignOccurence = equationString.indexOf(equationSign);
+
+                // let leftSide = equationString.substring(0, equationSignOccurence);
+                // let rightSide = equationString.substring(equationSignOccurence + 1);
+                const leftSide = equationString.substring(0, equationSignOccurence);
+                const rightSide = equationString.substring(equationSignOccurence + 1);
+
+                console.log(`ANALYZED EQUATION (${equationId}): ${equationString}     divided by ${equationSign} to: (${equationId+1})${leftSide}  & (${equationId+2})${rightSide}`);
+                const newEquation = solveChainedEquation(leftSide, equationId+1) + equationSign + solveChainedEquation(rightSide,equationId+2);
+                console.log('NEW EQUATION: ', newEquation);
+                debugger;
+
+                return solveChainedEquation(newEquation);
+            }
+        });
+
+        
+
+        //return solveChainedEquation(equationString);
     }
-
-    debugger;
 }
 
 function determineEquationType(simpleEquationString) {
@@ -89,16 +118,22 @@ function determineEquationType(simpleEquationString) {
     }
 }
 
-export function solveSingularEquation(equationString) {
+export function solveSingularEquation(equationString, equationType = '') {
     //6/--3
     //-6/-3
-    const equationType = determineEquationType(equationString);
+
+    if (equationType === '') equationType = determineEquationType(equationString);
 
     const equationSignOccurence = equationString.indexOf(equationType);
-    const leftSide = solveMultipleMinuses(equationString.substring(0, equationSignOccurence));
-    const rightSide = solveMultipleMinuses(equationString.substring(equationSignOccurence + 1));
+
+    // let leftSide = equationString.substring(0, equationSignOccurence);
+    // let rightSide = equationString.substring(equationSignOccurence + 1);
+    const leftSide = parseFloat(solveMultipleMinuses(equationString.substring(0, equationSignOccurence)));
+    const rightSide = parseFloat(solveMultipleMinuses(equationString.substring(equationSignOccurence + 1)));
 
     let result = '';
+
+    //debugger;
 
     switch (equationType) {
         case '+':
@@ -115,7 +150,7 @@ export function solveSingularEquation(equationString) {
             break;
     }
 
-    debugger;
+    console.log('SINGLE: ', equationString, ' = ', result);
     return result;
 }
 
@@ -210,5 +245,5 @@ export function countEquations(equationString) {
         }
     }
 
-    return equationsCount;
+    return { count: equationsCount, '*': multiplicationsCount, '/': divisionsCount, '+': additionsCount, '-': subtractionsCount };
 }

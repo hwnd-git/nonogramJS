@@ -1,4 +1,5 @@
 import * as utils from './nUtils.js';
+import { solveChainedEquation, normalizeEquation } from './nEquationSolver.js';
 
 if (document.readyState == "loading") {
     document.addEventListener('DOMContentLoaded', ready)
@@ -42,7 +43,8 @@ function populateTopLegend() {
     //         }
     //     }
     // }
-    
+    normalizeEquation('10+---5*2---6/2*---2+1');
+    //solveChainedEquation('10 + ---5*2-6 /2* 2+1');
 
     //console.log(utils.solveMultipleMinuses('---3'));
     //utils.solveSingularEquation('-6/--3');
@@ -52,13 +54,14 @@ function populateTopLegend() {
     //3*--2-1
     //utils.countEquations('3*--2-1');
 
-    utils.solveLayeredEquation('5---2');
-    utils.solveLayeredEquation('(10 + 5)*(2-(6/2))');
-    utils.calcEval(utils.getCSSVariable('--test3'));
-    utils.calcEval('calc(1-2)');
-    let test = utils.evaluateCSSVariable('--test3')
+    //utils.solveChainedEquation('5---2');
 
-    debugger;
+    //utils.solveChainedEquation('10 + 5*2-6/2', 1);
+    //utils.calcEval(utils.getCSSVariable('--test3'));
+    //utils.calcEval('calc(1-2)');
+    //let test = utils.evaluateCSSVariable('--test3')
+
+    //debugger;
 
 
     const legendElement = document.getElementById('legend-horizontal')
