@@ -11,13 +11,17 @@ export function solveBracketsEquation(equationString) {
     if (firstClosedBracketIndex >= 0) {
         let leftPart = equationString.substring(0, firstClosedBracketIndex);
         let rightPart = equationString.substring(firstClosedBracketIndex + 1);
-        leftPart = leftPart.split('(').splice(-1)[0];
+        let insideBrackets = leftPart.split('(').splice(-1)[0];
+        let indexOfInside = leftPart.lastIndexOf(insideBrackets);
+        leftPart = leftPart.substring(0, indexOfInside - 1);    //-1 excludes opening bracket
 
-        let newEquation = solveChainedEquation(leftPart) + rightPart;
+        let newEquation = leftPart + solveChainedEquation(insideBrackets) + rightPart;
         // analyzedEquation = newEquation;
 
-        // debugger;
+        //debugger;
         return solveBracketsEquation(newEquation);
+    } else {
+        return solveChainedEquation(equationString);
     }
     //TODO: dodać obsługę nawiasu, w którym jest po prostu liczba, bez żadnego działania
 }

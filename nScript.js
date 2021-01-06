@@ -29,48 +29,23 @@ function populateTopLegend() {
     const separatorWidth = utils.getCSSVariable('--separator-width');
     let columnsStyleString = '';
     let templateAreasString = '';
+    
+    debugger;
 
-    // for (let rowNo = 1; rowNo <= gridHeight; rowNo++) {
-    //     templateAreasString = templateAreasString.concat('"');
+    for (let rowNo = 1; rowNo <= gridHeight; rowNo++) {
+        templateAreasString = templateAreasString.concat('"');
 
-    //     for (let colNo = 1; colNo <= columnsQty; colNo++) {
-    //         if (colNo == columnsQty) {
-    //             columnsStyleString = columnsStyleString.concat(`${cellFullSize}`);
-    //             templateAreasString = templateAreasString.concat(`${colNo}-1"`);
-    //         } else {
-    //             columnsStyleString = columnsStyleString.concat(`${cellReducedSize} `);
-    //             templateAreasString = templateAreasString.concat(`${colNo}-${columnsQty - rowNo + 1} `);
-    //         }
-    //     }
-    // }
-    //normalizeEquation('10 + ---5*2--6 /2* ---2+1');
-    //solveChainedEquation(normalizeEquation('---10 + ---5*-2-6 /2* --2+1'));
-    //-10+2
-    //console.log('solution: ', solveChainedEquation('---10 + ---5*-2-6 /2* --2+1'));
-    //console.log('solution: ', solveChainedEquation('1---5*2+--18*1/--2'));
-
-    //console.log('solution: ', solveChainedEquation('2+1--18*2-5'));
-    console.log('solution: ', solveChainedEquation('2--18'));
-
-    // console.log('solution: ', solveBracketsEquation('(1---5)*(2+--18)*(1/--2)'));
-    //console.log(solveChainedEquation('-10+2'));
-
-    //console.log(utils.solveMultipleMinuses('---3'));
-    //utils.solveSingularEquation('-6/--3');
-    //3-2-1-0
-    //3---1
-    //3*--2
-    //3*--2-1
-    //utils.countEquations('3*--2-1');
-
-    //utils.solveChainedEquation('5---2');
-
-    //utils.solveChainedEquation('10 + 5*2-6/2', 1);
-    //utils.calcEval(utils.getCSSVariable('--test3'));
-    //utils.calcEval('calc(1-2)');
-    //let test = utils.evaluateCSSVariable('--test3')
-
-    //debugger;
+        for (let colNo = 1; colNo <= columnsQty; colNo++) {
+            if (colNo == columnsQty) {
+                columnsStyleString = columnsStyleString.concat(`${cellFullSize}`);
+                templateAreasString = templateAreasString.concat(`${colNo}-1"`);
+            } else {
+                columnsStyleString = columnsStyleString.concat(`${cellReducedSize} `);
+                templateAreasString = templateAreasString.concat(`${colNo}-${columnsQty - rowNo + 1} `);
+            }
+        }
+    }
+    
 
 
     const legendElement = document.getElementById('legend-horizontal')
