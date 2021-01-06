@@ -1,76 +1,107 @@
 const equationsOrder = ['*', '/', '+', '-'];
 
 export function solveChainedEquation(equationString, equationId) {
-
-    //10 + ---5*2-6 /2* 2+1
+    equationString = normalizeEquation(equationString);
 
     let equationsCountData = countEquations(equationString);
+    let analyzedEquation = equationString;
+    let splittingEquationSigns = equationsOrder;
 
     equationsOrder.forEach(equationSign => {
-        // if (equationsCountData[equationSign] > 0) {
-        //     do {
-        //         const equationParts = equationString.split(equationSign);
-        //         console.log(equationParts);
-        //     } while (equationsCountData[equationSign] > 0);
-        // } 
 
         while (equationsCountData[equationSign] > 0) {
-            const equationParts = equationString.split(equationSign);
+            console.log('solving equation: ', analyzedEquation);
+            console.log('Equations left: ', equationsCountData.count);
+
+            const equationParts = analyzedEquation.split(equationSign);
             console.log(equationParts);
 
             let leftPart = equationParts[0];
             let rightPart = equationParts[1];
 
-            debugger;
-            return false;
+            equationParts.splice(0, 2);
+
+            splittingEquationSigns = splittingEquationSigns.filter(eqSign => eqSign !== equationSign);
+
+            let leftLastEqIndex = getLastEquationIndex(leftPart, splittingEquationSigns);
+            let rightFirstEqIndex = getFirstEquationIndex(rightPart, splittingEquationSigns);
+
+            let leftEqSign = leftPart.charAt(leftLastEqIndex);
+            if (leftEqSign === '-') {
+                var leftNumber = leftPart.substring(leftLastEqIndex);
+                leftPart = leftPart.substring(0, leftLastEqIndex);
+            } else {
+                var leftNumber = leftPart.substring(leftLastEqIndex + 1);
+                leftPart = leftPart.substring(0, leftLastEqIndex + 1);
+            }
+
+            let rightNumber = rightPart.substring(0, rightFirstEqIndex);
+            rightPart = rightPart.substring(rightFirstEqIndex);
+
+            let newPartialEquation = leftPart + solveSingleEquation(leftNumber, rightNumber, equationSign) + rightPart
+
+            equationParts.unshift(newPartialEquation);
+
+            let newFullEquation = equationParts.join(equationSign);
+
+            analyzedEquation = normalizeEquation(newFullEquation)
+            equationsCountData = countEquations(analyzedEquation);
         }
 
 
     });
 
+    return analyzedEquation;
+
+}
+
+function getLastEquationIndex(equationString, equationSigns = equationsOrder) {
+    let eqSignsLocations = equationSigns.map(eqSign => equationString.lastIndexOf(eqSign));
+    let lastEqIndex = Math.max.apply(Math, eqSignsLocations);
+    return lastEqIndex;
+}
+
+function getFirstEquationIndex(equationString, equationSigns = equationsOrder) {
+    let eqSignsLocations = equationSigns.map(eqSign => equationString.indexOf(eqSign));
+    eqSignsLocations = eqSignsLocations.filter(signLocation => signLocation > 0);
+    let firstEqIndex = Math.min.apply(Math, eqSignsLocations);
+
+    return firstEqIndex;
 }
 
 function countEquations(equationString) {
-    const multipleMinusesExcluded = equationString.replaceAll(new RegExp('-{2,}', 'g'), '');
+    const removedAdditions = equationString.replaceAll('+', '');
+    const additionsCount = equationString.length - removedAdditions.length;
 
+    const removedSubtractions = equationString.replaceAll('-', '');
+    let subtractionsCount = equationString.length - removedSubtractions.length;
 
-    const removedAdditions = multipleMinusesExcluded.replaceAll('+', '');
-    const additionsCount = multipleMinusesExcluded.length - removedAdditions.length;
+    const removedMultiplications = equationString.replaceAll('*', '');
+    const multiplicationsCount = equationString.length - removedMultiplications.length;
 
-    const removedSubtractions = multipleMinusesExcluded.replaceAll('-', '');
-    const subtractionsCount = multipleMinusesExcluded.length - removedSubtractions.length;
-
-    const removedMultiplications = multipleMinusesExcluded.replaceAll('*', '');
-    const multiplicationsCount = multipleMinusesExcluded.length - removedMultiplications.length;
-
-    const removedDivisions = multipleMinusesExcluded.replaceAll('/', '');
-    const divisionsCount = multipleMinusesExcluded.length - removedDivisions.length;
+    const removedDivisions = equationString.replaceAll('/', '');
+    const divisionsCount = equationString.length - removedDivisions.length;
 
     let equationsCount = additionsCount + subtractionsCount + multiplicationsCount + divisionsCount;
 
-    if (equationsCount == 0) {
-        if (multipleMinusesExcluded.length < equationString.length) {
-            equationsCount = 1;
-        }
-    }
-
+    if (equationsCount == 1 && equationString.indexOf('-') == 0) {
+        equationsCount = 0;
+        subtractionsCount = 0;
+    } 
+    
     return { count: equationsCount, '*': multiplicationsCount, '/': divisionsCount, '+': additionsCount, '-': subtractionsCount };
 }
 
 function solveSingularEquation(equationString, equationType = '') {
-    //6/--3
-    //-6/-3
 
     if (equationType === '') equationType = determineEquationType(equationString);
 
     const equationSignOccurence = equationString.indexOf(equationType);
 
-    const leftSide = parseFloat(solveMultipleMinuses(equationString.substring(0, equationSignOccurence)));
-    const rightSide = parseFloat(solveMultipleMinuses(equationString.substring(equationSignOccurence + 1)));
+    const leftSide = parseFloat(equationString.substring(0, equationSignOccurence));
+    const rightSide = parseFloat(equationString.substring(equationSignOccurence + 1));
 
     let result = '';
-
-    //debugger;
 
     switch (equationType) {
         case '+':
@@ -91,22 +122,35 @@ function solveSingularEquation(equationString, equationType = '') {
     return result;
 }
 
+function solveSingleEquation(leftSide, rightSide, equationType) {
+    let result = '';
+
+    leftSide = parseFloat(leftSide);
+    rightSide = parseFloat(rightSide);
+
+    switch (equationType) {
+        case '+':
+            result = `${leftSide + rightSide}`;
+            break;
+        case '-':
+            result = `${leftSide - rightSide}`;
+            break;
+        case '*':
+            result = `${leftSide * rightSide}`;
+            break;
+        case '/':
+            result = `${leftSide / rightSide}`;
+            break;
+    }
+    return result;
+}
+
 function solveMultipleMinuses(multipleMinusesString, preceedingString) {
     const number = multipleMinusesString.replaceAll('-', '');
     const minuses = multipleMinusesString.replace(number, '');
     const numberOfMinuses = minuses.length;
 
     const preceedingChar = preceedingString.substring(preceedingString.length - 1);
-
-    //+---5 => +   -5
-    //+--5 -> +   5
-    //1---5 => 1   -5
-    //1--5 -> 1   +5
-    //*---5 => *   -5
-    //*--5 -> *   5 
-    //--5 ->   5
-
-    //debugger;
 
     switch (numberOfMinuses % 2) {
         case 0:
@@ -122,29 +166,27 @@ function solveMultipleMinuses(multipleMinusesString, preceedingString) {
 }
 
 export function normalizeEquation(equationString) {
-    //10+---5*2-6/2*-2+1
-    equationString = equationString.replaceAll(' ', '');
-
-    //const multipleMinusesExcluded = equationString.replaceAll(new RegExp('-{2,}', 'g'), '');
+    if (equationString.indexOf(' ') >= 0) equationString = equationString.replaceAll(' ', '');
+    
+    let checkedEquation = equationString;
+    
+    if (checkedEquation.search(new RegExp('-{2,}', 'g')) < 0) return equationString;
+    
     const nonMinusEquationSigns = equationsOrder.filter(equationSign => equationSign !== '-');
-    let minusesChainLocation = 0;
     let beforeMinusesString = '';
     let multipleMinusesString = '';
     let afterMinusesString = '';
-
-    let checkedEquation = equationString;
+    let minusesChainLocation = 0;
 
     do {
-        console.log('checked equation: ', checkedEquation);
+        console.log('normalizing equation: ', checkedEquation);
         minusesChainLocation = checkedEquation.search(new RegExp('-{2,}', 'g'));
         if (minusesChainLocation >= 0) {
             afterMinusesString = checkedEquation.substring(minusesChainLocation);
             beforeMinusesString = checkedEquation.substring(0, minusesChainLocation);
-            let equationSignLocations = nonMinusEquationSigns.map(equationSign => {
-                return afterMinusesString.indexOf(equationSign);
-            })
-            equationSignLocations = equationSignLocations.filter(signLocation => signLocation >= 0);
-            let firstEquationSignLocation = Math.min.apply(Math, equationSignLocations);
+
+            let firstEquationSignLocation = getFirstEquationIndex(equationString, nonMinusEquationSigns);
+
             multipleMinusesString = afterMinusesString.substring(0, firstEquationSignLocation);
             afterMinusesString = afterMinusesString.substring(firstEquationSignLocation);
 
@@ -153,8 +195,7 @@ export function normalizeEquation(equationString) {
 
     } while (minusesChainLocation >= 0)
 
-    //debugger;
-
+    return checkedEquation;
 }
 
 function determineEquationType(simpleEquationString) {

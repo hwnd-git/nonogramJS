@@ -43,8 +43,12 @@ function populateTopLegend() {
     //         }
     //     }
     // }
-    normalizeEquation('10+---5*2---6/2*---2+1');
-    //solveChainedEquation('10 + ---5*2-6 /2* 2+1');
+    //normalizeEquation('10 + ---5*2--6 /2* ---2+1');
+    //solveChainedEquation(normalizeEquation('---10 + ---5*-2-6 /2* --2+1'));
+    //-10+2
+    console.log('solution: ', solveChainedEquation('---10 + ---5*-2-6 /2* --2+1'));
+    console.log('solution: ', solveChainedEquation('1---5*2+--18*1/--2'));
+    //console.log(solveChainedEquation('-10+2'));
 
     //console.log(utils.solveMultipleMinuses('---3'));
     //utils.solveSingularEquation('-6/--3');
