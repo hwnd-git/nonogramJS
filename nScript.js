@@ -1,5 +1,5 @@
 import * as utils from './nUtils.js';
-import { solveChainedEquation, normalizeEquation } from './nEquationSolver.js';
+import { solveChainedEquation, normalizeEquation, solveBracketsEquation } from './nEquationSolver.js';
 
 if (document.readyState == "loading") {
     document.addEventListener('DOMContentLoaded', ready)
@@ -46,8 +46,13 @@ function populateTopLegend() {
     //normalizeEquation('10 + ---5*2--6 /2* ---2+1');
     //solveChainedEquation(normalizeEquation('---10 + ---5*-2-6 /2* --2+1'));
     //-10+2
-    console.log('solution: ', solveChainedEquation('---10 + ---5*-2-6 /2* --2+1'));
-    console.log('solution: ', solveChainedEquation('1---5*2+--18*1/--2'));
+    // console.log('solution: ', solveChainedEquation('---10 + ---5*-2-6 /2* --2+1'));
+    // console.log('solution: ', solveChainedEquation('1---5*2+--18*1/--2'));
+
+    console.log('solution: ', solveChainedEquation('2+1--18'));
+    //console.log('solution: ', solveChainedEquation('2--18'));
+
+    // console.log('solution: ', solveBracketsEquation('(1---5)*(2+--18)*(1/--2)'));
     //console.log(solveChainedEquation('-10+2'));
 
     //console.log(utils.solveMultipleMinuses('---3'));
