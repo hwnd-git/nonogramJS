@@ -76,7 +76,7 @@
 
 #legend-horizontal {
     display: grid;
-    grid-template-rows: repeat(calc(var(--legend-h-size) - 1), var(--cell-size-reduced)) var(--cell-size);
+    /* grid-template-rows: repeat(calc(var(--legend-h-size) - 1), var(--cell-size-reduced)) var(--cell-size); */
     /* grid-template-columns: repeat(calc(var(--stage-h-size) - 1), calc(var(--cell-size) - var(--cell-border))) var(--cell-size); */
 }
 
@@ -174,3 +174,7 @@
 .cell-game {
     /* border: solid rgb(212, 128, 128) 1px; */
 }
+
+/* #col2-2 {
+    grid-area: a5-5;
+} */

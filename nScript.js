@@ -28,29 +28,48 @@ function populateTopLegend() {
     const cellReducedSize = utils.getCSSVariable('--cell-size-reduced');
     const separatorWidth = utils.getCSSVariable('--separator-width');
     let columnsStyleString = '';
+    let rowsStyleString = '';
     let templateAreasString = '';
     
-    debugger;
+    //columns template
+    for (let colNo = 1; colNo <= columnsQty; colNo++) {
+        if (colNo == columnsQty) {
+            columnsStyleString = columnsStyleString.concat(`${cellFullSize}`);
+        } else {
+            columnsStyleString = columnsStyleString.concat(`${cellReducedSize} `);
+        }
+    }
 
+    //rows template
     for (let rowNo = 1; rowNo <= gridHeight; rowNo++) {
+        if (rowNo == gridHeight) {
+            rowsStyleString = rowsStyleString.concat(`${cellFullSize}`);
+        } else {
+            rowsStyleString = rowsStyleString.concat(`${cellReducedSize} `);
+        }
+    }
+    
+    //grid areas
+    
+    for (let rowNo = gridHeight; rowNo >= 1; rowNo--) {
         templateAreasString = templateAreasString.concat('"');
-
         for (let colNo = 1; colNo <= columnsQty; colNo++) {
             if (colNo == columnsQty) {
-                columnsStyleString = columnsStyleString.concat(`${cellFullSize}`);
-                templateAreasString = templateAreasString.concat(`${colNo}-1"`);
+                templateAreasString = templateAreasString.concat(`a${colNo}-${rowNo}" `);
             } else {
-                columnsStyleString = columnsStyleString.concat(`${cellReducedSize} `);
-                templateAreasString = templateAreasString.concat(`${colNo}-${columnsQty - rowNo + 1} `);
+                templateAreasString = templateAreasString.concat(`a${colNo}-${rowNo} `);
             }
         }
     }
     
-
+    console.log(templateAreasString);
 
     const legendElement = document.getElementById('legend-horizontal')
     //grid-template-columns: repeat(calc(var(--stage-h-size) - 1), calc(var(--cell-size) - var(--cell-border))) var(--cell-size);
-    legendElement.style.gridTemplateColumns = ``;
+    legendElement.style.gridTemplateColumns = columnsStyleString;
+    legendElement.style.gridTemplateRows = rowsStyleString;
+    legendElement.style.gridTemplateAreas = templateAreasString;
+
 
     for (let colNo = 1; colNo <= columnsQty; colNo++) {
         for (let rowNo = 1; rowNo <= gridHeight; rowNo++) {
@@ -58,8 +77,9 @@ function populateTopLegend() {
             let no = gridHeight - rowNo + 1;
             cell.className = 'cell cell-legend';
             cell.id = `col${colNo}-${rowNo}`;
-            cell.style.gridColumnStart = `${colNo}`;
-            cell.style.gridRowStart = `${no}`;
+            // cell.style.gridColumnStart = `${colNo}`;
+            // cell.style.gridRowStart = `${no}`;
+            cell.style.gridArea = `a${colNo}-${no}`;
 
             //translateCellToRemoveDoubleBorder(cell, borderWidthNumeric, true, false);
 
@@ -83,15 +103,19 @@ function populateSideLegend() {
             cell.className = 'cell cell-legend';
             // cell.id = `row${rowNo}-${colNo}`;
             cell.id = `${colNo}-row${rowNo}`;
+
             cell.style.gridColumnStart = `${no}`;
             cell.style.gridRowStart = `${rowNo}`;
+            //cell.style.gridArea = `${colNo}-${rowNo}`;
 
             //translateCellToRemoveDoubleBorder(cell, borderWidthNumeric, false, true);
-
             legendElement.appendChild(cell);
         }
     }
 }
+
+
+
 
 function populateGameGrid() {
     const width = utils.getCSSVariable('--stage-h-size');
