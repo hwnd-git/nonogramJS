@@ -104,8 +104,8 @@
     display: grid;
     background-color: #fff;
 
-    grid-template-rows: repeat(calc(var(--stage-v-size) - 1), var(--cell-size-reduced)) var(--cell-size);
-    grid-template-columns: repeat(calc(var(--stage-h-size) - 1), var(--cell-size-reduced)) var(--cell-size);
+    /* grid-template-rows: repeat(calc(var(--stage-v-size) - 1), var(--cell-size-reduced)) var(--cell-size);
+    grid-template-columns: repeat(calc(var(--stage-h-size) - 1), var(--cell-size-reduced)) var(--cell-size); */
 }
 
 .expander {
