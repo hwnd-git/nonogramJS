@@ -1,8 +1,5 @@
 import * as utils from './nUtils.js';
 
-//TODO: zamienić górny i boczny legend na odpowiednio gridy w gridach. Górny legend: jednowierszowy grid
-// o szerokości planszy, a w każdej komórce, jednokolumnowy grid. Odwrotnie dla bocznej legendy
-
 const cellFullSize = utils.getCSSVariable('--cell-size');
 const cellReducedSize = utils.getCSSVariable('--cell-size-reduced');
 const separatorWidth = utils.getCSSVariable('--separator-width');
@@ -62,44 +59,50 @@ function populateTopLegend() {
     }
 
     //grid areas
-    for (let rowNo = gridHeight; rowNo >= 1; rowNo--) {
-        templateAreasString = templateAreasString.concat('"');
-        for (let colNo = 1; colNo <= columnsQty; colNo++) {
-            let currentArea = '';
+    templateAreasString = templateAreasString.concat('"');
+    for (let colNo = 1; colNo <= columnsQty; colNo++) {
+        let currentArea = '';
 
-            if (colNo == columnsQty) {
-                currentArea = `a${colNo}-${rowNo}" `;
-            } else {
-                currentArea = `a${colNo}-${rowNo} `;
-            }
-
-            if (colNo % separatorSpacing == 0 && colNo != columnsQty) {
-                let multiplier = colNo / separatorSpacing;
-                currentArea = currentArea.concat(`sv${multiplier} `);
-            }
-
-            templateAreasString = templateAreasString.concat(currentArea);
+        if (colNo == columnsQty) {
+            currentArea = `col${colNo}" `;
+        } else {
+            currentArea = `col${colNo} `;
         }
+
+        if (colNo % separatorSpacing == 0 && colNo != columnsQty) {
+            let multiplier = colNo / separatorSpacing;
+            currentArea = currentArea.concat(`sv${multiplier} `);
+        }
+        templateAreasString = templateAreasString.concat(currentArea);
     }
+
 
     const legendElement = document.getElementById('legend-horizontal')
     legendElement.style.gridTemplateColumns = columnsStyleString;
-    legendElement.style.gridTemplateRows = rowsStyleString;
     legendElement.style.gridTemplateAreas = `${templateAreasString}`;
 
-    //adding cells
+    //adding columns
     for (let colNo = 1; colNo <= columnsQty; colNo++) {
-        for (let rowNo = 1; rowNo <= gridHeight; rowNo++) {
-            let cell = document.createElement('div');
-            let no = gridHeight - rowNo + 1;
-            cell.className = 'cell cell-legend';
-            cell.id = `col${colNo}-${rowNo}`;
-            cell.style.gridColumnStart = `${colNo}`;
-            cell.style.gridRowStart = `${no}`;
-            cell.style.gridArea = `a${colNo}-${rowNo}`;
+        let col = document.createElement('div');
+        col.className = 'legend-column';
+        col.id = `col${colNo}`;
+        col.style.gridArea = `col${colNo}`;
+        col.style.gridTemplateRows = rowsStyleString;
 
-            legendElement.appendChild(cell);
+        //adding cells and areas
+        let columnGridTemplateString = '';
+        for (let rowNo = gridHeight; rowNo >= 1; rowNo--) {
+            columnGridTemplateString = columnGridTemplateString.concat(`"a${colNo}-${rowNo}" `)
+
+            let cell = document.createElement('div');
+            cell.className = 'cell cell-legend';
+            cell.id = `top${colNo}-${rowNo}`;
+            cell.style.gridArea = `a${colNo}-${rowNo}`;
+            col.appendChild(cell);
         }
+
+        col.style.gridTemplateAreas = columnGridTemplateString;
+        legendElement.appendChild(col);
     }
 
     //adding separators
@@ -150,51 +153,50 @@ function populateSideLegend() {
     }
 
     //grid areas
+    templateAreasString = templateAreasString.concat('');
     for (let rowNo = 1; rowNo <= rowsQty; rowNo++) {
-        templateAreasString = templateAreasString.concat('"');
-        for (let colNo = gridWidth; colNo >= 1; colNo--) {
-            let currentArea = '';
-
-            if (colNo == 1) {
-                currentArea = `a${colNo}-${rowNo}" `;
-            } else {
-                currentArea = `a${colNo}-${rowNo} `;
-            }
-            templateAreasString = templateAreasString.concat(currentArea);
-        }
+        let currentArea = `"row${rowNo}" `;
+        templateAreasString = templateAreasString.concat(currentArea);
 
         if (rowNo % separatorSpacing == 0 && rowNo != rowsQty) {
-            let currentArea = '"';
             let multiplier = rowNo / separatorSpacing;
-            for (let colNo = gridWidth; colNo >= 1; colNo--) {
-                if (colNo == 1) {
-                    currentArea = currentArea.concat(`sh${multiplier}" `);
-                } else {
-                    currentArea = currentArea.concat(`sh${multiplier} `);
-                }
-            }
+            let currentArea = `"sh${multiplier}" `;
             templateAreasString = templateAreasString.concat(currentArea);
         }
     }
 
-    //console.log(templateAreasString);
-
     const legendElement = document.getElementById('legend-vertical')
-    legendElement.style.gridTemplateColumns = columnsStyleString;
     legendElement.style.gridTemplateRows = rowsStyleString;
     legendElement.style.gridTemplateAreas = `${templateAreasString}`;
 
-    //adding cells
+    //adding rows
     for (let rowNo = 1; rowNo <= rowsQty; rowNo++) {
-        for (let colNo = 1; colNo <= gridWidth; colNo++) {
-            let cell = document.createElement('div');
-            let no = gridWidth - colNo + 1;
-            cell.className = 'cell cell-legend';
-            cell.id = `${colNo}-row${rowNo}`;
-            cell.style.gridArea = `a${colNo}-${rowNo}`;
+        let row = document.createElement('div');
+        row.className = 'legend-row';
+        row.id = `row${rowNo}`;
+        row.style.gridArea = `row${rowNo}`;
+        row.style.gridTemplateColumns = columnsStyleString;
 
-            legendElement.appendChild(cell);
+        //adding cells and areas
+        let rowGridTemplateString = '"';
+        for (let colNo = gridWidth; colNo >= 1; colNo--) {
+            let areaPart = ''
+            if (colNo == 1) {
+                areaPart = `a${colNo}-${rowNo}"`;
+            } else {
+                areaPart = `a${colNo}-${rowNo} `;
+            }
+            rowGridTemplateString = rowGridTemplateString.concat(areaPart)
+
+            let cell = document.createElement('div');
+            cell.className = 'cell cell-legend';
+            cell.id = `side${colNo}-${rowNo}`;
+            cell.style.gridArea = `a${colNo}-${rowNo}`;
+            row.appendChild(cell);
         }
+
+        row.style.gridTemplateAreas = rowGridTemplateString;
+        legendElement.appendChild(row);
     }
 
     //adding separators

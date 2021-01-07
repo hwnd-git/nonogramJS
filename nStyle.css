@@ -81,6 +81,12 @@
     /* grid-template-columns: repeat(calc(var(--stage-h-size) - 1), calc(var(--cell-size) - var(--cell-border))) var(--cell-size); */
 }
 
+.legend-column, .legend-row {
+    display: grid;
+    /* border: solid 1px red; */
+    /* background-color: pink; */
+}
+
 #wrapper-left {
     grid-area: legend-v;
     border: solid var(--wrapper-border-color) var(--wrapper-border);
