@@ -2,8 +2,8 @@ import * as eq from './nEquationSolver.js';
 
 const cssUnits = ['px', 'pt', 'cm', 'mm', 'in', 'pc'];
 
-export function getCSSVariable(varName) {
-    let variable = getComputedStyle(document.documentElement).getPropertyValue(varName);
+export function getCSSVariable(varName, sourceElement = document.documentElement) {
+    let variable = getComputedStyle(sourceElement).getPropertyValue(varName);
     variable = variable.replaceAll(' ', '');
     //debugger;
     //return variable;
@@ -12,6 +12,10 @@ export function getCSSVariable(varName) {
     } else {
         return variable;
     }
+}
+
+export function setCSSVariable(varName, value, sourceElement = document.documentElement) {
+    sourceElement.style.setProperty(varName, value);
 }
 
 export function getColumnNo(cellDiv) {

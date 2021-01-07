@@ -1,25 +1,29 @@
 import * as utils from './nUtils.js';
 
-export let params = {
-    width: 0,
-    height: 0,
-    topLegendHeight: 0,
-    sideLegendWidth: 0,
-    cellSize: 0,
-    cellSizeReduced: 0,
-    borderWidth: 0,
-    separatorWidth: 0,
-    separatorSpacing: 0
+export let settings = {
+    width: {value: 0, cssName: '--stage-h-size'},
+    height: {value: 0, cssName: '--stage-v-size'},
+    topLegendHeight: {value: 0, cssName: '--legend-h-size'},
+    sideLegendWidth: {value: 0, cssName: '--legend-v-size'},
+    cellSize: {value: 0, cssName: '--cell-size'},
+    cellSizeReduced: {value: 0, cssName: '--cell-size-reduced'},
+    borderWidth: {value: 0, cssName: '--cell-border'},
+    separatorWidth: {value: 0, cssName: '---separator-width'},
+    separatorSpacing: {value: 0, cssName: '--separator-spacing'},
+};
+
+function loadSetting(setting) {
+    setting.value = utils.getCSSVariable(setting.cssName);
 }
 
 export function loadSettings() {
-    params.width = utils.getCSSVariable('--stage-h-size');
-    params.height = utils.getCSSVariable('--stage-v-size');
-    params.topLegendHeight = utils.getCSSVariable('--legend-h-size');
-    params.sideLegendWidth = utils.getCSSVariable('--legend-v-size');
-    params.cellSize = utils.getCSSVariable('--cell-size');
-    params.cellSizeReduced = utils.getCSSVariable('--cell-size-reduced');
-    params.borderWidth = utils.getCSSVariable('--cell-border')
-    params.separatorWidth = utils.getCSSVariable('--separator-width');
-    params.separatorSpacing = utils.getCSSVariable('--separator-spacing');
+    Object.keys(settings).forEach(settingKey => loadSetting(settings[settingKey]));
+}
+
+export function getSetting(setting) {
+    return setting.value;
+}
+
+export function updateSetting() {
+
 }
