@@ -4,6 +4,7 @@ export function injectEventHandlers() {
     let diagExpander = document.getElementById('expand-diagonal');
     diagExpander.addEventListener("mouseenter", expanderDiaHovered);
     diagExpander.addEventListener("mouseleave", expanderDiaLeft);
+    diagExpander.addEventListener('click', expanderDiaClicked)
 
     let horizExpander = document.getElementById('expand-horizontal');
     horizExpander.addEventListener('click', expanderHoClicked)
@@ -33,5 +34,10 @@ function expanderHoClicked() {
 }
 
 function expanderVeClicked() {
+    script.expandHeight();
+}
+
+function expanderDiaClicked() {
+    script.expandWidth();
     script.expandHeight();
 }
