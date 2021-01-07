@@ -6,7 +6,7 @@
 
 :root {
     --cell-size: 50px;
-    --cell-border: 2px;
+    --cell-border: 5px;
     --cell-radius: 0px;
     /* --cell-border-color: #808080; */
     --cell-border-color: #aaaaaa;
@@ -16,7 +16,7 @@
     --test2: var(--test);
     --test3: calc(calc(10px + 5px) * calc(2 - calc(6/2)));
 
-    --separator-width: 1px;
+    --separator-width: 10px;
     --separator-spacing: 5;
 
     --expander-size: 50px;
@@ -67,6 +67,7 @@
 
 .legend {
     background-color: #dadada;
+    height: 100%;
 }
 
 #wrapper-top {
@@ -194,11 +195,27 @@
     /* border: solid #555 1px; */
 }
 
-.cell-game {
-    /* border: solid rgb(212, 128, 128) 1px; */
+.cell[data-translation] {
+    /* --translation: calc(attr(data-translation string)); */
+    transform: translateX(var(--translation));
+    /* transform: translateX(10px); */
+    /* border-radius: calc(attr(data-translation)); */
+    background-color: pink;
+}
+
+.cell[data-translation]::after {
+    content: attr(data-translation);
 }
 
 .separator {
     background-color: var(--cell-border-color);
     background-color: #555;
+}
+
+.separator.sep-v {
+    width: var(--separator-width);
+}
+
+.separator.sep-h {
+    height: var(--separator-width);
 }

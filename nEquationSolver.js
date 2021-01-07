@@ -6,7 +6,7 @@ export function solveBracketsEquation(equationString) {
     const firstClosedBracketIndex = equationString.indexOf(')');
     //let analyzedEquation = equationString
 
-    console.log('Bracketed equation: ', equationString);
+    //console.log('Bracketed equation: ', equationString);
 
     if (firstClosedBracketIndex >= 0) {
         let leftPart = equationString.substring(0, firstClosedBracketIndex);
@@ -39,11 +39,11 @@ export function solveChainedEquation(equationString, equationId) {
     equationsOrder.forEach(equationSign => {
 
         while (equationsCountData[equationSign] > 0) {
-            console.log('solving equation: ', analyzedEquation);
-            console.log('Equations left: ', equationsCountData.count);
+            //console.log('solving equation: ', analyzedEquation);
+            //console.log('Equations left: ', equationsCountData.count);
 
             const equationParts = analyzedEquation.split(equationSign);
-            console.log(equationParts, 'equation: ', equationSign);
+            //console.log(equationParts, 'equation: ', equationSign);
 
             let leftPart = equationParts[0];
             let rightPart = equationParts[1];
@@ -165,7 +165,7 @@ function solveSingularEquation(equationString, equationType = '') {
             break;
     }
 
-    console.log('SINGLE: ', equationString, ' = ', result);
+    //console.log('SINGLE: ', equationString, ' = ', result);
     return result;
 }
 
@@ -230,7 +230,7 @@ export function normalizeEquation(equationString) {
     let minusesChainLocation = checkedEquation.search(new RegExp('-{2,}', 'g'));
 
     do {
-        console.log('normalizing equation: ', checkedEquation);
+        //console.log('normalizing equation: ', checkedEquation);
         //if (minusesChainLocation >= 0) {
         //2+1--18*2-5
 

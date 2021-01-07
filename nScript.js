@@ -31,8 +31,8 @@ function populateGrids() {
 }
 
 function populateTopLegend() {
-    const columnsQty = utils.getCSSVariable('--stage-h-size');
-    const gridHeight = utils.getCSSVariable('--legend-h-size');
+    const columnsQty = par.width;
+    const gridHeight = par.topLegendHeight;
 
     let columnsStyleString = '';
     let rowsStyleString = '';
@@ -52,7 +52,9 @@ function populateTopLegend() {
         }
 
         if (colNo % par.separatorSpacing == 0 && colNo != columnsQty) {
-            currentColumnWidth = currentColumnWidth.concat(`${par.separatorWidth} `);
+            //currentColumnWidth = currentColumnWidth.concat(`${par.separatorWidth} `);
+            // currentColumnWidth = currentColumnWidth.concat(`auto `);
+            currentColumnWidth = currentColumnWidth.concat(`max-content `);
         }
 
         columnsStyleString = columnsStyleString.concat(currentColumnWidth);
@@ -119,15 +121,15 @@ function populateTopLegend() {
     for (let i = 1; i <= separatorQty; i++) {
         const separator = document.createElement('div');
         separator.id = `sep-top-${i}`;
-        separator.classList.add('separator', 'separator-v', 'separator-top');
+        separator.classList.add('separator', 'sep-v', 'sep-top');
         separator.style.gridArea = `sv${i}`;
         legendElement.appendChild(separator);
     }
 }
 
 function populateSideLegend() {
-    const rowsQty = utils.getCSSVariable('--stage-v-size');
-    const gridWidth = utils.getCSSVariable('--legend-v-size');
+    const rowsQty = par.height;
+    const gridWidth = par.sideLegendWidth;
 
     let rowsStyleString = '';
     let columnsStyleString = '';
@@ -147,7 +149,8 @@ function populateSideLegend() {
         }
 
         if (rowNo % par.separatorSpacing == 0 && rowNo != rowsQty) {
-            currentRowWidth = currentRowWidth.concat(`${par.separatorWidth} `);
+            //currentRowWidth = currentRowWidth.concat(`${par.separatorWidth} `);
+            currentRowWidth = currentRowWidth.concat(`auto `);
         }
         rowsStyleString = rowsStyleString.concat(currentRowWidth);
     }
@@ -213,15 +216,15 @@ function populateSideLegend() {
     for (let i = 1; i <= separatorQty; i++) {
         const separator = document.createElement('div');
         separator.id = `sep-side-${i}`;
-        separator.classList.add('separator', 'separator-h', 'separator-side');
+        separator.classList.add('separator', 'sep-h', 'sep-side');
         separator.style.gridArea = `sh${i}`;
         legendElement.appendChild(separator);
     }
 }
 
 function populateGameGrid() {
-    const width = utils.getCSSVariable('--stage-h-size');
-    const height = utils.getCSSVariable('--stage-v-size');
+    const width = par.width;
+    const height = par.height;
 
     let columnsStyleString = '';
     let rowsStyleString = '';
@@ -241,7 +244,9 @@ function populateGameGrid() {
         }
 
         if (colNo % par.separatorSpacing == 0 && colNo != width) {
-            currentColumnWidth = currentColumnWidth.concat(`${par.separatorWidth} `);
+            // currentColumnWidth = currentColumnWidth.concat(`${par.separatorWidth} `);
+            currentColumnWidth = currentColumnWidth.concat(`auto `);
+            // currentColumnWidth = currentColumnWidth.concat(`5px `);
         }
 
         columnsStyleString = columnsStyleString.concat(currentColumnWidth);
@@ -261,7 +266,8 @@ function populateGameGrid() {
         }
 
         if (rowNo % par.separatorSpacing == 0 && rowNo != height) {
-            currentRowWidth = currentRowWidth.concat(`${par.separatorWidth} `);
+            // currentRowWidth = currentRowWidth.concat(`${par.separatorWidth} `);
+            currentRowWidth = currentRowWidth.concat(`auto `);
         }
         rowsStyleString = rowsStyleString.concat(currentRowWidth);
     }
@@ -309,12 +315,17 @@ function populateGameGrid() {
     legendElement.style.gridTemplateAreas = templateAreasString;
 
     //adding cells
+    const borderWidth = par.borderWidth;
     for (let colNo = 1; colNo <= width; colNo++) {
         for (let rowNo = 1; rowNo <= height; rowNo++) {
             let cell = document.createElement('div');
             cell.className = 'cell cell-game';
             cell.id = `cell${colNo}-${rowNo}`;
             cell.style.gridArea = `a${colNo}-${rowNo}`;
+            //const translationValue = utils.calcEval(`calc(-${colNo-1}*${borderWidth})`);
+            //cell.dataset.translation = translationValue;
+            //cell.style.setProperty('--translation', translationValue)
+            //console.log(cell.dataset.translation)
 
             legendElement.appendChild(cell);
         }
@@ -325,7 +336,7 @@ function populateGameGrid() {
     for (let i = 1; i <= hSeparatorQty; i++) {
         const separator = document.createElement('div');
         separator.id = `sep-game-h-${i}`;
-        separator.classList.add('separator', 'separator-h', 'separator-game');
+        separator.classList.add('separator', 'sep-h', 'sep-game');
         separator.style.gridArea = `sh${i}`;
         legendElement.appendChild(separator);
     }
@@ -336,13 +347,13 @@ function populateGameGrid() {
         for (let j = 1; j <= vSepPerBreakQty; j++) {
             const separator = document.createElement('div');
             separator.id = `sep-game-v${i}-${j}`;
-            separator.classList.add('separator', 'separator-h', 'separator-game');
+            separator.classList.add('separator', 'sep-v', 'sep-game');
             separator.style.gridArea = `sv${i}-${j}`;
             legendElement.appendChild(separator);
         }
     }
 }
 
-function expandWidth() {
-
+export function expandWidth() {
+    
 }
