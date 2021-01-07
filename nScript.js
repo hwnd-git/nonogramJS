@@ -1,9 +1,9 @@
 import * as utils from './nUtils.js';
-import { solveChainedEquation, normalizeEquation, solveBracketsEquation } from './nEquationSolver.js';
 
 const cellFullSize = utils.getCSSVariable('--cell-size');
 const cellReducedSize = utils.getCSSVariable('--cell-size-reduced');
 const separatorWidth = utils.getCSSVariable('--separator-width');
+const separatorSpacing = utils.getCSSVariable('--separator-spacing');
 
 if (document.readyState == "loading") {
     document.addEventListener('DOMContentLoaded', ready)
@@ -25,12 +25,6 @@ function populateTopLegend() {
     const columnsQty = utils.getCSSVariable('--stage-h-size');
     const gridHeight = utils.getCSSVariable('--legend-h-size');
 
-    const borderWidthString = utils.getCSSVariable('--cell-border');
-    let borderWidthNumeric = parseInt(borderWidthString, 10);
-
-    // const cellFullSize = utils.getCSSVariable('--cell-size');
-    // const cellReducedSize = utils.getCSSVariable('--cell-size-reduced');
-    // const separatorWidth = utils.getCSSVariable('--separator-width');
     let columnsStyleString = '';
     let rowsStyleString = '';
     let templateAreasString = '';
@@ -46,7 +40,7 @@ function populateTopLegend() {
             currentColumnWidth = `${cellReducedSize} `;
         }
 
-        if (colNo % 5 == 0 && colNo != columnsQty) {
+        if (colNo % separatorSpacing == 0 && colNo != columnsQty) {
             currentColumnWidth = currentColumnWidth.concat(`${separatorWidth} `);
         }
 
@@ -74,9 +68,13 @@ function populateTopLegend() {
                 currentArea = `a${colNo}-${rowNo} `;
             }
 
-            if (colNo % 5 == 0 && colNo != columnsQty) {
-                let multiplier = colNo / 5;
+            if (colNo % separatorSpacing == 0 && colNo != columnsQty) {
+                let multiplier = colNo / separatorSpacing;
                 currentArea = currentArea.concat(`sv${multiplier} `);
+                // const separator = document.createElement('div');
+                // separator.id = `sep-top-${multiplier}`;
+                // separator.classList.add('separator', 'separator-v', 'separator-top');
+                // separators.push(separator);
             }
 
             templateAreasString = templateAreasString.concat(currentArea);
@@ -87,6 +85,34 @@ function populateTopLegend() {
     legendElement.style.gridTemplateColumns = columnsStyleString;
     legendElement.style.gridTemplateRows = rowsStyleString;
     legendElement.style.gridTemplateAreas = `${templateAreasString}`;
+
+    //adding separators
+    const separators = [];
+    const separatorQty = (columnsQty - 1) / separatorSpacing;
+
+    // for (let colNo = 1; colNo <= columnsQty; colNo++) {
+    //     let currentArea = '';
+
+    //     if (colNo == columnsQty) {
+    //         currentArea = `a${colNo}-${rowNo}" `;
+    //     } else {
+    //         currentArea = `a${colNo}-${rowNo} `;
+    //     }
+
+    //     if (colNo % separatorSpacing == 0 && colNo != columnsQty) {
+    //         let multiplier = colNo / separatorSpacing;
+    //         currentArea = currentArea.concat(`sv${multiplier} `);
+    //         const separator = document.createElement('div');
+    //         separator.id = `sep-top-${multiplier}`;
+    //         separator.classList.add('separator', 'separator-v', 'separator-top');
+    //         separators.push(separator);
+    //     }
+    // }
+
+    
+    //legendElement.appendChild(separator);
+
+    //debugger;
 
     for (let colNo = 1; colNo <= columnsQty; colNo++) {
         for (let rowNo = 1; rowNo <= gridHeight; rowNo++) {
@@ -127,7 +153,7 @@ function populateSideLegend() {
             currentRowWidth = `${cellReducedSize} `;
         }
 
-        if (rowNo % 5 == 0 && rowNo != rowsQty) {
+        if (rowNo % separatorSpacing == 0 && rowNo != rowsQty) {
             currentRowWidth = currentRowWidth.concat(`${separatorWidth} `);
         }
         rowsStyleString = rowsStyleString.concat(currentRowWidth);
@@ -156,9 +182,9 @@ function populateSideLegend() {
             templateAreasString = templateAreasString.concat(currentArea);
         }
 
-        if (rowNo % 5 == 0 && rowNo != rowsQty) {
+        if (rowNo % separatorSpacing == 0 && rowNo != rowsQty) {
             let currentArea = '"';
-            let multiplier = rowNo / 5;
+            let multiplier = rowNo / separatorSpacing;
             for (let colNo = gridWidth; colNo >= 1; colNo--) {
                 if (colNo == 1) {
                     currentArea = currentArea.concat(`sh${multiplier}" `);
@@ -218,14 +244,14 @@ function populateGameGrid() {
             currentColumnWidth = `${cellReducedSize} `;
         }
 
-        if (colNo % 5 == 0 && colNo != width) {
+        if (colNo % separatorSpacing == 0 && colNo != width) {
             currentColumnWidth = currentColumnWidth.concat(`${separatorWidth} `);
         }
 
         columnsStyleString = columnsStyleString.concat(currentColumnWidth);
     }
 
-    console.log('columns: ', columnsStyleString);
+    //console.log('columns: ', columnsStyleString);
 
     //rows template
     for (let rowNo = 1; rowNo <= height; rowNo++) {
@@ -238,13 +264,13 @@ function populateGameGrid() {
             currentRowWidth = `${cellReducedSize} `;
         }
 
-        if (rowNo % 5 == 0 && rowNo != height) {
+        if (rowNo % separatorSpacing == 0 && rowNo != height) {
             currentRowWidth = currentRowWidth.concat(`${separatorWidth} `);
         }
         rowsStyleString = rowsStyleString.concat(currentRowWidth);
     }
 
-    console.log('rows: ', rowsStyleString);
+    //console.log('rows: ', rowsStyleString);
 
     //grid areas
     for (let rowNo = 1; rowNo <= height; rowNo++) {
@@ -258,19 +284,19 @@ function populateGameGrid() {
                 currentArea = `a${colNo}-${rowNo} `;
             }
 
-            if (colNo % 5 == 0 && colNo != width) {
-                let segmentsCounter = Math.floor((parseInt(rowNo) - 1) / 5) + 1;
-                let multiplier = colNo / 5;
+            if (colNo % separatorSpacing == 0 && colNo != width) {
+                let segmentsCounter = Math.floor((parseInt(rowNo) - 1) / separatorSpacing) + 1;
+                let multiplier = colNo / separatorSpacing;
                 currentArea = currentArea.concat(`sv${multiplier}-${segmentsCounter} `);
             }
 
             templateAreasString = templateAreasString.concat(currentArea);
         }
 
-        if (rowNo % 5 == 0 && rowNo != height) {
+        if (rowNo % separatorSpacing == 0 && rowNo != height) {
             let currentArea = '"';
-            let multiplier = rowNo / 5;
-            let widthWithSeparators = parseInt(width) + Math.floor((width - 1) / 5);
+            let multiplier = rowNo / separatorSpacing;
+            let widthWithSeparators = parseInt(width) + Math.floor((width - 1) / separatorSpacing);
             for (let colNo = 1; colNo <= widthWithSeparators; colNo++) {
                 if (colNo == widthWithSeparators) {
                     currentArea = currentArea.concat(`sh${multiplier}" `);
@@ -282,7 +308,7 @@ function populateGameGrid() {
         }
     }
 
-    console.log('template: ', templateAreasString);
+    //console.log('template: ', templateAreasString);
 
     const legendElement = document.getElementById('game-grid')
     legendElement.style.gridTemplateColumns = columnsStyleString;

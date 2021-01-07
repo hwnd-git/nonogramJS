@@ -7,7 +7,7 @@
 :root {
     --cell-size: 50px;
     --cell-border: 2px;
-    --cell-radius: 0px;
+    --cell-radius: 5px;
     --cell-border-color: #808080;
     --cell-size-reduced: calc(var(--cell-size) - var(--cell-border));
 
@@ -15,13 +15,14 @@
     --test2: var(--test);
     --test3: calc(calc(10px + 5px) * calc(2 - calc(6/2)));
 
-    --separator-width: 5px;
+    --separator-width: 10px;
+    --separator-spacing: 5;
 
     --expander-size: 50px;
     --legend-h-size: 4;
     --legend-v-size: 3;
-    --stage-h-size: 10;
-    --stage-v-size: 10;
+    --stage-h-size: 13;
+    --stage-v-size: 12;
 
     --game-width: calc(var(--cell-size) * var(--stage-h-size));
     --game-height: calc(var(--cell-size) * var(--stage-v-size));
@@ -175,6 +176,6 @@
     /* border: solid rgb(212, 128, 128) 1px; */
 }
 
-/* #col2-2 {
-    grid-area: a5-5;
-} */
+.separator {
+    background-color: red;
+}
