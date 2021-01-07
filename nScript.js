@@ -1,5 +1,6 @@
 import * as utils from './nUtils.js';
 import * as settings from './nConfig.js';
+import * as events from './nEvents.js';
 
 //TODO: row/column-templates ustawić na auto i niech się dopasowują do kontentu? Powinno być bardziej responsywnie.
 // Najpierw sprawdzić to na separatorach.
@@ -19,6 +20,7 @@ if (document.readyState == "loading") {
 
 function ready() {
     settings.loadSettings();
+    events.injectEventHandlers();
     populateGrids();
 }
 

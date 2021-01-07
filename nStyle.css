@@ -130,6 +130,7 @@
 }
 
 #expand-horizontal:hover,
+#expand-horizontal.expanded,
 #expand-horizontal:hover ~ #expand-diagonal {
     width: calc(var(--expander-size)*1.5);
 }
@@ -143,6 +144,7 @@
 }
 
 #expand-vertical:hover,
+#expand-vertical.expanded,
 #expand-vertical:hover ~ #expand-diagonal {
     height: calc(var(--expander-size)*1.5);
 }
@@ -156,15 +158,20 @@
     transform: translate(100%, 100%);
 }
 
+
 #expand-diagonal:hover {
     width: calc(var(--expander-size)*1.5);
     height: calc(var(--expander-size)*1.5);
 }
 
-#expand-diagonal:hover ~ #expand-horizontal, 
-#expand-diagonal:hover ~ #expand-vertival
+#expand-diagonal:hover ~ #expand-horizontal
 {
-    background-color: pink;
+    width: calc(var(--expander-size)*1.5);
+}
+
+#expand-diagonal:hover ~ #expand-vertical
+{
+    height: calc(var(--expander-size)*1.5);
 }
 
 /* ================================================================ */
