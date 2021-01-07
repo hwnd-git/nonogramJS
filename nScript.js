@@ -474,6 +474,122 @@ function addTopLegendColumn(colNo) {
     }
 
     col.style.gridTemplateAreas = columnGridTemplateString;
-
     topLegend.appendChild(col);
+}
+
+export function expandHeight() {
+    const heightSetting = par.height;
+    config.updateSetting(heightSetting, `${parseInt(heightSetting.value) + 1}`);
+
+    updateSideLegendAreas();
+    updateSideLegendRowsTemplate();
+    addSideLegendRow(heightSetting.value);
+    addSideSeparators();
+
+    console.log('New height: ', heightSetting.value);
+}
+
+function updateSideLegendAreas() {
+    const rowsQty = par.height.value;
+    const sepSpacing = par.separatorSpacing.value;
+
+    let templateAreasString = '';
+
+    templateAreasString = templateAreasString.concat('');
+    for (let rowNo = 1; rowNo <= rowsQty; rowNo++) {
+        let currentArea = `"row${rowNo}" `;
+        templateAreasString = templateAreasString.concat(currentArea);
+
+        if (rowNo % sepSpacing == 0 && rowNo != rowsQty) {
+            let multiplier = rowNo / sepSpacing;
+            let currentArea = `"sh${multiplier}" `;
+            templateAreasString = templateAreasString.concat(currentArea);
+        }
+    }
+
+    const sideLegend = document.getElementById('legend-vertical');
+    sideLegend.style.gridTemplateAreas = templateAreasString;
+}
+
+function updateSideLegendRowsTemplate() {
+    const rowsQty = par.height.value;
+    const cellSize = par.cellSize.value;
+    const cellSizeReduced = par.cellSizeReduced.value;
+    const sepSpacing = par.separatorSpacing.value;
+
+    let rowsStyleString = '';
+
+    for (let rowNo = 1; rowNo <= rowsQty; rowNo++) {
+
+        let currentRowWidth = ''
+
+        if (rowNo == rowsQty) {
+            currentRowWidth = `${cellSize}`;
+        } else if (rowNo % sepSpacing == 0) {
+            currentRowWidth = `${cellSize} `;
+        } else {
+            currentRowWidth = `${cellSizeReduced} `;
+        }
+
+        if (rowNo % sepSpacing == 0 && rowNo != rowsQty) {
+            //currentRowWidth = currentRowWidth.concat(`${par.separatorWidth} `);
+            currentRowWidth = currentRowWidth.concat(`auto `);
+        }
+        rowsStyleString = rowsStyleString.concat(currentRowWidth);
+    }
+
+    const sideLegend = document.getElementById('legend-vertical');
+    sideLegend.style.gridTemplateRows = rowsStyleString;
+}
+
+function addSideLegendRow(rowNo) {
+    const sideLegend = document.getElementById('legend-vertical');
+    const firstRow = document.getElementById('row1');
+    const columnsStyleString = firstRow.style.gridTemplateColumns;
+
+    const gridWidth = par.sideLegendWidth.value;
+
+    let row = document.createElement('div');
+    row.className = 'legend-row';
+    row.id = `row${rowNo}`;
+    row.style.gridArea = `row${rowNo}`;
+    row.style.gridTemplateColumns = columnsStyleString;
+
+    //adding cells and areas
+    let rowGridTemplateString = '"';
+    for (let colNo = gridWidth; colNo >= 1; colNo--) {
+        let areaPart = ''
+        if (colNo == 1) {
+            areaPart = `a${colNo}-${rowNo}"`;
+        } else {
+            areaPart = `a${colNo}-${rowNo} `;
+        }
+        rowGridTemplateString = rowGridTemplateString.concat(areaPart)
+
+        let cell = document.createElement('div');
+        cell.className = 'cell cell-legend';
+        cell.id = `side${colNo}-${rowNo}`;
+        cell.style.gridArea = `a${colNo}-${rowNo}`;
+        row.appendChild(cell);
+    }
+
+    row.style.gridTemplateAreas = rowGridTemplateString;
+    sideLegend.appendChild(row);
+}
+
+function addSideSeparators() {
+    const rowsQty = par.height.value;
+    const sepSpacing = par.separatorSpacing.value;
+    const sideLegend = document.getElementById('legend-vertical');
+
+    const separatorQty = (rowsQty - 1) / sepSpacing;
+    for (let i = 1; i <= separatorQty; i++) {
+        if (!document.getElementById(`sep-side-${i}`)) {
+            const separator = document.createElement('div');
+            separator.id = `sep-side-${i}`;
+            separator.classList.add('separator', 'sep-h', 'sep-side');
+            separator.style.gridArea = `sh${i}`;
+            sideLegend.appendChild(separator);
+        }
+    }
 }

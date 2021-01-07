@@ -7,6 +7,9 @@ export function injectEventHandlers() {
 
     let horizExpander = document.getElementById('expand-horizontal');
     horizExpander.addEventListener('click', expanderHoClicked)
+
+    let vertExpander = document.getElementById('expand-vertical');
+    vertExpander.addEventListener('click', expanderVeClicked)
 }
 
 function expanderDiaHovered() {
@@ -27,5 +30,8 @@ function expanderDiaLeft() {
 
 function expanderHoClicked() {
     script.expandWidth();
-    //console.log('click!')
+}
+
+function expanderVeClicked() {
+    script.expandHeight();
 }
