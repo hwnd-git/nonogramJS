@@ -1,17 +1,24 @@
 import * as utils from './nUtils.js';
+import * as settings from './nConfig.js';
 
-const cellFullSize = utils.getCSSVariable('--cell-size');
-const cellReducedSize = utils.getCSSVariable('--cell-size-reduced');
-const separatorWidth = utils.getCSSVariable('--separator-width');
-const separatorSpacing = utils.getCSSVariable('--separator-spacing');
+//TODO: row/column-templates ustawić na auto i niech się dopasowują do kontentu? Powinno być bardziej responsywnie.
+// Najpierw sprawdzić to na separatorach.
+
+// const cellFullSize = utils.getCSSVariable('--cell-size');
+// const cellReducedSize = utils.getCSSVariable('--cell-size-reduced');
+// const separatorWidth = utils.getCSSVariable('--separator-width');
+// const separatorSpacing = utils.getCSSVariable('--separator-spacing');
+
+const par = settings.params;
 
 if (document.readyState == "loading") {
     document.addEventListener('DOMContentLoaded', ready)
 } else {
-    ready()
+    ready();
 }
 
 function ready() {
+    settings.loadSettings();
     populateGrids();
 }
 
@@ -35,15 +42,15 @@ function populateTopLegend() {
         let currentColumnWidth = ''
 
         if (colNo == columnsQty) {
-            currentColumnWidth = `${cellFullSize}`;
-        } else if (colNo % separatorSpacing == 0) {
-            currentColumnWidth = `${cellFullSize} `;
+            currentColumnWidth = `${par.cellSize}`;
+        } else if (colNo % par.separatorSpacing == 0) {
+            currentColumnWidth = `${par.cellSize} `;
         } else {
-            currentColumnWidth = `${cellReducedSize} `;
+            currentColumnWidth = `${par.cellSizeReduced} `;
         }
 
-        if (colNo % separatorSpacing == 0 && colNo != columnsQty) {
-            currentColumnWidth = currentColumnWidth.concat(`${separatorWidth} `);
+        if (colNo % par.separatorSpacing == 0 && colNo != columnsQty) {
+            currentColumnWidth = currentColumnWidth.concat(`${par.separatorWidth} `);
         }
 
         columnsStyleString = columnsStyleString.concat(currentColumnWidth);
@@ -52,9 +59,9 @@ function populateTopLegend() {
     //rows template
     for (let rowNo = 1; rowNo <= gridHeight; rowNo++) {
         if (rowNo == gridHeight) {
-            rowsStyleString = rowsStyleString.concat(`${cellFullSize}`);
+            rowsStyleString = rowsStyleString.concat(`${par.cellSize}`);
         } else {
-            rowsStyleString = rowsStyleString.concat(`${cellReducedSize} `);
+            rowsStyleString = rowsStyleString.concat(`${par.cellSizeReduced} `);
         }
     }
 
@@ -69,8 +76,8 @@ function populateTopLegend() {
             currentArea = `col${colNo} `;
         }
 
-        if (colNo % separatorSpacing == 0 && colNo != columnsQty) {
-            let multiplier = colNo / separatorSpacing;
+        if (colNo % par.separatorSpacing == 0 && colNo != columnsQty) {
+            let multiplier = colNo / par.separatorSpacing;
             currentArea = currentArea.concat(`sv${multiplier} `);
         }
         templateAreasString = templateAreasString.concat(currentArea);
@@ -106,7 +113,7 @@ function populateTopLegend() {
     }
 
     //adding separators
-    const separatorQty = (columnsQty - 1) / separatorSpacing;
+    const separatorQty = (columnsQty - 1) / par.separatorSpacing;
     for (let i = 1; i <= separatorQty; i++) {
         const separator = document.createElement('div');
         separator.id = `sep-top-${i}`;
@@ -130,15 +137,15 @@ function populateSideLegend() {
         let currentRowWidth = ''
 
         if (rowNo == rowsQty) {
-            currentRowWidth = `${cellFullSize}`;
-        } else if (rowNo % separatorSpacing == 0) {
-            currentRowWidth = `${cellFullSize} `;
+            currentRowWidth = `${par.cellSize}`;
+        } else if (rowNo % par.separatorSpacing == 0) {
+            currentRowWidth = `${par.cellSize} `;
         } else {
-            currentRowWidth = `${cellReducedSize} `;
+            currentRowWidth = `${par.cellSizeReduced} `;
         }
 
-        if (rowNo % separatorSpacing == 0 && rowNo != rowsQty) {
-            currentRowWidth = currentRowWidth.concat(`${separatorWidth} `);
+        if (rowNo % par.separatorSpacing == 0 && rowNo != rowsQty) {
+            currentRowWidth = currentRowWidth.concat(`${par.separatorWidth} `);
         }
         rowsStyleString = rowsStyleString.concat(currentRowWidth);
     }
@@ -146,9 +153,9 @@ function populateSideLegend() {
     //columns template
     for (let colNo = 1; colNo <= gridWidth; colNo++) {
         if (colNo == gridWidth) {
-            columnsStyleString = columnsStyleString.concat(`${cellFullSize}`);
+            columnsStyleString = columnsStyleString.concat(`${par.cellSize}`);
         } else {
-            columnsStyleString = columnsStyleString.concat(`${cellReducedSize} `);
+            columnsStyleString = columnsStyleString.concat(`${par.cellSizeReduced} `);
         }
     }
 
@@ -158,8 +165,8 @@ function populateSideLegend() {
         let currentArea = `"row${rowNo}" `;
         templateAreasString = templateAreasString.concat(currentArea);
 
-        if (rowNo % separatorSpacing == 0 && rowNo != rowsQty) {
-            let multiplier = rowNo / separatorSpacing;
+        if (rowNo % par.separatorSpacing == 0 && rowNo != rowsQty) {
+            let multiplier = rowNo / par.separatorSpacing;
             let currentArea = `"sh${multiplier}" `;
             templateAreasString = templateAreasString.concat(currentArea);
         }
@@ -200,7 +207,7 @@ function populateSideLegend() {
     }
 
     //adding separators
-    const separatorQty = (rowsQty - 1) / separatorSpacing;
+    const separatorQty = (rowsQty - 1) / par.separatorSpacing;
     for (let i = 1; i <= separatorQty; i++) {
         const separator = document.createElement('div');
         separator.id = `sep-side-${i}`;
@@ -224,15 +231,15 @@ function populateGameGrid() {
         let currentColumnWidth = ''
 
         if (colNo == width) {
-            currentColumnWidth = `${cellFullSize}`;
-        } else if (colNo % separatorSpacing == 0) {
-            currentColumnWidth = `${cellFullSize} `;
+            currentColumnWidth = `${par.cellSize}`;
+        } else if (colNo % par.separatorSpacing == 0) {
+            currentColumnWidth = `${par.cellSize} `;
         } else {
-            currentColumnWidth = `${cellReducedSize} `;
+            currentColumnWidth = `${par.cellSizeReduced} `;
         }
 
-        if (colNo % separatorSpacing == 0 && colNo != width) {
-            currentColumnWidth = currentColumnWidth.concat(`${separatorWidth} `);
+        if (colNo % par.separatorSpacing == 0 && colNo != width) {
+            currentColumnWidth = currentColumnWidth.concat(`${par.separatorWidth} `);
         }
 
         columnsStyleString = columnsStyleString.concat(currentColumnWidth);
@@ -244,15 +251,15 @@ function populateGameGrid() {
         let currentRowWidth = ''
 
         if (rowNo == height) {
-            currentRowWidth = `${cellFullSize}`;
-        } else if (rowNo % separatorSpacing == 0) {
-            currentRowWidth = `${cellFullSize} `;
+            currentRowWidth = `${par.cellSize}`;
+        } else if (rowNo % par.separatorSpacing == 0) {
+            currentRowWidth = `${par.cellSize} `;
         } else {
-            currentRowWidth = `${cellReducedSize} `;
+            currentRowWidth = `${par.cellSizeReduced} `;
         }
 
-        if (rowNo % separatorSpacing == 0 && rowNo != height) {
-            currentRowWidth = currentRowWidth.concat(`${separatorWidth} `);
+        if (rowNo % par.separatorSpacing == 0 && rowNo != height) {
+            currentRowWidth = currentRowWidth.concat(`${par.separatorWidth} `);
         }
         rowsStyleString = rowsStyleString.concat(currentRowWidth);
     }
@@ -269,19 +276,19 @@ function populateGameGrid() {
                 currentArea = `a${colNo}-${rowNo} `;
             }
 
-            if (colNo % separatorSpacing == 0 && colNo != width) {
-                let segmentsCounter = Math.floor((parseInt(rowNo) - 1) / separatorSpacing) + 1;
-                let multiplier = colNo / separatorSpacing;
+            if (colNo % par.separatorSpacing == 0 && colNo != width) {
+                let segmentsCounter = Math.floor((parseInt(rowNo) - 1) / par.separatorSpacing) + 1;
+                let multiplier = colNo / par.separatorSpacing;
                 currentArea = currentArea.concat(`sv${multiplier}-${segmentsCounter} `);
             }
 
             templateAreasString = templateAreasString.concat(currentArea);
         }
 
-        if (rowNo % separatorSpacing == 0 && rowNo != height) {
+        if (rowNo % par.separatorSpacing == 0 && rowNo != height) {
             let currentArea = '"';
-            let multiplier = rowNo / separatorSpacing;
-            let widthWithSeparators = parseInt(width) + Math.floor((width - 1) / separatorSpacing);
+            let multiplier = rowNo / par.separatorSpacing;
+            let widthWithSeparators = parseInt(width) + Math.floor((width - 1) / par.separatorSpacing);
             for (let colNo = 1; colNo <= widthWithSeparators; colNo++) {
                 if (colNo == widthWithSeparators) {
                     currentArea = currentArea.concat(`sh${multiplier}" `);
@@ -312,7 +319,7 @@ function populateGameGrid() {
     }
 
     //adding separators
-    const hSeparatorQty = (height - 1) / separatorSpacing;
+    const hSeparatorQty = (height - 1) / par.separatorSpacing;
     for (let i = 1; i <= hSeparatorQty; i++) {
         const separator = document.createElement('div');
         separator.id = `sep-game-h-${i}`;
@@ -320,8 +327,8 @@ function populateGameGrid() {
         separator.style.gridArea = `sh${i}`;
         legendElement.appendChild(separator);
     }
-    //const vSeparatorQty = ((width - 1) / separatorSpacing) * (hSeparatorQty + 1);
-    const vBreaksQty = (width - 1) / separatorSpacing;
+    
+    const vBreaksQty = (width - 1) / par.separatorSpacing;
     const vSepPerBreakQty = hSeparatorQty + 1;
     for (let i = 1; i <= vBreaksQty; i++) {
         for (let j = 1; j <= vSepPerBreakQty; j++) {
@@ -334,18 +341,6 @@ function populateGameGrid() {
     }
 }
 
-function translateCellToRemoveDoubleBorder(cellDiv, translationValue, translateLeft = true, translateUp = true) {
-    const colNo = utils.getColumnNo(cellDiv);
-    const rowNo = utils.getRowNo(cellDiv);
+function expandWidth() {
 
-    const left = translateLeft ? -1 : 1;
-    const up = translateUp ? -1 : 1;
-
-    if (colNo > 1 && rowNo > 1) {
-        cellDiv.style.transform = `translate(${left * translationValue * (colNo - 1)}px, ${up * translationValue * (rowNo - 1)}px)`
-    } else if (colNo > 1 && rowNo == 1) {
-        cellDiv.style.transform = `translate(${left * translationValue * (colNo - 1)}px, 0)`
-    } else if (rowNo > 1 && colNo == 1) {
-        cellDiv.style.transform = `translate(0, ${up * translationValue * (rowNo - 1)}px)`
-    }
 }

@@ -8,7 +8,8 @@
     --cell-size: 50px;
     --cell-border: 2px;
     --cell-radius: 0px;
-    --cell-border-color: #808080;
+    /* --cell-border-color: #808080; */
+    --cell-border-color: #aaaaaa;
     --cell-size-reduced: calc(var(--cell-size) - var(--cell-border));
 
     --test: var(--cell-radius);
@@ -128,7 +129,8 @@
     transform: translateX(100%);
 }
 
-#expand-horizontal:hover {
+#expand-horizontal:hover,
+#expand-horizontal:hover ~ #expand-diagonal {
     width: calc(var(--expander-size)*1.5);
 }
 
@@ -140,7 +142,8 @@
     transform: translateY(100%);
 }
 
-#expand-vertical:hover {
+#expand-vertical:hover,
+#expand-vertical:hover ~ #expand-diagonal {
     height: calc(var(--expander-size)*1.5);
 }
 
@@ -156,6 +159,12 @@
 #expand-diagonal:hover {
     width: calc(var(--expander-size)*1.5);
     height: calc(var(--expander-size)*1.5);
+}
+
+#expand-diagonal:hover ~ #expand-horizontal, 
+#expand-diagonal:hover ~ #expand-vertival
+{
+    background-color: pink;
 }
 
 /* ================================================================ */
