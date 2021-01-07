@@ -8,7 +8,7 @@ export let settings = {
     cellSize: {value: 0, cssName: '--cell-size'},
     cellSizeReduced: {value: 0, cssName: '--cell-size-reduced'},
     borderWidth: {value: 0, cssName: '--cell-border'},
-    separatorWidth: {value: 0, cssName: '---separator-width'},
+    separatorWidth: {value: 0, cssName: '--separator-width'},
     separatorSpacing: {value: 0, cssName: '--separator-spacing'},
 };
 
@@ -20,10 +20,7 @@ export function loadSettings() {
     Object.keys(settings).forEach(settingKey => loadSetting(settings[settingKey]));
 }
 
-export function getSetting(setting) {
-    return setting.value;
-}
-
-export function updateSetting() {
-
+export function updateSetting(setting, newVal) {
+    setting.value = newVal;
+    utils.setCSSVariable(setting.cssName, newVal);
 }

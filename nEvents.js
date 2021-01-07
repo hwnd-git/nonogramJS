@@ -27,5 +27,5 @@ function expanderDiaLeft() {
 
 function expanderHoClicked() {
     script.expandWidth();
-    console.log('click!')
+    //console.log('click!')
 }

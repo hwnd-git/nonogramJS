@@ -89,6 +89,13 @@
     /* background-color: pink; */
 }
 
+/* .legend-column {
+    background-color: lightblue;
+    border-radius: 10px;
+    width: 90%;
+    height: 90%;
+} */
+
 #wrapper-left {
     grid-area: legend-v;
     border: solid var(--wrapper-border-color) var(--wrapper-border);
@@ -192,8 +199,16 @@
 }
 
 .cell-legend {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     /* border: solid #555 1px; */
+    /* border-radius: 15px; */
 }
+
+/* .cell-legend::after {
+    content: 'x';
+} */
 
 .cell[data-translation] {
     /* --translation: calc(attr(data-translation string)); */
@@ -202,10 +217,10 @@
     /* border-radius: calc(attr(data-translation)); */
     background-color: pink;
 }
-
+/* 
 .cell[data-translation]::after {
     content: attr(data-translation);
-}
+} */
 
 .separator {
     background-color: var(--cell-border-color);

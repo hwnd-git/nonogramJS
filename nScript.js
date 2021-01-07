@@ -50,8 +50,6 @@ function populateTopLegend() {
         }
 
         if (colNo % sepSpacing == 0 && colNo != columnsQty) {
-            //currentColumnWidth = currentColumnWidth.concat(`${par.separatorWidth} `);
-            // currentColumnWidth = currentColumnWidth.concat(`auto `);
             currentColumnWidth = currentColumnWidth.concat(`max-content `);
         }
 
@@ -105,6 +103,7 @@ function populateTopLegend() {
 
             let cell = document.createElement('div');
             cell.className = 'cell cell-legend';
+            // cell.className = 'cell-legend';
             cell.id = `top${colNo}-${rowNo}`;
             cell.style.gridArea = `a${colNo}-${rowNo}`;
             col.appendChild(cell);
@@ -343,7 +342,7 @@ function populateGameGrid() {
         separator.style.gridArea = `sh${i}`;
         legendElement.appendChild(separator);
     }
-    
+
     const vBreaksQty = (width - 1) / sepSpacing;
     const vSepPerBreakQty = hSeparatorQty + 1;
     for (let i = 1; i <= vBreaksQty; i++) {
@@ -358,5 +357,123 @@ function populateGameGrid() {
 }
 
 export function expandWidth() {
-    
+    const widthSetting = par.width;
+    config.updateSetting(widthSetting, `${parseInt(widthSetting.value) + 1}`);
+
+    updateTopLegendAreas();
+    updateTopLegendColumnsTemplate();
+    addTopLegendColumn(widthSetting.value);
+    addTopSeparators();
+
+    console.log('New width: ', widthSetting.value);
+}
+
+function addTopSeparators() {
+    const columnsQty = par.width.value;
+    const sepSpacing = par.separatorSpacing.value;
+    const topLegend = document.getElementById('legend-horizontal');
+
+    const separatorQty = (columnsQty - 1) / sepSpacing;
+    for (let i = 1; i <= separatorQty; i++) {
+        if (!document.getElementById(`sep-top-${i}`)) {
+            const separator = document.createElement('div');
+            separator.id = `sep-top-${i}`;
+            separator.classList.add('separator', 'sep-v', 'sep-top');
+            separator.style.gridArea = `sv${i}`;
+            topLegend.appendChild(separator);
+        }
+    }
+}
+
+function updateTopLegendColumnsTemplate() {
+    const columnsQty = par.width.value;
+    const cellSize = par.cellSize.value;
+    const cellSizeReduced = par.cellSizeReduced.value;
+    const sepSpacing = par.separatorSpacing.value;
+
+    let columnsStyleString = '';
+
+    for (let colNo = 1; colNo <= columnsQty; colNo++) {
+
+        let currentColumnWidth = ''
+
+        if (colNo == columnsQty) {
+            currentColumnWidth = `${cellSize}`;
+        } else if (colNo % sepSpacing == 0) {
+            currentColumnWidth = `${cellSize} `;
+        } else {
+            currentColumnWidth = `${cellSizeReduced} `;
+        }
+
+        if (colNo % sepSpacing == 0 && colNo != columnsQty) {
+            currentColumnWidth = currentColumnWidth.concat(`max-content `);
+        }
+
+        columnsStyleString = columnsStyleString.concat(currentColumnWidth);
+    }
+
+    const topLegend = document.getElementById('legend-horizontal');
+    topLegend.style.gridTemplateColumns = columnsStyleString;
+}
+
+//TODO: zamiast funkcji update, wydajniej byłoby używać funkcji która
+// nie generuje całego stringa od nowa, tylko bierze istniejący i tylko
+// go modyfikuje
+
+function updateTopLegendAreas() {
+    const columnsQty = par.width.value;
+    const sepSpacing = par.separatorSpacing.value;
+
+    let templateAreasString = '';
+
+    templateAreasString = templateAreasString.concat('"');
+    for (let colNo = 1; colNo <= columnsQty; colNo++) {
+        let currentArea = '';
+
+        if (colNo == columnsQty) {
+            currentArea = `col${colNo}" `;
+        } else {
+            currentArea = `col${colNo} `;
+        }
+
+        if (colNo % sepSpacing == 0 && colNo != columnsQty) {
+            let multiplier = colNo / sepSpacing;
+            currentArea = currentArea.concat(`sv${multiplier} `);
+        }
+        templateAreasString = templateAreasString.concat(currentArea);
+    }
+
+    const topLegend = document.getElementById('legend-horizontal');
+    topLegend.style.gridTemplateAreas = templateAreasString;
+}
+
+function addTopLegendColumn(colNo) {
+    const topLegend = document.getElementById('legend-horizontal');
+    const firstColumn = document.getElementById('col1');
+    const rowsStyleString = firstColumn.style.gridTemplateRows;
+
+    const gridHeight = par.topLegendHeight.value;
+
+    let col = document.createElement('div');
+    col.className = 'legend-column';
+    col.id = `col${colNo}`;
+    col.style.gridArea = `col${colNo}`;
+    col.style.gridTemplateRows = rowsStyleString;
+
+    //adding cells and areas
+    let columnGridTemplateString = '';
+    for (let rowNo = gridHeight; rowNo >= 1; rowNo--) {
+        columnGridTemplateString = columnGridTemplateString.concat(`"a${colNo}-${rowNo}" `)
+
+        let cell = document.createElement('div');
+        cell.className = 'cell cell-legend';
+        // cell.className = 'cell-legend';
+        cell.id = `top${colNo}-${rowNo}`;
+        cell.style.gridArea = `a${colNo}-${rowNo}`;
+        col.appendChild(cell);
+    }
+
+    col.style.gridTemplateAreas = columnGridTemplateString;
+
+    topLegend.appendChild(col);
 }
