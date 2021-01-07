@@ -1,5 +1,8 @@
 import * as utils from './nUtils.js';
 
+//TODO: zamienić górny i boczny legend na odpowiednio gridy w gridach. Górny legend: jednowierszowy grid
+// o szerokości planszy, a w każdej komórce, jednokolumnowy grid. Odwrotnie dla bocznej legendy
+
 const cellFullSize = utils.getCSSVariable('--cell-size');
 const cellReducedSize = utils.getCSSVariable('--cell-size-reduced');
 const separatorWidth = utils.getCSSVariable('--separator-width');
@@ -36,6 +39,8 @@ function populateTopLegend() {
 
         if (colNo == columnsQty) {
             currentColumnWidth = `${cellFullSize}`;
+        } else if (colNo % separatorSpacing == 0) {
+            currentColumnWidth = `${cellFullSize} `;
         } else {
             currentColumnWidth = `${cellReducedSize} `;
         }
@@ -71,10 +76,6 @@ function populateTopLegend() {
             if (colNo % separatorSpacing == 0 && colNo != columnsQty) {
                 let multiplier = colNo / separatorSpacing;
                 currentArea = currentArea.concat(`sv${multiplier} `);
-                // const separator = document.createElement('div');
-                // separator.id = `sep-top-${multiplier}`;
-                // separator.classList.add('separator', 'separator-v', 'separator-top');
-                // separators.push(separator);
             }
 
             templateAreasString = templateAreasString.concat(currentArea);
@@ -86,34 +87,7 @@ function populateTopLegend() {
     legendElement.style.gridTemplateRows = rowsStyleString;
     legendElement.style.gridTemplateAreas = `${templateAreasString}`;
 
-    //adding separators
-    const separators = [];
-    const separatorQty = (columnsQty - 1) / separatorSpacing;
-
-    // for (let colNo = 1; colNo <= columnsQty; colNo++) {
-    //     let currentArea = '';
-
-    //     if (colNo == columnsQty) {
-    //         currentArea = `a${colNo}-${rowNo}" `;
-    //     } else {
-    //         currentArea = `a${colNo}-${rowNo} `;
-    //     }
-
-    //     if (colNo % separatorSpacing == 0 && colNo != columnsQty) {
-    //         let multiplier = colNo / separatorSpacing;
-    //         currentArea = currentArea.concat(`sv${multiplier} `);
-    //         const separator = document.createElement('div');
-    //         separator.id = `sep-top-${multiplier}`;
-    //         separator.classList.add('separator', 'separator-v', 'separator-top');
-    //         separators.push(separator);
-    //     }
-    // }
-
-    
-    //legendElement.appendChild(separator);
-
-    //debugger;
-
+    //adding cells
     for (let colNo = 1; colNo <= columnsQty; colNo++) {
         for (let rowNo = 1; rowNo <= gridHeight; rowNo++) {
             let cell = document.createElement('div');
@@ -127,17 +101,22 @@ function populateTopLegend() {
             legendElement.appendChild(cell);
         }
     }
+
+    //adding separators
+    const separatorQty = (columnsQty - 1) / separatorSpacing;
+    for (let i = 1; i <= separatorQty; i++) {
+        const separator = document.createElement('div');
+        separator.id = `sep-top-${i}`;
+        separator.classList.add('separator', 'separator-v', 'separator-top');
+        separator.style.gridArea = `sv${i}`;
+        legendElement.appendChild(separator);
+    }
 }
 
 function populateSideLegend() {
     const rowsQty = utils.getCSSVariable('--stage-v-size');
     const gridWidth = utils.getCSSVariable('--legend-v-size');
-    const borderWidthString = utils.getCSSVariable('--cell-border');
-    let borderWidthNumeric = parseInt(borderWidthString, 10);
 
-    // const cellFullSize = utils.getCSSVariable('--cell-size');
-    // const cellReducedSize = utils.getCSSVariable('--cell-size-reduced');
-    // const separatorWidth = utils.getCSSVariable('--separator-width');
     let rowsStyleString = '';
     let columnsStyleString = '';
     let templateAreasString = '';
@@ -149,6 +128,8 @@ function populateSideLegend() {
 
         if (rowNo == rowsQty) {
             currentRowWidth = `${cellFullSize}`;
+        } else if (rowNo % separatorSpacing == 0) {
+            currentRowWidth = `${cellFullSize} `;
         } else {
             currentRowWidth = `${cellReducedSize} `;
         }
@@ -203,32 +184,34 @@ function populateSideLegend() {
     legendElement.style.gridTemplateRows = rowsStyleString;
     legendElement.style.gridTemplateAreas = `${templateAreasString}`;
 
+    //adding cells
     for (let rowNo = 1; rowNo <= rowsQty; rowNo++) {
         for (let colNo = 1; colNo <= gridWidth; colNo++) {
             let cell = document.createElement('div');
             let no = gridWidth - colNo + 1;
             cell.className = 'cell cell-legend';
             cell.id = `${colNo}-row${rowNo}`;
-
-            // cell.style.gridColumnStart = `${no}`;
-            // cell.style.gridRowStart = `${rowNo}`;
-
             cell.style.gridArea = `a${colNo}-${rowNo}`;
 
             legendElement.appendChild(cell);
         }
+    }
+
+    //adding separators
+    const separatorQty = (rowsQty - 1) / separatorSpacing;
+    for (let i = 1; i <= separatorQty; i++) {
+        const separator = document.createElement('div');
+        separator.id = `sep-side-${i}`;
+        separator.classList.add('separator', 'separator-h', 'separator-side');
+        separator.style.gridArea = `sh${i}`;
+        legendElement.appendChild(separator);
     }
 }
 
 function populateGameGrid() {
     const width = utils.getCSSVariable('--stage-h-size');
     const height = utils.getCSSVariable('--stage-v-size');
-    const borderWidthString = utils.getCSSVariable('--cell-border');
-    let borderWidthNumeric = parseInt(borderWidthString, 10);
 
-    // const cellFullSize = utils.getCSSVariable('--cell-size');
-    // const cellReducedSize = utils.getCSSVariable('--cell-size-reduced');
-    // const separatorWidth = utils.getCSSVariable('--separator-width');
     let columnsStyleString = '';
     let rowsStyleString = '';
     let templateAreasString = '';
@@ -240,6 +223,8 @@ function populateGameGrid() {
 
         if (colNo == width) {
             currentColumnWidth = `${cellFullSize}`;
+        } else if (colNo % separatorSpacing == 0) {
+            currentColumnWidth = `${cellFullSize} `;
         } else {
             currentColumnWidth = `${cellReducedSize} `;
         }
@@ -251,8 +236,6 @@ function populateGameGrid() {
         columnsStyleString = columnsStyleString.concat(currentColumnWidth);
     }
 
-    //console.log('columns: ', columnsStyleString);
-
     //rows template
     for (let rowNo = 1; rowNo <= height; rowNo++) {
 
@@ -260,6 +243,8 @@ function populateGameGrid() {
 
         if (rowNo == height) {
             currentRowWidth = `${cellFullSize}`;
+        } else if (rowNo % separatorSpacing == 0) {
+            currentRowWidth = `${cellFullSize} `;
         } else {
             currentRowWidth = `${cellReducedSize} `;
         }
@@ -269,8 +254,6 @@ function populateGameGrid() {
         }
         rowsStyleString = rowsStyleString.concat(currentRowWidth);
     }
-
-    //console.log('rows: ', rowsStyleString);
 
     //grid areas
     for (let rowNo = 1; rowNo <= height; rowNo++) {
@@ -308,33 +291,45 @@ function populateGameGrid() {
         }
     }
 
-    //console.log('template: ', templateAreasString);
 
     const legendElement = document.getElementById('game-grid')
     legendElement.style.gridTemplateColumns = columnsStyleString;
     legendElement.style.gridTemplateRows = rowsStyleString;
     legendElement.style.gridTemplateAreas = templateAreasString;
 
+    //adding cells
     for (let colNo = 1; colNo <= width; colNo++) {
         for (let rowNo = 1; rowNo <= height; rowNo++) {
             let cell = document.createElement('div');
-            //let no = height - rowNo + 1;
             cell.className = 'cell cell-game';
             cell.id = `cell${colNo}-${rowNo}`;
-            // cell.style.gridColumnStart = `${colNo}`;
-            // cell.style.gridRowStart = `${rowNo}`;
-
             cell.style.gridArea = `a${colNo}-${rowNo}`;
-
-            //translateCellToRemoveDoubleBorder(cell, borderWidthNumeric);
 
             legendElement.appendChild(cell);
         }
-        //TODO: zmniejszyć wielkośc grida (przeliczać) po translacji komórek
     }
 
-    const vShrink = (height - 1) * borderWidthNumeric;
-
+    //adding separators
+    const hSeparatorQty = (height - 1) / separatorSpacing;
+    for (let i = 1; i <= hSeparatorQty; i++) {
+        const separator = document.createElement('div');
+        separator.id = `sep-game-h-${i}`;
+        separator.classList.add('separator', 'separator-h', 'separator-game');
+        separator.style.gridArea = `sh${i}`;
+        legendElement.appendChild(separator);
+    }
+    //const vSeparatorQty = ((width - 1) / separatorSpacing) * (hSeparatorQty + 1);
+    const vBreaksQty = (width - 1) / separatorSpacing;
+    const vSepPerBreakQty = hSeparatorQty + 1;
+    for (let i = 1; i <= vBreaksQty; i++) {
+        for (let j = 1; j <= vSepPerBreakQty; j++) {
+            const separator = document.createElement('div');
+            separator.id = `sep-game-v${i}-${j}`;
+            separator.classList.add('separator', 'separator-h', 'separator-game');
+            separator.style.gridArea = `sv${i}-${j}`;
+            legendElement.appendChild(separator);
+        }
+    }
 }
 
 function translateCellToRemoveDoubleBorder(cellDiv, translationValue, translateLeft = true, translateUp = true) {
