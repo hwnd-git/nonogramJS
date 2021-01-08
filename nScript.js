@@ -6,7 +6,7 @@ import * as top from './nTopLegend.js';
 //TODO: row/column-templates ustawić na auto i niech się dopasowują do kontentu? Powinno być bardziej responsywnie.
 // Najpierw sprawdzić to na separatorach.
 
-const par = config.settings;
+const param = config.settings;
 
 if (document.readyState == "loading") {
     document.addEventListener('DOMContentLoaded', ready)
@@ -21,30 +21,13 @@ function ready() {
 }
 
 function populateGrids() {
-    populateTopLegend();
+    top.populateLegend();
     populateSideLegend();
     populateGameGrid();
 }
 
-function populateTopLegend() {
-    const columnsQty = par.width.value;
-
-    let columnsStyleString = generateTopLegendTemplateStrings().col;
-    let templateAreasString = generateTopLegendAreasString();
-
-    const legendElement = document.getElementById('legend-top')
-    legendElement.style.gridTemplateColumns = columnsStyleString;
-    legendElement.style.gridTemplateAreas = `${templateAreasString}`;
-
-    for (let colNo = 1; colNo <= columnsQty; colNo++) {
-        addTopLegendColumn(colNo);
-    }
-
-    addTopSeparators();
-}
-
 function populateSideLegend() {
-    const rowsQty = par.height.value;
+    const rowsQty = param.height.value;
 
     let rowsStyleString = generateSideLegendTemplateStrings().row;
     let templateAreasString = generateSideLegendAreasString();
@@ -61,8 +44,8 @@ function populateSideLegend() {
 }
 
 function populateGameGrid() {
-    const width = par.width.value;
-    const height = par.height.value;
+    const width = param.width.value;
+    const height = param.height.value;
 
     let columnsStyleString = generateGameGridTemplateStrings().col;
     let rowsStyleString = generateGameGridTemplateStrings().row;
@@ -87,13 +70,13 @@ function populateGameGrid() {
 // go modyfikuje
 
 export function expandWidth() {
-    const widthSetting = par.width;
+    const widthSetting = param.width;
     config.updateSetting(widthSetting, `${parseInt(widthSetting.value) + 1}`);
 
-    updateTopLegendAreas();
-    updateTopLegendTemplate();
-    addTopLegendColumn(widthSetting.value);
-    addTopSeparators();
+    top.updateAreas();
+    top.updateTemplate();
+    top.addColumn(widthSetting.value);
+    top.addSeparators();
 
     updateGameGridAreas();
     updateGameGridTemplate();
@@ -104,7 +87,7 @@ export function expandWidth() {
 }
 
 export function expandHeight() {
-    const heightSetting = par.height;
+    const heightSetting = param.height;
     config.updateSetting(heightSetting, `${parseInt(heightSetting.value) + 1}`);
 
     updateSideLegendAreas();
@@ -121,57 +104,34 @@ export function expandHeight() {
 }
 
 export function expandSize() {
-    const widthSetting = par.width;
+    const widthSetting = param.width;
     config.updateSetting(widthSetting, `${parseInt(widthSetting.value) + 1}`);
 
-    const heightSetting = par.height;
+    const heightSetting = param.height;
     config.updateSetting(heightSetting, `${parseInt(heightSetting.value) + 1}`);
 
-    updateTopLegendAreas();
+    top.updateAreas();
     updateSideLegendAreas();
     updateGameGridAreas();
 
-    updateTopLegendTemplate();
+    top.updateTemplate();
     updateSideLegendTemplate();
     updateGameGridTemplate();
 
-    addTopLegendColumn(widthSetting.value);
+    top.addColumn(widthSetting.value);
     addSideLegendRow(heightSetting.value);
     addGameGridMissingCells();
 
-    addTopSeparators();
+    top.addSeparators();
     addSideSeparators();
     addGameSeparators();
 }
 
-function generateTopLegendAreasString() {
-    const columnsQty = par.width.value;
-    const sepSpacing = par.separatorSpacing.value;
 
-    let templateAreasString = '';
-
-    templateAreasString = templateAreasString.concat('"');
-    for (let colNo = 1; colNo <= columnsQty; colNo++) {
-        let currentArea = '';
-
-        if (colNo == columnsQty) {
-            currentArea = `col${colNo}" `;
-        } else {
-            currentArea = `col${colNo} `;
-        }
-
-        if (colNo % sepSpacing == 0 && colNo != columnsQty) {
-            let multiplier = colNo / sepSpacing;
-            currentArea = currentArea.concat(`sv${multiplier} `);
-        }
-        templateAreasString = templateAreasString.concat(currentArea);
-    }
-    return templateAreasString;
-}
 
 function generateSideLegendAreasString() {
-    const rowsQty = par.height.value;
-    const sepSpacing = par.separatorSpacing.value;
+    const rowsQty = param.height.value;
+    const sepSpacing = param.separatorSpacing.value;
 
     let templateAreasString = '';
 
@@ -190,9 +150,9 @@ function generateSideLegendAreasString() {
 }
 
 function generateGameGridAreasString() {
-    const width = par.width.value;
-    const height = par.height.value;
-    const sepSpacing = par.separatorSpacing.value;
+    const width = param.width.value;
+    const height = param.height.value;
+    const sepSpacing = param.separatorSpacing.value;
 
     let templateAreasString = '';
 
@@ -234,10 +194,7 @@ function generateGameGridAreasString() {
     return templateAreasString;
 }
 
-function updateTopLegendAreas() {
-    const topLegend = document.getElementById('legend-top');
-    topLegend.style.gridTemplateAreas = generateTopLegendAreasString();
-}
+
 
 function updateSideLegendAreas() {
     const sideLegend = document.getElementById('legend-side');
@@ -249,53 +206,14 @@ function updateGameGridAreas() {
     gameGrid.style.gridTemplateAreas = generateGameGridAreasString();
 }
 
-function generateTopLegendTemplateStrings() {
-    const columnsQty = par.width.value;
-    const legendHeight = par.topLegendHeight.value;
-    const cellSize = par.cellSize.value;
-    const cellSizeReduced = par.cellSizeReduced.value;
-    const sepSpacing = par.separatorSpacing.value;
 
-    //columns template
-    let columnsStyleString = '';
-    for (let colNo = 1; colNo <= columnsQty; colNo++) {
-
-        let currentColumnWidth = ''
-
-        if (colNo == columnsQty) {
-            currentColumnWidth = `${cellSize}`;
-        } else if (colNo % sepSpacing == 0) {
-            currentColumnWidth = `${cellSize} `;
-        } else {
-            currentColumnWidth = `${cellSizeReduced} `;
-        }
-
-        if (colNo % sepSpacing == 0 && colNo != columnsQty) {
-            currentColumnWidth = currentColumnWidth.concat(`max-content `);
-        }
-
-        columnsStyleString = columnsStyleString.concat(currentColumnWidth);
-    }
-
-    //rows template
-    let rowsStyleString = '';
-    for (let rowNo = 1; rowNo <= legendHeight; rowNo++) {
-        if (rowNo == legendHeight) {
-            rowsStyleString = rowsStyleString.concat(`${cellSize}`);
-        } else {
-            rowsStyleString = rowsStyleString.concat(`${cellSizeReduced} `);
-        }
-    }
-
-    return { col: columnsStyleString, row: rowsStyleString };
-}
 
 function generateSideLegendTemplateStrings() {
-    const rowsQty = par.height.value;
-    const legendWidth = par.sideLegendWidth.value;
-    const cellSize = par.cellSize.value;
-    const cellSizeReduced = par.cellSizeReduced.value;
-    const sepSpacing = par.separatorSpacing.value;
+    const rowsQty = param.height.value;
+    const legendWidth = param.sideLegendWidth.value;
+    const cellSize = param.cellSize.value;
+    const cellSizeReduced = param.cellSizeReduced.value;
+    const sepSpacing = param.separatorSpacing.value;
 
     //rows template
     let rowsStyleString = '';
@@ -331,11 +249,11 @@ function generateSideLegendTemplateStrings() {
 }
 
 function generateGameGridTemplateStrings() {
-    const width = par.width.value;
-    const height = par.height.value;
-    const cellSize = par.cellSize.value;
-    const cellSizeReduced = par.cellSizeReduced.value;
-    const sepSpacing = par.separatorSpacing.value;
+    const width = param.width.value;
+    const height = param.height.value;
+    const cellSize = param.cellSize.value;
+    const cellSizeReduced = param.cellSizeReduced.value;
+    const sepSpacing = param.separatorSpacing.value;
 
     let columnsStyleString = '';
     let rowsStyleString = '';
@@ -382,11 +300,7 @@ function generateGameGridTemplateStrings() {
     return { row: rowsStyleString, col: columnsStyleString };
 }
 
-function updateTopLegendTemplate() {
 
-    const topLegend = document.getElementById('legend-top');
-    topLegend.style.gridTemplateColumns = generateTopLegendTemplateStrings().col;
-}
 
 function updateSideLegendTemplate() {
     const sideLegend = document.getElementById('legend-side');
@@ -400,43 +314,13 @@ function updateGameGridTemplate() {
     gameGrid.style.gridTemplateColumns = templates.col;
 }
 
-function addTopLegendColumn(colNo) {
-    const topLegend = document.getElementById('legend-top');
-    //const firstColumn = document.getElementById('col1');
-    const rowsStyleString = generateTopLegendTemplateStrings().row;
 
-    const gridHeight = par.topLegendHeight.value;
-
-    if (!document.getElementById(`col${colNo}`)) {
-        let col = document.createElement('div');
-        col.className = 'legend-column';
-        col.id = `col${colNo}`;
-        col.style.gridArea = `col${colNo}`;
-        col.style.gridTemplateRows = rowsStyleString;
-
-        //adding cells and areas
-        let columnGridTemplateString = '';
-        for (let rowNo = gridHeight; rowNo >= 1; rowNo--) {
-            columnGridTemplateString = columnGridTemplateString.concat(`"a${colNo}-${rowNo}" `)
-
-            let cell = document.createElement('div');
-            cell.className = 'cell cell-legend';
-            // cell.className = 'cell-legend';
-            cell.id = `top${colNo}-${rowNo}`;
-            cell.style.gridArea = `a${colNo}-${rowNo}`;
-            col.appendChild(cell);
-        }
-
-        col.style.gridTemplateAreas = columnGridTemplateString;
-        topLegend.appendChild(col);
-    }
-}
 
 function addSideLegendRow(rowNo) {
     const sideLegend = document.getElementById('legend-side');
     const columnsStyleString = generateSideLegendTemplateStrings().col;
 
-    const gridWidth = par.sideLegendWidth.value;
+    const gridWidth = param.sideLegendWidth.value;
 
     if (!document.getElementById(`row${rowNo}`)) {
         let row = document.createElement('div');
@@ -482,8 +366,8 @@ function addGameGridCell(colNo, rowNo) {
 }
 
 function addGameGridMissingCells() {
-    const width = par.width.value;
-    const height = par.height.value;
+    const width = param.width.value;
+    const height = param.height.value;
 
     //locate first missing column number
     let emptyColNo = 0;
@@ -537,26 +421,11 @@ function addGameGridMissingCells() {
     }
 }
 
-function addTopSeparators() {
-    const columnsQty = par.width.value;
-    const sepSpacing = par.separatorSpacing.value;
-    const topLegend = document.getElementById('legend-top');
 
-    const separatorQty = (columnsQty - 1) / sepSpacing;
-    for (let i = 1; i <= separatorQty; i++) {
-        if (!document.getElementById(`sep-top-${i}`)) {
-            const separator = document.createElement('div');
-            separator.id = `sep-top-${i}`;
-            separator.classList.add('separator', 'sep-v', 'sep-top');
-            separator.style.gridArea = `sv${i}`;
-            topLegend.appendChild(separator);
-        }
-    }
-}
 
 function addSideSeparators() {
-    const rowsQty = par.height.value;
-    const sepSpacing = par.separatorSpacing.value;
+    const rowsQty = param.height.value;
+    const sepSpacing = param.separatorSpacing.value;
     const sideLegend = document.getElementById('legend-side');
 
     const separatorQty = (rowsQty - 1) / sepSpacing;
@@ -572,9 +441,9 @@ function addSideSeparators() {
 }
 
 function addGameSeparators() {
-    const width = par.width.value;
-    const height = par.height.value;
-    const sepSpacing = par.separatorSpacing.value;
+    const width = param.width.value;
+    const height = param.height.value;
+    const sepSpacing = param.separatorSpacing.value;
     const gameGrid = document.getElementById('game-grid');
 
     //adding separators
