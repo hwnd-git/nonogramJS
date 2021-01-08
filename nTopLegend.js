@@ -1,8 +1,9 @@
 import * as config from './nConfig.js';
 
 const param = config.settings;
-
 export const legend = document.getElementById('legend-top');
+
+
 
 function generateTopLegendAreasString() {
     const columnsQty = param.width.value;
