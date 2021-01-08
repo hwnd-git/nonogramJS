@@ -6,24 +6,25 @@ export function injectEventHandlers() {
     diagExpander.addEventListener("mouseleave", expanderDiaLeft);
     diagExpander.addEventListener('click', expanderDiaClicked)
 
-    let horizExpander = document.getElementById('expand-horizontal');
-    horizExpander.addEventListener('click', expanderHoClicked)
+    let widthExpander = document.getElementById('expand-width');
+    widthExpander.addEventListener('click', expanderHoClicked)
+    //widthExpander.addEventListener(dr)
 
-    let vertExpander = document.getElementById('expand-vertical');
-    vertExpander.addEventListener('click', expanderVeClicked)
+    let heightExpander = document.getElementById('expand-height');
+    heightExpander.addEventListener('click', expanderVeClicked)
 }
 
 function expanderDiaHovered() {
-    let expandHorizontal = document.getElementById('expand-horizontal');
-    let expandVertical = document.getElementById('expand-vertical');
+    let expandHorizontal = document.getElementById('expand-width');
+    let expandVertical = document.getElementById('expand-height');
 
     expandHorizontal.classList.add('expanded');
     expandVertical.classList.add('expanded');
 }
 
 function expanderDiaLeft() {
-    let expandHorizontal = document.getElementById('expand-horizontal');
-    let expandVertical = document.getElementById('expand-vertical');
+    let expandHorizontal = document.getElementById('expand-width');
+    let expandVertical = document.getElementById('expand-height');
 
     expandHorizontal.classList.remove('expanded');
     expandVertical.classList.remove('expanded');

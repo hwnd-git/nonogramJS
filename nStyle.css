@@ -12,16 +12,13 @@
     --cell-border-color: #aaaaaa;
     --cell-size-reduced: calc(var(--cell-size) - var(--cell-border));
 
-    --test: var(--cell-radius);
-    --test2: var(--test);
-    --test3: calc(calc(10px + 5px) * calc(2 - calc(6/2)));
-
     --separator-width: 1px;
     --separator-spacing: 5;
 
-    --expander-size: 50px;
-    --top-rows-no: 4;
-    --side-cols-no: 3;
+    --outer-border: 2px;
+    --expander-size: calc(var(--cell-size) * 0.75);
+    --top-rows-no: 2;
+    --side-cols-no: 2;
     --stage-cols-no: 8;
     --stage-rows-no: 6;
 
@@ -30,28 +27,33 @@
     --legend-width: calc(var(--cell-size) * var(--side-cols-no));
     --legend-height: calc(var(--cell-size) * var(--top-rows-no));
 
-    --shrink-game-h: calc((var(--stage-cols-no) - 1 ) * var(--cell-border));
-    --shrink-game-v: calc((var(--stage-rows-no) - 1 ) * var(--cell-border));
-    --shrink-left-h: calc((var(--side-cols-no) - 1 ) * var(--cell-border));
-    --shrink-top-v: calc((var(--top-rows-no) - 1 ) * var(--cell-border));
+    --shrink-game-h: calc((var(--stage-cols-no) - 1) * var(--cell-border));
+    --shrink-game-v: calc((var(--stage-rows-no) - 1) * var(--cell-border));
+    --shrink-left-h: calc((var(--side-cols-no) - 1) * var(--cell-border));
+    --shrink-top-v: calc((var(--top-rows-no) - 1) * var(--cell-border));
 
     --wrapper-border: 3px;
-    --wrapper-border-color: #000;
+    --wrapper-border-color: rgb(0, 0, 0);
 }
 
 #main-container {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    /* justify-content: center; */
+    /* align-items: center; */
+    padding-top: calc(var(--cell-size) + 10px);
+    padding-left: calc(var(--cell-size) + 10px);
 }
 
 #outer-grid {
     display: grid;
     position: relative;
-    border: solid 2px black;
+    /* border: solid var(--outer-border) red; */
+    /* width: 100%; */
 
     grid-template-rows: max-content max-content;
     grid-template-columns: max-content max-content;
+    /* grid-template-rows: flex flex;
+    grid-template-columns: flex flex; */
     grid-template-areas:
         "blank legend-top"
         "legend-side game-grid";
@@ -79,22 +81,12 @@
 
 #legend-top {
     display: grid;
-    /* grid-template-rows: repeat(calc(var(--top-rows-no) - 1), var(--cell-size-reduced)) var(--cell-size); */
-    /* grid-template-columns: repeat(calc(var(--stage-cols-no) - 1), calc(var(--cell-size) - var(--cell-border))) var(--cell-size); */
 }
 
-.legend-column, .legend-row {
+.legend-column,
+.legend-row {
     display: grid;
-    /* border: solid 1px red; */
-    /* background-color: pink; */
 }
-
-/* .legend-column {
-    background-color: lightblue;
-    border-radius: 10px;
-    width: 90%;
-    height: 90%;
-} */
 
 #wrapper-left {
     grid-area: legend-side;
@@ -105,8 +97,6 @@
 
 #legend-side {
     display: grid;
-    /* grid-template-rows: repeat(calc(var(--stage-rows-no) - 1), var(--cell-size-reduced)) var(--cell-size); */
-    /* grid-template-columns: repeat(calc(var(--side-cols-no) - 1), var(--cell-size-reduced)) var(--cell-size); */
 }
 
 #wrapper-game {
@@ -119,51 +109,55 @@
 #game-grid {
     display: grid;
     background-color: #fff;
-
-    /* grid-template-rows: repeat(calc(var(--stage-rows-no) - 1), var(--cell-size-reduced)) var(--cell-size);
-    grid-template-columns: repeat(calc(var(--stage-cols-no) - 1), var(--cell-size-reduced)) var(--cell-size); */
 }
 
 .expander {
-    border: solid rgb(153, 55, 55) 5px;
+    border: solid rgb(0, 0, 0) var(--wrapper-border);
     transition: all 0.3s;
+    /* z-index: -1; */
 }
 
-#expand-horizontal {
+#expand-width {
     position: absolute;
-    height: 100%;
+    cursor: e-resize;
+    height: calc(100%);
     width: var(--expander-size);
     right: 0;
-    transform: translateX(100%);
+    bottom: 0;
+    transform: translateX(calc(100% - var(--wrapper-border)));
 }
 
-#expand-horizontal:hover,
-#expand-horizontal.expanded,
-#expand-horizontal:hover ~ #expand-diagonal {
+#expand-width:hover,
+#expand-width.expanded,
+#expand-width:hover~#expand-diagonal {
     width: calc(var(--expander-size)*1.5);
 }
 
-#expand-vertical {
+#expand-height {
     position: absolute;
+    cursor: s-resize;
+
     height: var(--expander-size);
-    width: 100%;
+    width: calc(100%);
     bottom: 0;
-    transform: translateY(100%);
+    right: 0;
+    transform: translateY(calc(100% - var(--wrapper-border)));
 }
 
-#expand-vertical:hover,
-#expand-vertical.expanded,
-#expand-vertical:hover ~ #expand-diagonal {
+#expand-height:hover,
+#expand-height.expanded,
+#expand-height:hover~#expand-diagonal {
     height: calc(var(--expander-size)*1.5);
 }
 
 #expand-diagonal {
     position: absolute;
+    cursor: all-scroll;
     height: var(--expander-size);
     width: var(--expander-size);
     bottom: 0;
     right: 0;
-    transform: translate(100%, 100%);
+    transform: translate(calc(100% - var(--wrapper-border)), calc(100% - var(--wrapper-border)));
 }
 
 
@@ -172,14 +166,41 @@
     height: calc(var(--expander-size)*1.5);
 }
 
-#expand-diagonal:hover ~ #expand-horizontal
-{
+#expand-diagonal:hover~#expand-width {
     width: calc(var(--expander-size)*1.5);
 }
 
-#expand-diagonal:hover ~ #expand-vertical
-{
+#expand-diagonal:hover~#expand-height {
     height: calc(var(--expander-size)*1.5);
+}
+
+.reducer {
+    position: absolute;
+    border: solid 2px black;
+
+    height: calc(var(--cell-size) * 0.75);
+    width: calc(var(--cell-size) * 0.75);
+    /* border-radius: 10px; */
+
+    transition: all 0.3s;
+}
+
+.reducer:hover {
+    height: calc(var(--cell-size));
+    width: calc(var(--cell-size));
+    background-color: red;
+} 
+
+#reduce-height {
+    left: calc(var(--wrapper-border) * -1);
+    bottom: var(--wrapper-border);
+    transform: translateX(calc(-100%));
+}
+
+#reduce-width {
+    right: var(--wrapper-border);
+    top: calc(var(--wrapper-border) * -1);
+    transform: translateY(calc(-100%));
 }
 
 /* ================================================================ */
@@ -202,25 +223,12 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    /* border: solid #555 1px; */
-    /* border-radius: 15px; */
 }
-
-/* .cell-legend::after {
-    content: 'x';
-} */
 
 .cell[data-translation] {
-    /* --translation: calc(attr(data-translation string)); */
     transform: translateX(var(--translation));
-    /* transform: translateX(10px); */
-    /* border-radius: calc(attr(data-translation)); */
     background-color: pink;
 }
-/* 
-.cell[data-translation]::after {
-    content: attr(data-translation);
-} */
 
 .separator {
     background-color: var(--cell-border-color);
