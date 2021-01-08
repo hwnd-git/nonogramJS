@@ -23,7 +23,7 @@ export function getColumnNo(cellOrCol) {
     let colNo = undefined;
 
     if (id.indexOf('col') >= 0) {
-        id = id.replaceAll('col','');
+        id = id.replaceAll('col', '');
         colNo = parseInt(id);
     } else {
         const idSplit = id.split('-');
@@ -33,10 +33,18 @@ export function getColumnNo(cellOrCol) {
     return colNo;
 }
 
-export function getRowNo(cellDiv) {
-    const id = cellDiv.id;
-    const idSplit = id.split('-');
-    const rowNo = parseInt(idSplit[1].match(/\d/g).join(''));
+export function getRowNo(cellOrRow) {
+    let id = cellOrRow.id;
+    let rowNo = undefined;
+
+    if (id.indexOf('row') >= 0) {
+        id = id.replaceAll('row', '');
+        rowNo = parseInt(id);
+    } else {
+        const idSplit = id.split('-');
+        const rowNo = parseInt(idSplit[1].match(/\d/g).join(''));
+    }
+
     return rowNo;
 }
 
@@ -82,12 +90,12 @@ function getResultingCssUnit(expression) {
         let expressionWithoutUnits = expression.replaceAll(cssUnit, '');
 
         let lengthDifference = expression.length - expressionWithoutUnits.length;
-        return lengthDifference/unitStrLen;
+        return lengthDifference / unitStrLen;
     })
     let maxOccurence = Math.max.apply(Math, occurences);
-    
+
     let unitOccurences = new Map()
-    for(let i = 0; i < cssUnits.length; i++) {
+    for (let i = 0; i < cssUnits.length; i++) {
         if (occurences[i] == maxOccurence) unitOccurences.set(cssUnits[i], occurences[i])
     }
 

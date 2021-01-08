@@ -44,10 +44,8 @@ export function expandWidth() {
 
 export function expandHeight() {
     const heightSetting = param.height;
-    if (parseInt(heightSetting.value) > 0) {
-        config.updateSetting(heightSetting, `${parseInt(heightSetting.value) + 1}`);
-    }
-
+    config.updateSetting(heightSetting, `${parseInt(heightSetting.value) + 1}`);
+    
     side.update();
     main.update();
 
@@ -74,11 +72,17 @@ export function reduceWidth() {
 
     top.update();
     // main.update();
-
-    
 }
 
+export function reduceHeight() {
+    const heightSetting = param.height;
+    if (parseInt(heightSetting.value) > 0) {
+        config.updateSetting(heightSetting, `${parseInt(heightSetting.value) - 1}`);
+    }
 
+    side.update();
+    // main.update();
+}
 
 
 

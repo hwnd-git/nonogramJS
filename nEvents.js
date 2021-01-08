@@ -55,4 +55,5 @@ function reducerWidthClicked() {
 
 function reducerHeightClicked() {
     console.log('reduce h')
+    script.reduceHeight();
 }

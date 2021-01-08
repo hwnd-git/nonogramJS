@@ -73,7 +73,7 @@ function generateTopLegendTemplateStrings() {
 }
 
 export function update() {
-    const widthSetting = param.width;
+    //const widthSetting = param.width;
 
     updateAreas();
     updateTemplate();
@@ -89,7 +89,7 @@ export function populateLegend() {
     legend.style.gridTemplateColumns = columnsStyleString;
     legend.style.gridTemplateAreas = `${templateAreasString}`;
 
-    updateColumns();
+    addColumns();
     addSeparators();
 }
 
@@ -202,7 +202,6 @@ function updateSeparators() {
 
     addSeparators();
 
-    debugger;
     const allSeparators = document.querySelectorAll('.sep-top');
     let excessSepQty = allSeparators.length - separatorQty;
     let removedSepQty = 0;
