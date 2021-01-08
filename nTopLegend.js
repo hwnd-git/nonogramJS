@@ -1,0 +1,1 @@
+export const legend = document.getElementById('legend-top');

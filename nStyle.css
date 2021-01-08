@@ -6,7 +6,7 @@
 
 :root {
     --cell-size: 50px;
-    --cell-border: 5px;
+    --cell-border: 1px;
     --cell-radius: 0px;
     /* --cell-border-color: #808080; */
     --cell-border-color: #aaaaaa;
@@ -16,7 +16,7 @@
     --test2: var(--test);
     --test3: calc(calc(10px + 5px) * calc(2 - calc(6/2)));
 
-    --separator-width: 10px;
+    --separator-width: 1px;
     --separator-spacing: 5;
 
     --expander-size: 50px;
