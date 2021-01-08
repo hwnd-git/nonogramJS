@@ -1,10 +1,10 @@
 import * as utils from './nUtils.js';
 
 export let settings = {
-    width: {value: 0, cssName: '--stage-h-size'},
-    height: {value: 0, cssName: '--stage-v-size'},
-    topLegendHeight: {value: 0, cssName: '--legend-h-size'},
-    sideLegendWidth: {value: 0, cssName: '--legend-v-size'},
+    width: {value: 0, cssName: '--stage-cols-no'},
+    height: {value: 0, cssName: '--stage-rows-no'},
+    topLegendHeight: {value: 0, cssName: '--top-rows-no'},
+    sideLegendWidth: {value: 0, cssName: '--side-cols-no'},
     cellSize: {value: 0, cssName: '--cell-size'},
     cellSizeReduced: {value: 0, cssName: '--cell-size-reduced'},
     borderWidth: {value: 0, cssName: '--cell-border'},
