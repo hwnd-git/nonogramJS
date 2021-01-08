@@ -18,10 +18,18 @@ export function setCSSVariable(varName, value, sourceElement = document.document
     sourceElement.style.setProperty(varName, value);
 }
 
-export function getColumnNo(cellDiv) {
-    const id = cellDiv.id;
-    const idSplit = id.split('-');
-    const colNo = parseInt(idSplit[0].match(/\d/g).join(''));
+export function getColumnNo(cellOrCol) {
+    let id = cellOrCol.id;
+    let colNo = undefined;
+
+    if (id.indexOf('col') >= 0) {
+        id = id.replaceAll('col','');
+        colNo = parseInt(id);
+    } else {
+        const idSplit = id.split('-');
+        colNo = parseInt(idSplit[0].match(/\d/g).join(''));
+    }
+
     return colNo;
 }
 
@@ -30,6 +38,16 @@ export function getRowNo(cellDiv) {
     const idSplit = id.split('-');
     const rowNo = parseInt(idSplit[1].match(/\d/g).join(''));
     return rowNo;
+}
+
+export function getSeparatorNo(separatorDiv) {
+    let id = separatorDiv.id;
+    let idSplit = id.split('-');
+
+    //ifs here
+    let sepNo = parseInt(idSplit.splice(-1)[0]);
+
+    return sepNo;
 }
 
 export function evaluateCSSVariable(varName) {

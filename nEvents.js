@@ -7,11 +7,17 @@ export function injectEventHandlers() {
     diagExpander.addEventListener('click', expanderDiaClicked)
 
     let widthExpander = document.getElementById('expand-width');
-    widthExpander.addEventListener('click', expanderHoClicked)
+    widthExpander.addEventListener('click', expanderWidthClicked)
     //widthExpander.addEventListener(dr)
 
     let heightExpander = document.getElementById('expand-height');
-    heightExpander.addEventListener('click', expanderVeClicked)
+    heightExpander.addEventListener('click', expanderHeightClicked)
+
+    let widthReducer = document.getElementById('reduce-width');
+    widthReducer.addEventListener('click', reducerWidthClicked);
+    
+    let heightReducer = document.getElementById('reduce-height');
+    heightReducer.addEventListener('click', reducerHeightClicked);
 }
 
 function expanderDiaHovered() {
@@ -30,14 +36,23 @@ function expanderDiaLeft() {
     expandVertical.classList.remove('expanded');
 }
 
-function expanderHoClicked() {
+function expanderWidthClicked() {
     script.expandWidth();
 }
 
-function expanderVeClicked() {
+function expanderHeightClicked() {
     script.expandHeight();
 }
 
 function expanderDiaClicked() {
     script.expandSize();
+}
+
+function reducerWidthClicked() {
+    console.log('reduce w')
+    script.reduceWidth();
+}
+
+function reducerHeightClicked() {
+    console.log('reduce h')
 }
