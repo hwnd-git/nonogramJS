@@ -182,7 +182,7 @@ function addSeparators() {
     const columnsQty = param.width.value;
     const sepSpacing = param.separatorSpacing.value;
 
-    const separatorQty = (columnsQty - 1) / sepSpacing;
+    const separatorQty = Math.floor((columnsQty - 1) / sepSpacing);
     for (let sepNo = 1; sepNo <= separatorQty; sepNo++) {
         addSeparator(sepNo);
     }
@@ -198,7 +198,7 @@ function removeSeparator(sepNo) {
 function updateSeparators() {
     const columnsQty = param.width.value;
     const sepSpacing = param.separatorSpacing.value;
-    const separatorQty = (columnsQty - 1) / sepSpacing;
+    const separatorQty = Math.floor((columnsQty - 1) / sepSpacing);
 
     addSeparators();
 

@@ -1,4 +1,5 @@
 import * as config from './nConfig.js';
+import * as utils from './nUtils.js';
 
 const param = config.settings;
 export const grid = document.getElementById('game-grid');
@@ -105,8 +106,10 @@ function generateGameGridTemplateStrings() {
 export function update() {
     updateAreas();
     updateTemplate();
-    addMissingCells();
-    addSeparators();
+    // addMissingCells();
+    updateCells();
+    //addSeparators();
+    updateSeparators();
 }
 
 export function populateGrid() {
@@ -123,7 +126,7 @@ export function populateGrid() {
 
     for (let colNo = 1; colNo <= width; colNo++) {
         for (let rowNo = 1; rowNo <= height; rowNo++) {
-            addGameGridCell(colNo, rowNo);
+            addGameCell(colNo, rowNo);
         }
     }
 
@@ -140,7 +143,9 @@ function updateTemplate() {
     grid.style.gridTemplateColumns = templates.col;
 }
 
-function addGameGridCell(colNo, rowNo) {
+function addGameCell(colNo, rowNo) {
+    if (document.getElementById(`cell${colNo}-${rowNo}`)) return;
+
     if (!document.getElementById(`cell${colNo}-${rowNo}`)) {
         let cell = document.createElement('div');
         cell.className = 'cell cell-game';
@@ -191,7 +196,7 @@ function addMissingCells() {
     if (emptyRowNo > 0) {
         for (let colNo = 1; colNo <= width; colNo++) {
             setTimeout(function () {
-                addGameGridCell(colNo, emptyRowNo)
+                addGameCell(colNo, emptyRowNo)
             }, colNo * cellRowPopupTime)
             //addGameGridCell(colNo, emptyRowNo);
         }
@@ -201,10 +206,63 @@ function addMissingCells() {
     if (emptyColNo > 0) {
         for (let rowNo = 1; rowNo <= height; rowNo++) {
             setTimeout(function () {
-                addGameGridCell(emptyColNo, rowNo);
+                addGameCell(emptyColNo, rowNo);
             }, rowNo * cellColPopupTime)
         }
     }
+}
+
+function removeGameCell(colNo, rowNo) {
+    let cell = document.getElementById(`cell${colNo}-${rowNo}`);
+    if (!cell) return;
+
+    cell.parentElement.removeChild(cell);
+}
+
+function updateCells() {
+    const columnsQty = param.width.value;
+    const rowsQty = param.height.value;
+    const cellsQty = columnsQty * rowsQty;
+
+    addMissingCells();
+
+    //v-separators:
+    const allCells = document.querySelectorAll('.cell-game');
+    let excessCellsQty = allCells.length - cellsQty;
+    let removedCellsQty = 0;
+    if (excessCellsQty > 0) {
+        for (let cellNo = allCells.length; cellNo >= 1; cellNo--) {
+            const currCell = allCells.item(cellNo - 1);
+            //debugger;
+            const currCellCol = utils.getColumnNo(currCell);
+            const currCellRow = utils.getRowNo(currCell);
+            if (currCellCol > columnsQty || currCellRow > rowsQty) {
+                removeGameCell(currCellCol, currCellRow);
+                removedCellsQty++;
+            }
+            if (removedCellsQty >= excessCellsQty) break;
+        }
+    }
+}
+
+function addSeparatorH(sepNo) {
+    if (document.getElementById(`sep-gameH-${sepNo}`)) return;
+
+    const separator = document.createElement('div');
+    separator.id = `sep-gameH-${sepNo}`;
+    separator.classList.add('separator', 'sep-h', 'sep-game', 'sep-game-h');
+    separator.style.gridArea = `sh${sepNo}`;
+    grid.appendChild(separator);
+}
+
+function addSeparatorV(sepNo1, sepNo2) {
+    if (document.getElementById(`sep-gameV-${sepNo1}-${sepNo2}`)) return;
+
+    const separator = document.createElement('div');
+    separator.id = `sep-gameV-${sepNo1}-${sepNo2}`;
+    separator.classList.add('separator', 'sep-v', 'sep-game', 'sep-game-v');
+    separator.style.gridArea = `sv${sepNo1}-${sepNo2}`;
+    grid.appendChild(separator);
 }
 
 function addSeparators() {
@@ -212,29 +270,77 @@ function addSeparators() {
     const height = param.height.value;
     const sepSpacing = param.separatorSpacing.value;
 
-    //adding separators
-    const hSeparatorQty = (height - 1) / sepSpacing;
-    for (let i = 1; i <= hSeparatorQty; i++) {
-        if (!document.getElementById(`sep-game-h-${i}`)) {
-            const separator = document.createElement('div');
-            separator.id = `sep-game-h-${i}`;
-            separator.classList.add('separator', 'sep-h', 'sep-game');
-            separator.style.gridArea = `sh${i}`;
-            grid.appendChild(separator);
+    const hSeparatorQty = Math.floor((height - 1) / sepSpacing);
+    for (let sepNo = 1; sepNo <= hSeparatorQty; sepNo++) {
+        addSeparatorH(sepNo);
+    }
+
+    const vBreaksQty = Math.floor((width - 1) / sepSpacing);
+    const vSepPerBreakQty = hSeparatorQty + 1;
+    for (let sepNo1 = 1; sepNo1 <= vBreaksQty; sepNo1++) {
+        for (let sepNo2 = 1; sepNo2 <= vSepPerBreakQty; sepNo2++) {
+            addSeparatorV(sepNo1, sepNo2)
+        }
+    }
+}
+
+function removeSeparatorH(sepNo) {
+    let separator = document.getElementById(`sep-gameH-${sepNo}`);
+    if (!separator) return;
+    
+    separator.parentElement.removeChild(separator);
+}
+
+function removeSeparatorV(sepNo1, sepNo2) {
+    let separator = document.getElementById(`sep-gameV-${sepNo1}-${sepNo2}`);
+    if (!separator) return;
+    
+    separator.parentElement.removeChild(separator);
+}
+
+function updateSeparators() {
+    const rowsQty = param.height.value;
+    const columnsQty = param.width.value;
+    const sepSpacing = param.separatorSpacing.value;
+    const separatorHQty = Math.floor((rowsQty - 1) / sepSpacing);
+
+    const vBreaksQty = Math.floor((columnsQty - 1) / sepSpacing);
+    const vSepPerBreakQty = separatorHQty + 1;
+    const separatorVQty = vBreaksQty * vSepPerBreakQty;
+
+    addSeparators();
+
+    //h-separators:
+    const allSeparatorsH = document.querySelectorAll('.sep-game-h');
+    let excessSepHQty = allSeparatorsH.length - separatorHQty;
+    let removedSepHQty = 0;
+    if (excessSepHQty > 0) {
+        for (let sepNo = allSeparatorsH.length; sepNo >= 1; sepNo--) {
+            const currSepH = allSeparatorsH.item(sepNo - 1);
+            const currSepHNo = utils.getSeparatorNo(currSepH);
+            if (currSepHNo > separatorHQty) {
+                removeSeparatorH(currSepHNo);
+                removedSepHQty++;
+            }
+            if (removedSepHQty >= excessSepHQty) break;
         }
     }
 
-    const vBreaksQty = (width - 1) / sepSpacing;
-    const vSepPerBreakQty = hSeparatorQty + 1;
-    for (let i = 1; i <= vBreaksQty; i++) {
-        for (let j = 1; j <= vSepPerBreakQty; j++) {
-            if (!document.getElementById(`sep-game-v-${i}-${j}`)) {
-                const separator = document.createElement('div');
-                separator.id = `sep-game-v${i}-${j}`;
-                separator.classList.add('separator', 'sep-v', 'sep-game');
-                separator.style.gridArea = `sv${i}-${j}`;
-                grid.appendChild(separator);
+    //v-separators:
+    const allSeparatorsV = document.querySelectorAll('.sep-game-v');
+    let excessSepVQty = allSeparatorsV.length - separatorVQty;
+    let removedSepVQty = 0;
+    if (excessSepVQty > 0) {
+        for (let sepNo = allSeparatorsV.length; sepNo >= 1; sepNo--) {
+            const currSepV = allSeparatorsV.item(sepNo - 1);
+            //debugger;
+            const currSepVNo1 = utils.getSeparatorNo(currSepV).no1;
+            const currSepVNo2 = utils.getSeparatorNo(currSepV).no2;
+            if (currSepVNo1 > vBreaksQty || currSepVNo2 > vSepPerBreakQty) {
+                removeSeparatorV(currSepVNo1, currSepVNo2);
+                removedSepVQty++;
             }
+            if (removedSepVQty >= excessSepVQty) break;
         }
     }
 }

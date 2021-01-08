@@ -42,7 +42,7 @@ export function getRowNo(cellOrRow) {
         rowNo = parseInt(id);
     } else {
         const idSplit = id.split('-');
-        const rowNo = parseInt(idSplit[1].match(/\d/g).join(''));
+        rowNo = parseInt(idSplit[1].match(/\d/g).join(''));
     }
 
     return rowNo;
@@ -53,7 +53,14 @@ export function getSeparatorNo(separatorDiv) {
     let idSplit = id.split('-');
 
     //ifs here
-    let sepNo = parseInt(idSplit.splice(-1)[0]);
+    let sepNo = undefined;
+    if (idSplit.length > 3) {   //gameGrid V separator (has more id segments)
+        let sepNo2 = parseInt(idSplit.splice(-1)[0]);    //splice odcina i zwraca ostatni element tablicy (tablica zostaje odcięta)
+        let sepNo1 = parseInt(idSplit.splice(-1)[0]);
+        sepNo = {no1: sepNo1, no2: sepNo2};
+    } else {
+        sepNo = parseInt(idSplit.splice(-1)[0]);
+    }
 
     return sepNo;
 }

@@ -71,7 +71,7 @@ export function reduceWidth() {
     }
 
     top.update();
-    // main.update();
+    main.update();
 }
 
 export function reduceHeight() {
@@ -81,7 +81,7 @@ export function reduceHeight() {
     }
 
     side.update();
-    // main.update();
+    main.update();
 }
 
 

@@ -12,7 +12,7 @@
     --cell-border-color: #aaaaaa;
     --cell-size-reduced: calc(var(--cell-size) - var(--cell-border));
 
-    --separator-width: 1px;
+    --separator-width: 5px;
     --separator-spacing: 5;
 
     --outer-border: 2px;
@@ -158,6 +158,7 @@
     bottom: 0;
     right: 0;
     transform: translate(calc(100% - var(--wrapper-border)), calc(100% - var(--wrapper-border)));
+    /* border-bottom-right-radius: 50%; */
 }
 
 
