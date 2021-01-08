@@ -65,15 +65,23 @@ function generateSideLegendAreasString() {
     return templateAreasString;
 }
 
-export function populateSideLegend() {
+export function update() {
+    const heightSetting = param.height;
+
+    updateAreas();
+    updateTemplate();
+    addRow(heightSetting.value);
+    addSeparators();
+}
+
+export function populateLegend() {
     const rowsQty = param.height.value;
 
     let rowsStyleString = generateSideLegendTemplateStrings().row;
     let templateAreasString = generateSideLegendAreasString();
 
-    const legendElement = document.getElementById('legend-side')
-    legendElement.style.gridTemplateRows = rowsStyleString;
-    legendElement.style.gridTemplateAreas = templateAreasString;
+    legend.style.gridTemplateRows = rowsStyleString;
+    legend.style.gridTemplateAreas = templateAreasString;
 
     for (let rowNo = 1; rowNo <= rowsQty; rowNo++) {
         addRow(rowNo);
@@ -82,18 +90,15 @@ export function populateSideLegend() {
     addSeparators();
 }
 
-export function updateAreas() {
-    const sideLegend = document.getElementById('legend-side');
-    sideLegend.style.gridTemplateAreas = generateSideLegendAreasString();
+function updateAreas() {
+    legend.style.gridTemplateAreas = generateSideLegendAreasString();
 }
 
-export function updateTemplate() {
-    const sideLegend = document.getElementById('legend-side');
-    sideLegend.style.gridTemplateRows = generateSideLegendTemplateStrings().row;
+function updateTemplate() {
+    legend.style.gridTemplateRows = generateSideLegendTemplateStrings().row;
 }
 
-export function addRow(rowNo) {
-    const sideLegend = document.getElementById('legend-side');
+function addRow(rowNo) {
     const columnsStyleString = generateSideLegendTemplateStrings().col;
 
     const gridWidth = param.sideLegendWidth.value;
@@ -124,14 +129,13 @@ export function addRow(rowNo) {
         }
 
         row.style.gridTemplateAreas = rowGridTemplateString;
-        sideLegend.appendChild(row);
+        legend.appendChild(row);
     }
 }
 
-export function addSeparators() {
+function addSeparators() {
     const rowsQty = param.height.value;
     const sepSpacing = param.separatorSpacing.value;
-    const sideLegend = document.getElementById('legend-side');
 
     const separatorQty = (rowsQty - 1) / sepSpacing;
     for (let i = 1; i <= separatorQty; i++) {
@@ -140,7 +144,7 @@ export function addSeparators() {
             separator.id = `sep-side-${i}`;
             separator.classList.add('separator', 'sep-h', 'sep-side');
             separator.style.gridArea = `sh${i}`;
-            sideLegend.appendChild(separator);
+            legend.appendChild(separator);
         }
     }
 }

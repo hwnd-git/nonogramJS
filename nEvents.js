@@ -38,7 +38,5 @@ function expanderVeClicked() {
 }
 
 function expanderDiaClicked() {
-    // script.expandWidth();
-    // script.expandHeight();
     script.expandSize();
 }

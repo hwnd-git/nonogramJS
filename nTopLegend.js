@@ -71,6 +71,15 @@ function generateTopLegendTemplateStrings() {
     return { col: columnsStyleString, row: rowsStyleString };
 }
 
+export function update() {
+    const widthSetting = param.width;
+    
+    updateAreas();
+    updateTemplate();
+    addColumn(widthSetting.value);
+    addSeparators();
+}
+
 export function populateLegend() {
     const columnsQty = param.width.value;
 
@@ -87,15 +96,15 @@ export function populateLegend() {
     addSeparators();
 }
 
-export function updateAreas() {
+function updateAreas() {
     legend.style.gridTemplateAreas = generateTopLegendAreasString();
 }
 
-export function updateTemplate() {
+function updateTemplate() {
     legend.style.gridTemplateColumns = generateTopLegendTemplateStrings().col;
 }
 
-export function addColumn(colNo) {
+function addColumn(colNo) {
     const rowsStyleString = generateTopLegendTemplateStrings().row;
 
     const gridHeight = param.topLegendHeight.value;
@@ -125,7 +134,7 @@ export function addColumn(colNo) {
     }
 }
 
-export function addSeparators() {
+function addSeparators() {
     const columnsQty = param.width.value;
     const sepSpacing = param.separatorSpacing.value;
 
