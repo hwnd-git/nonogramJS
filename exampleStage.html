@@ -9,24 +9,29 @@
 </head>
 <body>
     <div id="main-container">
-        <div id="outer-grid">
-            <div id="blank"></div>
-            <div id="wrapper-top" class="wrapper">
-                <div id="legend-top" class="legend legend-top top-left-border"></div>
+        <div id="wrapper-whole">
+            <div id="whole-grid">
+                <div id="blank"></div>
+                <div id="wrapper-top" class="wrapper">
+                    <div id="legend-top" class="legend legend-top top-left-border"></div>
+                </div>
+                <div id="wrapper-left" class="wrapper">
+                    <div id="legend-side" class="legend legend-side top-left-border"></div>
+                </div>
+                <div id="wrapper-game" class="wrapper">
+                    <div id="game-grid" class="top-left-border"></div>
+                </div>
+    
+                <div id="expand-width" class="expander"></div>
+                <div id="expand-height" class="expander"></div>
+                <div id="expand-diag" class="expander"></div>
+    
+                <div id="reduce-width" class="reducer"></div>
+                <div id="reduce-height" class="reducer"></div>
             </div>
-            <div id="wrapper-left" class="wrapper">
-                <div id="legend-side" class="legend legend-side top-left-border"></div>
-            </div>
-            <div id="wrapper-game" class="wrapper">
-                <div id="game-grid" class="top-left-border"></div>
-            </div>
-
-            <div id="expand-width" class="expander"></div>
-            <div id="expand-height" class="expander"></div>
-            <div id="expand-diagonal" class="expander"></div>
-
-            <div id="reduce-width" class="reducer"></div>
-            <div id="reduce-height" class="reducer"></div>
+            <div id="manipulator-width" class="manipulator manipulator-width"></div>
+            <div id="manipulator-height" class="manipulator manipulator-height"></div>
+            <div id="manipulator-diag" class="manipulator manipulator-diag"></div>
         </div>
     </div>
 </body>

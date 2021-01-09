@@ -1,7 +1,7 @@
 import * as script from './nScript.js';
 
 export function injectEventHandlers() {
-    let diagExpander = document.getElementById('expand-diagonal');
+    let diagExpander = document.getElementById('expand-diag');
     diagExpander.addEventListener("mouseenter", expanderDiaHovered);
     diagExpander.addEventListener("mouseleave", expanderDiaLeft);
     diagExpander.addEventListener('click', expanderDiaClicked)
