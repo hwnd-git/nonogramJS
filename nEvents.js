@@ -1,5 +1,15 @@
 import * as script from './nScript.js';
 
+const wrapperLeft = document.getElementById('wrapper-left');
+const wrapperGame = document.getElementById('wrapper-game');
+const wrapperTop = document.getElementById('wrapper-top');
+const brdrRight = document.getElementById('brdr-right');
+const brdrBottom = document.getElementById('brdr-bottom');
+const wholeWrapper = document.getElementById('wrapper-whole');
+
+let draggingHeight = false;
+let draggingWidth = false;
+
 export function injectEventHandlers() {
     let diagExpander = document.getElementById('expand-diag');
     diagExpander.addEventListener("mouseenter", expanderDiaHovered);
@@ -15,9 +25,23 @@ export function injectEventHandlers() {
 
     let widthReducer = document.getElementById('reduce-width');
     widthReducer.addEventListener('click', reducerWidthClicked);
-    
+
     let heightReducer = document.getElementById('reduce-height');
     heightReducer.addEventListener('click', reducerHeightClicked);
+
+    let widthManipulator = document.getElementById('manipulator-width');
+    widthManipulator.addEventListener('mouseenter', manipulatorWidthHovered);
+    widthManipulator.addEventListener('mouseleave', manipulatorWidthExit);
+
+    let heightManipulator = document.getElementById('manipulator-height');
+    heightManipulator.addEventListener('mouseenter', manipulatorHeightHovered);
+    heightManipulator.addEventListener('mouseleave', manipulatorHeightExit);
+    heightManipulator.addEventListener('dragstart', manipulatorHeightDragStart);
+    heightManipulator.addEventListener('dragend', manipulatorHeightDragEnd);
+
+    let diagManipulator = document.getElementById('manipulator-diag');
+    diagManipulator.addEventListener('mouseenter', manipulatorDiagonalHovered);
+    diagManipulator.addEventListener('mouseleave', manipulatorDiagonalExit);
 }
 
 function expanderDiaHovered() {
@@ -56,4 +80,44 @@ function reducerWidthClicked() {
 function reducerHeightClicked() {
     console.log('reduce h')
     script.reduceHeight();
+}
+
+function manipulatorHeightHovered() {
+    brdrBottom.classList.add('edit');
+}
+
+function manipulatorHeightExit() {
+    if (!draggingHeight) brdrBottom.classList.remove('edit');
+}
+
+function manipulatorWidthHovered() {
+    brdrRight.classList.add('edit');
+}
+
+function manipulatorWidthExit() {
+    if (!draggingWidth) brdrRight.classList.remove('edit');
+}
+
+function manipulatorDiagonalHovered() {
+    manipulatorHeightHovered();
+    manipulatorWidthHovered();
+}
+
+function manipulatorDiagonalExit() {
+    manipulatorHeightExit();
+    manipulatorWidthExit();
+}
+
+function manipulatorHeightDragStart() {
+    draggingHeight = true;
+    manipulatorHeightHovered();
+    console.log('start');
+
+    wholeWrapper.style.height = '100px'
+}
+
+function manipulatorHeightDragEnd() {
+    draggingHeight = false;
+    manipulatorHeightExit();
+    console.log('end');
 }

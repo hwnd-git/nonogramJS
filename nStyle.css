@@ -5,7 +5,7 @@
 }
 
 :root {
-    --cell-size: 50px;
+    --cell-size: 40px;
     --cell-border: 1px;
     --cell-radius: 0px;
     /* --cell-border-color: #808080; */
@@ -19,8 +19,8 @@
     --expander-size: calc(var(--cell-size) * 0.75);
     --top-rows-no: 2;
     --side-cols-no: 2;
-    --stage-cols-no: 8;
-    --stage-rows-no: 6;
+    --stage-cols-no: 14;
+    --stage-rows-no: 11;
 
     --game-width: calc(var(--cell-size) * var(--stage-cols-no));
     --game-height: calc(var(--cell-size) * var(--stage-rows-no));
@@ -46,6 +46,8 @@
 
 #wrapper-whole {
     position: relative;
+    /* border: solid skyblue 5px; */
+    /* overflow: hidden; */
 }
 
 #whole-grid {
@@ -81,8 +83,9 @@
     border: solid var(--wrapper-border-color) var(--wrapper-border);
     border-bottom: solid var(--wrapper-border-color) calc(var(--wrapper-border)/2);
     border-left: solid var(--wrapper-border-color) calc(var(--wrapper-border)/2);
+    border-right: dashed;
 
-    /* border-right: dashed 10px; */
+    transition: 1s;
 }
 
 #legend-top {
@@ -99,8 +102,7 @@
     border: solid var(--wrapper-border-color) var(--wrapper-border);
     border-top: solid var(--wrapper-border-color) calc(var(--wrapper-border)/2);
     border-right: solid var(--wrapper-border-color) calc(var(--wrapper-border)/2);
-
-    /* border-bottom: dashed 10px; */
+    border-bottom: dashed;
 }
 
 #legend-side {
@@ -112,14 +114,36 @@
     border: solid var(--wrapper-border-color) var(--wrapper-border);
     border-top: solid var(--wrapper-border-color) calc(var(--wrapper-border)/2);
     border-left: solid var(--wrapper-border-color) calc(var(--wrapper-border)/2);
-
-    /* border-right: dashed 10px; */
-    /* border-bottom: dashed 10px; */
+    border-right: dashed;
+    border-bottom: dashed;
 }
 
 #game-grid {
     display: grid;
     background-color: #fff;
+}
+
+.brdr {
+    position: absolute;
+    transition: opacity 0.3s;
+    /* opacity: 0; */
+}
+
+.brdr-bottom {
+    width: 100%;
+    bottom: 0;
+    border-bottom: solid var(--wrapper-border-color) var(--wrapper-border);
+}
+
+.brdr-right {
+    height: 100%;
+    top: 0;
+    right: 0;
+    border-right: solid var(--wrapper-border-color) var(--wrapper-border);
+}
+
+.brdr.edit {
+    opacity: 0.5;
 }
 
 /* =================== OLD EXPANDER STYLE =================== */
