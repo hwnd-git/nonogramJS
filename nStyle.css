@@ -77,6 +77,8 @@
     border: solid var(--wrapper-border-color) var(--wrapper-border);
     border-bottom: solid var(--wrapper-border-color) calc(var(--wrapper-border)/2);
     border-left: solid var(--wrapper-border-color) calc(var(--wrapper-border)/2);
+
+    /* border-right: dashed 10px; */
 }
 
 #legend-top {
@@ -93,6 +95,8 @@
     border: solid var(--wrapper-border-color) var(--wrapper-border);
     border-top: solid var(--wrapper-border-color) calc(var(--wrapper-border)/2);
     border-right: solid var(--wrapper-border-color) calc(var(--wrapper-border)/2);
+
+    /* border-bottom: dashed 10px; */
 }
 
 #legend-side {
@@ -104,6 +108,9 @@
     border: solid var(--wrapper-border-color) var(--wrapper-border);
     border-top: solid var(--wrapper-border-color) calc(var(--wrapper-border)/2);
     border-left: solid var(--wrapper-border-color) calc(var(--wrapper-border)/2);
+
+    /* border-right: dashed 10px; */
+    /* border-bottom: dashed 10px; */
 }
 
 #game-grid {
@@ -114,7 +121,7 @@
 .expander {
     border: solid rgb(0, 0, 0) var(--wrapper-border);
     transition: all 0.3s;
-    /* z-index: -1; */
+    /* opacity: 0; */
 }
 
 #expand-width {
@@ -152,7 +159,7 @@
 
 #expand-diagonal {
     position: absolute;
-    cursor: all-scroll;
+    cursor: se-resize;
     height: var(--expander-size);
     width: var(--expander-size);
     bottom: 0;
@@ -178,12 +185,15 @@
 .reducer {
     position: absolute;
     border: solid 2px black;
+    cursor: pointer;
 
     height: calc(var(--cell-size) * 0.75);
     width: calc(var(--cell-size) * 0.75);
     /* border-radius: 10px; */
 
     transition: all 0.3s;
+
+    /* opacity: 0; */
 }
 
 .reducer:hover {
