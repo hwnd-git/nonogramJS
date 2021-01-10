@@ -12,6 +12,8 @@ const brdrBottom = document.getElementById('brdr-bottom');
 
 const mHeight = document.getElementById('manipulator-height');
 const mHeightGhost = document.getElementById('manipulator-height-ghost');
+const mWidth = document.getElementById('manipulator-width');
+const mWidthGhost = document.getElementById('manipulator-width-ghost');
 
 
 let draggingHeight = false;
@@ -44,9 +46,11 @@ export function injectEventHandlers() {
     let heightReducer = document.getElementById('reduce-height');
     heightReducer.addEventListener('click', reducerHeightClicked);
 
-    let widthManipulator = document.getElementById('manipulator-width');
-    widthManipulator.addEventListener('mouseenter', manipulatorWidthHovered);
-    widthManipulator.addEventListener('mouseleave', manipulatorWidthExit);
+    mWidth.addEventListener('mouseenter', manipulatorWidthHovered);
+    mWidth.addEventListener('mouseleave', manipulatorWidthExit);
+    mWidth.addEventListener('dragstart', manipulatorWidthDragStart);
+    mWidth.addEventListener('drag', manipulatorWidthDrag);
+    mWidth.addEventListener('dragend', manipulatorWidthDragEnd);
 
     mHeight.addEventListener('mouseenter', manipulatorHeightHovered);
     mHeight.addEventListener('mouseleave', manipulatorHeightExit);
@@ -124,33 +128,52 @@ function manipulatorDiagonalExit() {
 }
 
 function manipulatorHeightDragStart(e) {
+    console.log('start height');
+
     draggingHeight = true;
     mHeight.classList.add('dragging')
     mHeightGhost.classList.add('dragging')
 
     manipulatorHeightHovered();
-    console.log('start');
 
     dragEl = document.getElementById('manipulator-height');
 
-    prevX = posX = e.clientX;
+    // prevX = posX = e.clientX;
     prevY = posY = e.clientY;
+
+    startMouseTracking();
+}
+
+function manipulatorWidthDragStart(e) {
+    console.log('start width');
+    
+    draggingHeight = true;
+    mWidth.classList.add('dragging')
+    mWidthGhost.classList.add('dragging')
+
+    manipulatorWidthHovered();
+
+    dragEl = document.getElementById('manipulator-width');
+
+    prevX = posX = e.clientX;
 
     startMouseTracking();
 }
 
 function manipulatorHeightDrag(e) {
     let incrementY = posY - prevY;
-    //console.log('inc: ', incrementY)
-
-    // wholeWrapper.style.height = wholeWrapper.getBoundingClientRect().height + incrementY + "px";
 
     utils.changeHeightOfElement(wholeGrid, incrementY);
-
-    // utils.changeHeightOfElement(wrapperGame, incrementY);
-    // utils.changeHeightOfElement(wrapperLeft, incrementY);
     
     prevY = posY;
+}
+
+function manipulatorWidthDrag(e) {
+    let incrementX = posX - prevX;
+
+    utils.changeWidthOfElement(wholeGrid, incrementX);
+    
+    prevX = posX;
 }
 
 function manipulatorHeightDragEnd() {
@@ -159,9 +182,20 @@ function manipulatorHeightDragEnd() {
     mHeightGhost.classList.remove('dragging')
 
     manipulatorHeightExit();
-    console.log('end');
-
     endMouseTracking();
+
+    console.log('end height');
+}
+
+function manipulatorWidthDragEnd() {
+    draggingWidth = false;
+    mWidth.classList.remove('dragging')
+    mWidthGhost.classList.remove('dragging')
+
+    manipulatorWidthExit();
+    endMouseTracking();
+
+    console.log('end width');
 }
 
 function startMouseTracking() {

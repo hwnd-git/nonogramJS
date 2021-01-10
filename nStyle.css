@@ -60,6 +60,7 @@
     /* grid-template-rows: flex flex;
     grid-template-columns: flex flex; */
     grid-template-rows: max-content;
+    grid-template-columns: max-content;
     grid-template-areas:
         "blank legend-top"
         "legend-side game-grid";
@@ -330,13 +331,9 @@
 }
 
 .manipulator-height:hover + .ghost,
-.ghost.dragging {
+.ghost-height.dragging {
     width: calc(var(--man-length) * 2);
     left: calc(50% - var(--man-length));
-    opacity: 1;
-}
-
-.manipulator-height.test {
     opacity: 1;
 }
 
@@ -353,8 +350,16 @@
 
 .manipulator-width:hover,
 .manipulator-width.dragging {
+    /* height: calc(var(--man-length) * 2);
+    top: calc(50% - var(--man-length)); */
+    opacity: 0;
+}
+
+.manipulator-width:hover + .ghost,
+.ghost-width.dragging {
     height: calc(var(--man-length) * 2);
     top: calc(50% - var(--man-length));
+    opacity: 1;
 }
 
 .manipulator-diag {

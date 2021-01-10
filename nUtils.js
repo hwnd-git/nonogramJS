@@ -112,3 +112,7 @@ function getResultingCssUnit(expression) {
 export function changeHeightOfElement(element, changeValue) {
     element.style.height = element.getBoundingClientRect().height + changeValue + "px";
 }
+
+export function changeWidthOfElement(element, changeValue) {
+    element.style.width = element.getBoundingClientRect().width + changeValue + "px";
+}
