@@ -9,6 +9,8 @@ const brdrRight = document.getElementById('brdr-right');
 const brdrBottom = document.getElementById('brdr-bottom');
 
 const mHeight = document.getElementById('manipulator-height');
+const mHeightGhost = document.getElementById('manipulator-height-ghost');
+
 
 let draggingHeight = false;
 let draggingWidth = false;
@@ -120,9 +122,10 @@ function manipulatorDiagonalExit() {
 }
 
 function manipulatorHeightDragStart(e) {
-    mHeight.classList.add('test')
+    // mHeight.classList.add('test')
     draggingHeight = true;
     mHeight.classList.add('dragging')
+    mHeightGhost.classList.add('dragging')
 
     // setTimeout(() => (mHeight.classList.remove('invisible')), 1000)
 
@@ -169,6 +172,7 @@ function manipulatorHeightDrag(e) {
 function manipulatorHeightDragEnd() {
     draggingHeight = false;
     mHeight.classList.remove('dragging')
+    mHeightGhost.classList.remove('dragging')
 
     manipulatorHeightExit();
     console.log('end');

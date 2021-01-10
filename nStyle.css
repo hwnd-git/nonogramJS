@@ -291,9 +291,11 @@
     border-radius: calc(var(--man-width) * 10);
     background-color: white;
     position: absolute;
-    /* -webkit-user-drag: none;
-    -moz-user-drag: none; */
     transition: 0.3s;
+}
+
+.ghost {
+    pointer-events: none;
 }
 
 .manipulator-height {
@@ -309,9 +311,14 @@
 
 .manipulator-height:hover,
 .manipulator-height.dragging {
+    opacity: 0;
+}
+
+.manipulator-height:hover + .ghost,
+.ghost.dragging {
     width: calc(var(--man-length) * 2);
     left: calc(50% - var(--man-length));
-    opacity: 0.1;
+    opacity: 1;
 }
 
 .manipulator-height.test {
