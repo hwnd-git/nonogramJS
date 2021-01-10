@@ -5,7 +5,7 @@
 }
 
 :root {
-    --cell-size: 20px;
+    --cell-size: 40px;
     --cell-border: 1px;
     --cell-radius: 0px;
     /* --cell-border-color: #808080; */
@@ -19,8 +19,8 @@
     --expander-size: calc(var(--cell-size) * 0.75);
     --top-rows-no: 3;
     --side-cols-no: 3;
-    --stage-cols-no: 30;
-    --stage-rows-no: 40;
+    --stage-cols-no: 14;
+    --stage-rows-no: 11;
 
     --top-legend-full-height: calc(var(--top-rows-no) * var(--cell-size));
     --top-legend-reduction: calc((var(--top-rows-no) - 1) * var(--cell-border));
@@ -366,12 +366,13 @@
     --man-width-increase: calc(var(--man-width) * 2);
     --man-length: calc(var(--cell-size) * 1.5);
     --man-length-increase: calc(var(--man-length) * 2);
+    
+    --full-size: calc(100% + var(--wrapper-border));
 
     --man-pos-on-border: calc((var(--wrapper-border) + var(--man-width)) * -0.5);
     --man-pos-on-border-increased: calc((var(--wrapper-border) + var(--man-width-increase)) * -0.5);
     --man-pos-on-half: calc((var(--full-size) - var(--man-length)) * 0.5);
     --man-pos-on-half-increased: calc((var(--full-size) - var(--man-length-increase)) * 0.5);
-    --full-size: calc(100% + var(--wrapper-border));
 
     border: solid var(--man-border) black;
     border-radius: calc(var(--man-width) * 10);
@@ -462,7 +463,7 @@
 }
 
 /* ================================================================ */
-/* ================================================================ */
+/* =========================== CELLS ============================== */
 /* ================================================================ */
 
 .cell {
@@ -500,4 +501,23 @@
 
 .separator.sep-h {
     height: var(--separator-width);
+}
+
+
+/* ================================================================ */
+/* ============================= DROPS ============================ */
+/* ================================================================ */
+
+.drop {
+    --drop-width: 120px;
+
+    position: absolute;
+    border: solid black 3px;
+    background-color: white;
+    width: var(--drop-width);
+    height: calc(var(--cell-size)*0.75);
+
+    left: 50%;
+    top: 400px;
+    transform: translate(-50%);
 }
