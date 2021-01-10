@@ -5,7 +5,7 @@
 }
 
 :root {
-    --cell-size: 40px;
+    --cell-size: 20px;
     --cell-border: 1px;
     --cell-radius: 0px;
     /* --cell-border-color: #808080; */
@@ -19,8 +19,8 @@
     --expander-size: calc(var(--cell-size) * 0.75);
     --top-rows-no: 3;
     --side-cols-no: 3;
-    --stage-cols-no: 6;
-    --stage-rows-no: 6;
+    --stage-cols-no: 30;
+    --stage-rows-no: 40;
 
     --top-legend-full-height: calc(var(--top-rows-no) * var(--cell-size));
     --top-legend-reduction: calc((var(--top-rows-no) - 1) * var(--cell-border));
@@ -54,10 +54,6 @@
     position: relative;
     /* border: solid var(--outer-border) red; */
 
-    /* grid-template-rows: min-content min-content;
-    grid-template-columns: min-content min-content; */
-    /* grid-template-rows: flex flex;
-    grid-template-columns: flex flex; */
     grid-template-rows: max-content;
     grid-template-columns: max-content;
     grid-template-areas:
@@ -82,7 +78,7 @@
 }
 
 .wrapper {
-    /* overflow: hidden; */
+    /* overflow: hidden; */ /* kiedy jest włączony - mocno zamula zmniejszanie szerokości planszy */
 }
 
 #wrapper-top {
@@ -96,6 +92,7 @@
     /* border-color: orangered; */
 
     /* transition: 1s; */
+    /* width: 500px; */
 }
 
 #legend-top {
@@ -109,8 +106,8 @@
 }
 
 #wrapper-left {
-    display: flex;
-    justify-content: center;
+    /* display: flex; */
+    /* justify-content: center; */
 
     grid-area: legend-side;
     border: solid var(--wrapper-border-color) var(--wrapper-border);
@@ -141,6 +138,7 @@
     /* border-bottom: dashed rgb(0, 0, 0, 1) var(--wrapper-border); */
 
     /* height: 100%; */
+    width: max-content;
 }
 
 #game-grid {
@@ -192,6 +190,8 @@
     /* border-color: pink; */
     /* opacity: 0.5; */
     /* border-width: var(--wrapper-border); */
+    border-top-style: solid;
+    border-left-style: solid;
     border-top-width: calc(var(--wrapper-border) * 0.5);
     border-left-width: calc(var(--wrapper-border) * 0.5);
     bottom: calc(var(--wrapper-border) * -1);
