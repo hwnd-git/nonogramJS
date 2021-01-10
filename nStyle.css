@@ -5,14 +5,14 @@
 }
 
 :root {
-    --cell-size: 100px;
-    --cell-border: 15px;
+    --cell-size: 40px;
+    --cell-border: 1px;
     --cell-radius: 0px;
     /* --cell-border-color: #808080; */
     --cell-border-color: #aaaaaa;
     --cell-size-reduced: calc(var(--cell-size) - var(--cell-border));
 
-    --separator-width: 5px;
+    --separator-width: 1px;
     --separator-spacing: 5;
 
     --outer-border: 2px;
@@ -30,7 +30,7 @@
     --side-legend-reduction: calc((var(--side-cols-no) - 1) * var(--cell-border));
     --side-legend-width: calc(var(--side-legend-full-width) - var(--side-legend-reduction));
 
-    --wrapper-border: 20px;
+    --wrapper-border: 4px;
     /* powinno być wartością parzystą (często jest dzielone przez 2) */
     --wrapper-border-color: rgb(0, 0, 0);
 }
@@ -93,7 +93,7 @@
     border-left: solid var(--wrapper-border-color) calc(var(--wrapper-border)/2);
     border-right: transparent rgb(0, 0, 0, 1) var(--wrapper-border);
     /* border-right: dashed rgb(0, 0, 0, 1) var(--wrapper-border); */
-    border-color: orangered;
+    /* border-color: orangered; */
 
     /* transition: 1s; */
 }
@@ -118,10 +118,10 @@
     border-right: solid var(--wrapper-border-color) calc(var(--wrapper-border)/2);
     border-bottom: transparent rgb(0, 0, 0, 1) var(--wrapper-border);
 
-    border-color: yellow
-        /* border-bottom: dashed rgb(0, 0, 0, 1) var(--wrapper-border); */
+    /* border-color: yellow */
+    /* border-bottom: dashed rgb(0, 0, 0, 1) var(--wrapper-border); */
 
-        /* height: 100px; */
+    /* height: 100px; */
 }
 
 #legend-side {
@@ -156,14 +156,14 @@
 
 .brdr-bottom {
     width: calc(100% + var(--wrapper-border));
-    width: 100%;
+    /* width: 100%; */
     bottom: calc(var(--wrapper-border) * -1);
     border-bottom: solid var(--wrapper-border-color) var(--wrapper-border);
 }
 
 .brdr-right {
     height: calc(100% + var(--wrapper-border));
-    height: 100%;
+    /* height: 100%; */
     top: 0;
     right: calc(var(--wrapper-border) * -1);
     border-right: solid var(--wrapper-border-color) var(--wrapper-border);
@@ -189,8 +189,8 @@
 #fake-border-game {
     /* position: absolute; */
     /* border-style: dashed; */
-    border-color: pink;
-    opacity: 0.5;
+    /* border-color: pink; */
+    /* opacity: 0.5; */
     /* border-width: var(--wrapper-border); */
     border-top-width: calc(var(--wrapper-border) * 0.5);
     border-left-width: calc(var(--wrapper-border) * 0.5);
@@ -202,8 +202,8 @@
 }
 
 #fake-border-side {
-    border-color: skyblue;
-    opacity: 0.5;
+    /* border-color: skyblue; */
+    /* opacity: 0.5; */
     bottom: calc(var(--wrapper-border) * -1);
     left: 0;
     border-top-width: calc(var(--wrapper-border) * 0.5);
@@ -214,8 +214,8 @@
 }
 
 #fake-border-top {
-    border-color: greenyellow;
-    opacity: 0.5;
+    /* border-color: greenyellow; */
+    /* opacity: 0.5; */
     top: 0;
     right: calc(var(--wrapper-border) * -1);
     border-bottom-width: calc(var(--wrapper-border) * 0.5);
@@ -362,7 +362,7 @@
 .manipulator {
     --man-border: 2px;
     --man-width: calc(var(--cell-size) * 0.3);
-    --man-width: var(--wrapper-border);
+    --man-width: calc(var(--wrapper-border) * 3);
     --man-width-increase: calc(var(--man-width) * 2);
     --man-length: calc(var(--cell-size) * 1.5);
     --man-length-increase: calc(var(--man-length) * 2);
@@ -380,8 +380,10 @@
     transition: 0.3s;
 }
 
-.ghost {
+.persistent {
     pointer-events: none;
+    background-color: red;
+    /* transition: 0.3s; */
 }
 
 .manipulator-height {
@@ -401,8 +403,8 @@
     opacity: 0;
 }
 
-.manipulator-height:hover+.ghost,
-.ghost-height.dragging {
+.manipulator-height:hover+.persistent,
+.persistent-height.dragging {
     width: var(--man-length-increase);
     /* height: var(--man-width-increase); */
     left: var(--man-pos-on-half-increased);
@@ -425,8 +427,8 @@
     opacity: 0;
 }
 
-.manipulator-width:hover+.ghost,
-.ghost-width.dragging {
+.manipulator-width:hover+.persistent,
+.persistent-width.dragging {
     height: var(--man-length-increase);
     top: var(--man-pos-on-half-increased);
     opacity: 1;
@@ -445,13 +447,18 @@
     opacity: 0;
 }
 
-.manipulator-diag:hover+.ghost,
-.ghost-diag.dragging {
+.manipulator-diag:hover+.persistent,
+.persistent-diag.dragging {
     width: var(--man-width-increase);
     height: var(--man-width-increase);
     bottom: var(--man-pos-on-border-increased);
     right: var(--man-pos-on-border-increased);
     opacity: 1;
+}
+
+.manipulator.hidden {
+    opacity: 0;
+    /* background-color: red; */
 }
 
 /* ================================================================ */

@@ -3,7 +3,7 @@ import * as utils from './nUtils.js'
 
 //TODO: podczas manipulacji jednym manipulatorem ukryć pozostałe
 
-
+//TODO: zwiększyć zakres chwytania manipulatorów
 
 const wholeWrapper = document.getElementById('wrapper-whole');
 const wholeGrid = document.getElementById('whole-grid');
@@ -13,12 +13,11 @@ const wrapperTop = document.getElementById('wrapper-top');
 const brdrRightSwitchable = document.getElementById('brdr-right-switchable');
 const brdrBottomSwitchable = document.getElementById('brdr-bottom-switchable');
 const mHeight = document.getElementById('manipulator-height');
-const mHeightGhost = document.getElementById('manipulator-height-ghost');
+const mHeightPersistent = document.getElementById('manipulator-height-persistent');
 const mWidth = document.getElementById('manipulator-width');
-const mWidthGhost = document.getElementById('manipulator-width-ghost');
+const mWidthPersistent = document.getElementById('manipulator-width-persistent');
 const mDiag = document.getElementById('manipulator-diag');
-const mDiagGhost = document.getElementById('manipulator-diag-ghost');
-
+const mDiagPersistent = document.getElementById('manipulator-diag-persistent');
 
 let draggingHeight = false;
 let draggingWidth = false;
@@ -132,12 +131,28 @@ function manipulatorDiagonalExit() {
     manipulatorWidthExit();
 }
 
+function showAllManipulators() {
+    const manipulators = document.querySelectorAll('.manipulator');
+    for (let manipulator of manipulators) {
+        manipulator.classList.remove('hidden');
+    }
+}
+
+function hideAllManipulatorsExceptDragged() {
+    let manipulators = Array.from(document.querySelectorAll('.manipulator:not(.dragging)'));
+
+    for (let manipulator of manipulators) {
+        manipulator.classList.add('hidden');
+    }
+}
+
 function manipulatorHeightDragStart(e) {
     console.log('start height');
 
     draggingHeight = true;
-    mHeight.classList.add('dragging')
-    mHeightGhost.classList.add('dragging')
+    mHeight.classList.add('dragging');
+    mHeightPersistent.classList.add('dragging');
+    hideAllManipulatorsExceptDragged();
 
     manipulatorHeightHovered();
 
@@ -151,10 +166,11 @@ function manipulatorHeightDragStart(e) {
 
 function manipulatorWidthDragStart(e) {
     console.log('start width');
-    
+
     draggingHeight = true;
     mWidth.classList.add('dragging')
-    mWidthGhost.classList.add('dragging')
+    mWidthPersistent.classList.add('dragging')
+    hideAllManipulatorsExceptDragged();
 
     manipulatorWidthHovered();
 
@@ -167,11 +183,12 @@ function manipulatorWidthDragStart(e) {
 
 function manipulatorDiagDragStart(e) {
     console.log('start diag');
-    
+
     draggingHeight = true;
     draggingWidth = true;
     mDiag.classList.add('dragging')
-    mDiagGhost.classList.add('dragging')
+    mDiagPersistent.classList.add('dragging')
+    hideAllManipulatorsExceptDragged();
 
     manipulatorWidthHovered();
     manipulatorHeightHovered();
@@ -188,7 +205,7 @@ function manipulatorHeightDrag(e) {
     let incrementY = posY - prevY;
 
     utils.changeHeightOfElement(wholeGrid, incrementY);
-    
+
     prevY = posY;
 }
 
@@ -196,7 +213,7 @@ function manipulatorWidthDrag(e) {
     let incrementX = posX - prevX;
 
     utils.changeWidthOfElement(wholeGrid, incrementX);
-    
+
     prevX = posX;
 }
 
@@ -206,7 +223,7 @@ function manipulatorDiagDrag(e) {
 
     utils.changeWidthOfElement(wholeGrid, incrementX);
     utils.changeHeightOfElement(wholeGrid, incrementY);
-    
+
     prevX = posX;
     prevY = posY;
 }
@@ -214,7 +231,10 @@ function manipulatorDiagDrag(e) {
 function manipulatorHeightDragEnd() {
     draggingHeight = false;
     mHeight.classList.remove('dragging')
-    mHeightGhost.classList.remove('dragging')
+    mHeightPersistent.classList.remove('dragging')
+    // mWidth.classList.remove('hidden');
+    // mWidthPersistent.classList.remove('hidden');
+    showAllManipulators();
 
     manipulatorHeightExit();
     endMouseTracking();
@@ -224,8 +244,11 @@ function manipulatorHeightDragEnd() {
 
 function manipulatorWidthDragEnd() {
     draggingWidth = false;
-    mWidth.classList.remove('dragging')
-    mWidthGhost.classList.remove('dragging')
+    mWidth.classList.remove('dragging');
+    mWidthPersistent.classList.remove('dragging');
+    // mHeight.classList.remove('hidden');
+    // mHeightPersistent.classList.remove('hidden');
+    showAllManipulators();
 
     manipulatorWidthExit();
     endMouseTracking();
@@ -236,8 +259,9 @@ function manipulatorWidthDragEnd() {
 function manipulatorDiagDragEnd() {
     draggingWidth = false;
     draggingHeight = false;
-    mDiag.classList.remove('dragging')
-    mDiagGhost.classList.remove('dragging')
+    mDiag.classList.remove('dragging');
+    mDiagPersistent.classList.remove('dragging');
+    showAllManipulators();
 
     manipulatorWidthExit();
     manipulatorHeightExit();
