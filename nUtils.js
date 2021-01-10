@@ -109,3 +109,6 @@ function getResultingCssUnit(expression) {
     return unitOccurences.keys().next().value;
 }
 
+export function changeHeightOfElement(element, changeValue) {
+    element.style.height = element.getBoundingClientRect().height + changeValue + "px";
+}

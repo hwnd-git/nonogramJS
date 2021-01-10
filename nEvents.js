@@ -1,7 +1,9 @@
 import * as script from './nScript.js';
+import * as utils from './nUtils.js'
 
 
 const wholeWrapper = document.getElementById('wrapper-whole');
+const wholeGrid = document.getElementById('whole-grid');
 const wrapperLeft = document.getElementById('wrapper-left');
 const wrapperGame = document.getElementById('wrapper-game');
 const wrapperTop = document.getElementById('wrapper-top');
@@ -122,12 +124,9 @@ function manipulatorDiagonalExit() {
 }
 
 function manipulatorHeightDragStart(e) {
-    // mHeight.classList.add('test')
     draggingHeight = true;
     mHeight.classList.add('dragging')
     mHeightGhost.classList.add('dragging')
-
-    // setTimeout(() => (mHeight.classList.remove('invisible')), 1000)
 
     manipulatorHeightHovered();
     console.log('start');
@@ -138,34 +137,19 @@ function manipulatorHeightDragStart(e) {
     prevY = posY = e.clientY;
 
     startMouseTracking();
-
-    const startingHeight = wholeWrapper.getBoundingClientRect().height;
-    console.log('height: ', startingHeight);
-    
-
-    // let bounds = wholeWrapper.getBoundingClientRect();
-    // wholeWrapper.style.height = `${bounds.height + 10}px`
-
-    // bounds = wrapperGame.getBoundingClientRect();
-    // console.log(bounds.height);
-    
-    // wrapperGame.style.height = `${bounds.height + 10}px`
-
-    // window.addEventListener('mousemove', trackMouseMovement)
-    // window.addEventListener('mouseup', mouseup)
-
-    //wholeWrapper.style.height = '100px'
 }
 
 function manipulatorHeightDrag(e) {
-    //console.log('drag');
-    console.log('posY: ', posY);
-    
     let incrementY = posY - prevY;
-    console.log('inc: ', incrementY)
+    //console.log('inc: ', incrementY)
 
-    wholeWrapper.style.height = wholeWrapper.getBoundingClientRect().height + incrementY + "px";
+    // wholeWrapper.style.height = wholeWrapper.getBoundingClientRect().height + incrementY + "px";
 
+    utils.changeHeightOfElement(wholeGrid, incrementY);
+
+    // utils.changeHeightOfElement(wrapperGame, incrementY);
+    // utils.changeHeightOfElement(wrapperLeft, incrementY);
+    
     prevY = posY;
 }
 
