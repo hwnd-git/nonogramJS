@@ -151,28 +151,29 @@
 .brdr {
     position: absolute;
     transition: opacity 0.3s;
-    opacity: 0;
+    /* opacity: 0; */
 }
 
 .brdr-bottom {
     width: calc(100% + var(--wrapper-border));
+    width: 100%;
     bottom: calc(var(--wrapper-border) * -1);
     border-bottom: solid var(--wrapper-border-color) var(--wrapper-border);
 }
 
 .brdr-right {
     height: calc(100% + var(--wrapper-border));
+    height: 100%;
     top: 0;
     right: calc(var(--wrapper-border) * -1);
-    ;
     border-right: solid var(--wrapper-border-color) var(--wrapper-border);
 }
 
-.brdr.brdr-dashed {
+/* .brdr.brdr-dashed {
     border-bottom-style: dashed;
     border-right-style: dashed;
     border-color: var(--wrapper-border-color);
-}
+} */
 
 .brdr.edit {
     opacity: 0;
