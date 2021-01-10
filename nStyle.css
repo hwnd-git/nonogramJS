@@ -54,7 +54,6 @@
     display: grid;
     position: relative;
     /* border: solid var(--outer-border) red; */
-    /* width: 100%; */
 
     grid-template-rows: max-content max-content;
     grid-template-columns: max-content max-content;
@@ -76,6 +75,10 @@
 .legend {
     background-color: #dadada;
     height: 100%;
+}
+
+.wrapper {
+    overflow: hidden;
 }
 
 #wrapper-top {
@@ -288,6 +291,8 @@
     border-radius: calc(var(--man-width) * 10);
     background-color: white;
     position: absolute;
+    /* -webkit-user-drag: none;
+    -moz-user-drag: none; */
     transition: 0.3s;
 }
 
@@ -302,9 +307,15 @@
     bottom: var(--man-h-bottom);
 }
 
-.manipulator-height:hover {
+.manipulator-height:hover,
+.manipulator-height.dragging {
     width: calc(var(--man-length) * 2);
     left: calc(50% - var(--man-length));
+    opacity: 0.1;
+}
+
+.manipulator-height.test {
+    opacity: 1;
 }
 
 .manipulator-width {
@@ -318,7 +329,8 @@
     right: var(--man-v-right);
 }
 
-.manipulator-width:hover {
+.manipulator-width:hover,
+.manipulator-width.dragging {
     height: calc(var(--man-length) * 2);
     top: calc(50% - var(--man-length));
 }
@@ -332,7 +344,8 @@
     transform: translate(calc(50% - var(--wrapper-border)), calc(50% - var(--wrapper-border)));
 }
 
-.manipulator-diag:hover {
+.manipulator-diag:hover,
+.manipulator-diag.dragging {
     width: calc(var(--man-width) * 2);
     height: calc(var(--man-width) * 2);
 }

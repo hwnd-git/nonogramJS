@@ -1,14 +1,25 @@
 import * as script from './nScript.js';
 
+
+const wholeWrapper = document.getElementById('wrapper-whole');
 const wrapperLeft = document.getElementById('wrapper-left');
 const wrapperGame = document.getElementById('wrapper-game');
 const wrapperTop = document.getElementById('wrapper-top');
 const brdrRight = document.getElementById('brdr-right');
 const brdrBottom = document.getElementById('brdr-bottom');
-const wholeWrapper = document.getElementById('wrapper-whole');
+
+const mHeight = document.getElementById('manipulator-height');
 
 let draggingHeight = false;
 let draggingWidth = false;
+
+let dragEl = document.createElement('div');
+
+let prevX = 0;
+let prevY = 0;
+
+let posX = 0;
+let posY = 0;
 
 export function injectEventHandlers() {
     let diagExpander = document.getElementById('expand-diag');
@@ -33,11 +44,11 @@ export function injectEventHandlers() {
     widthManipulator.addEventListener('mouseenter', manipulatorWidthHovered);
     widthManipulator.addEventListener('mouseleave', manipulatorWidthExit);
 
-    let heightManipulator = document.getElementById('manipulator-height');
-    heightManipulator.addEventListener('mouseenter', manipulatorHeightHovered);
-    heightManipulator.addEventListener('mouseleave', manipulatorHeightExit);
-    heightManipulator.addEventListener('dragstart', manipulatorHeightDragStart);
-    heightManipulator.addEventListener('dragend', manipulatorHeightDragEnd);
+    mHeight.addEventListener('mouseenter', manipulatorHeightHovered);
+    mHeight.addEventListener('mouseleave', manipulatorHeightExit);
+    mHeight.addEventListener('dragstart', manipulatorHeightDragStart);
+    mHeight.addEventListener('drag', manipulatorHeightDrag);
+    mHeight.addEventListener('dragend', manipulatorHeightDragEnd);
 
     let diagManipulator = document.getElementById('manipulator-diag');
     diagManipulator.addEventListener('mouseenter', manipulatorDiagonalHovered);
@@ -108,16 +119,71 @@ function manipulatorDiagonalExit() {
     manipulatorWidthExit();
 }
 
-function manipulatorHeightDragStart() {
+function manipulatorHeightDragStart(e) {
+    mHeight.classList.add('test')
     draggingHeight = true;
+    mHeight.classList.add('dragging')
+
+    // setTimeout(() => (mHeight.classList.remove('invisible')), 1000)
+
     manipulatorHeightHovered();
     console.log('start');
 
-    wholeWrapper.style.height = '100px'
+    dragEl = document.getElementById('manipulator-height');
+
+    prevX = posX = e.clientX;
+    prevY = posY = e.clientY;
+
+    startMouseTracking();
+
+    const startingHeight = wholeWrapper.getBoundingClientRect().height;
+    console.log('height: ', startingHeight);
+    
+
+    // let bounds = wholeWrapper.getBoundingClientRect();
+    // wholeWrapper.style.height = `${bounds.height + 10}px`
+
+    // bounds = wrapperGame.getBoundingClientRect();
+    // console.log(bounds.height);
+    
+    // wrapperGame.style.height = `${bounds.height + 10}px`
+
+    // window.addEventListener('mousemove', trackMouseMovement)
+    // window.addEventListener('mouseup', mouseup)
+
+    //wholeWrapper.style.height = '100px'
+}
+
+function manipulatorHeightDrag(e) {
+    //console.log('drag');
+    console.log('posY: ', posY);
+    
+    let incrementY = posY - prevY;
+    console.log('inc: ', incrementY)
+
+    wholeWrapper.style.height = wholeWrapper.getBoundingClientRect().height + incrementY + "px";
+
+    prevY = posY;
 }
 
 function manipulatorHeightDragEnd() {
     draggingHeight = false;
+    mHeight.classList.remove('dragging')
+
     manipulatorHeightExit();
     console.log('end');
+
+    endMouseTracking();
+}
+
+function startMouseTracking() {
+    document.ondragover = function (event) {
+        event = event || window.event;
+        posX = event.pageX;
+        posY = event.pageY;
+    };
+}
+
+function endMouseTracking() {
+    document.ondragover = null;
 }
