@@ -40,9 +40,9 @@ export function injectEventHandlers() {
     let heightReducer = document.getElementById('reduce-height');
     heightReducer.addEventListener('click', reducerHeightClicked);
 
-    let widthManipulator = document.getElementById('manipulator-width');
-    widthManipulator.addEventListener('mouseenter', manipulatorWidthHovered);
-    widthManipulator.addEventListener('mouseleave', manipulatorWidthExit);
+    // let widthManipulator = document.getElementById('manipulator-width');
+    // widthManipulator.addEventListener('mouseenter', manipulatorWidthHovered);
+    // widthManipulator.addEventListener('mouseleave', manipulatorWidthExit);
 
     mHeight.addEventListener('mouseenter', manipulatorHeightHovered);
     mHeight.addEventListener('mouseleave', manipulatorHeightExit);
@@ -50,9 +50,9 @@ export function injectEventHandlers() {
     mHeight.addEventListener('drag', manipulatorHeightDrag);
     mHeight.addEventListener('dragend', manipulatorHeightDragEnd);
 
-    let diagManipulator = document.getElementById('manipulator-diag');
-    diagManipulator.addEventListener('mouseenter', manipulatorDiagonalHovered);
-    diagManipulator.addEventListener('mouseleave', manipulatorDiagonalExit);
+    // let diagManipulator = document.getElementById('manipulator-diag');
+    // diagManipulator.addEventListener('mouseenter', manipulatorDiagonalHovered);
+    // diagManipulator.addEventListener('mouseleave', manipulatorDiagonalExit);
 }
 
 function expanderDiaHovered() {

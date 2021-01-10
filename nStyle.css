@@ -282,28 +282,40 @@
     transform: translate(calc(100%), calc(100%));
 }
 
-.manipulator {
+.m-container {
     --man-border: 2px;
     --man-width: calc(var(--cell-size) * 0.3);
     --man-length: calc(var(--cell-size) * 1.5);
 
+    position: absolute;
+    border: solid 1px red;
+}
+
+.manipulator {
+    /* --man-border: 2px;
+    --man-width: calc(var(--cell-size) * 0.3);
+    --man-length: calc(var(--cell-size) * 1.5); */
+
     border: solid var(--man-border) black;
     border-radius: calc(var(--man-width) * 10);
     background-color: white;
-    position: absolute;
-    /* -webkit-user-drag: none;
-    -moz-user-drag: none; */
+    pointer-events: none;
+    /* position: absolute; */
     transition: 0.3s;
 }
 
-.manipulator-height {
+.manipulator-height{
+    width: var(--man-length);
+    height: var(--man-width);
+}
+
+.m-height {
     --man-h-left: calc(50% - var(--man-length) / 2);
     --man-h-bottom: calc((var(--wrapper-border) - var(--man-width))/2);
 
     cursor: s-resize;
-    width: var(--man-length);
-    height: var(--man-width);
-    left: var(--man-h-left);
+    /* left: var(--man-h-left); */
+    left: calc(50% - var(--man-length) / 2);
     bottom: var(--man-h-bottom);
 }
 
