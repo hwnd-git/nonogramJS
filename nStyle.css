@@ -5,8 +5,8 @@
 }
 
 :root {
-    --cell-size: 40px;
-    --cell-border: 1px;
+    --cell-size: 100px;
+    --cell-border: 15px;
     --cell-radius: 0px;
     /* --cell-border-color: #808080; */
     --cell-border-color: #aaaaaa;
@@ -17,22 +17,21 @@
 
     --outer-border: 2px;
     --expander-size: calc(var(--cell-size) * 0.75);
-    --top-rows-no: 2;
-    --side-cols-no: 2;
-    --stage-cols-no: 14;
-    --stage-rows-no: 11;
+    --top-rows-no: 3;
+    --side-cols-no: 3;
+    --stage-cols-no: 6;
+    --stage-rows-no: 6;
 
-    --game-width: calc(var(--cell-size) * var(--stage-cols-no));
-    --game-height: calc(var(--cell-size) * var(--stage-rows-no));
-    --legend-width: calc(var(--cell-size) * var(--side-cols-no));
-    --legend-height: calc(var(--cell-size) * var(--top-rows-no));
+    --top-legend-full-height: calc(var(--top-rows-no) * var(--cell-size));
+    --top-legend-reduction: calc((var(--top-rows-no) - 1) * var(--cell-border));
+    --top-legend-height: calc(var(--top-legend-full-height) - var(--top-legend-reduction));
 
-    --shrink-game-h: calc((var(--stage-cols-no) - 1) * var(--cell-border));
-    --shrink-game-v: calc((var(--stage-rows-no) - 1) * var(--cell-border));
-    --shrink-left-h: calc((var(--side-cols-no) - 1) * var(--cell-border));
-    --shrink-top-v: calc((var(--top-rows-no) - 1) * var(--cell-border));
+    --side-legend-full-width: calc(var(--side-cols-no) * var(--cell-size));
+    --side-legend-reduction: calc((var(--side-cols-no) - 1) * var(--cell-border));
+    --side-legend-width: calc(var(--side-legend-full-width) - var(--side-legend-reduction));
 
-    --wrapper-border: 3px;
+    --wrapper-border: 20px;
+    /* powinno być wartością parzystą (często jest dzielone przez 2) */
     --wrapper-border-color: rgb(0, 0, 0);
 }
 
@@ -83,7 +82,7 @@
 }
 
 .wrapper {
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 #wrapper-top {
@@ -92,7 +91,9 @@
     border: solid var(--wrapper-border-color) var(--wrapper-border);
     border-bottom: solid var(--wrapper-border-color) calc(var(--wrapper-border)/2);
     border-left: solid var(--wrapper-border-color) calc(var(--wrapper-border)/2);
-    border-right: dashed;
+    border-right: transparent rgb(0, 0, 0, 1) var(--wrapper-border);
+    /* border-right: dashed rgb(0, 0, 0, 1) var(--wrapper-border); */
+    border-color: orangered;
 
     /* transition: 1s; */
 }
@@ -115,9 +116,12 @@
     border: solid var(--wrapper-border-color) var(--wrapper-border);
     border-top: solid var(--wrapper-border-color) calc(var(--wrapper-border)/2);
     border-right: solid var(--wrapper-border-color) calc(var(--wrapper-border)/2);
-    border-bottom: dashed;
+    border-bottom: transparent rgb(0, 0, 0, 1) var(--wrapper-border);
 
-    height: 100%;
+    border-color: yellow
+        /* border-bottom: dashed rgb(0, 0, 0, 1) var(--wrapper-border); */
+
+        /* height: 100px; */
 }
 
 #legend-side {
@@ -131,8 +135,10 @@
     border: solid var(--wrapper-border-color) var(--wrapper-border);
     border-top: solid var(--wrapper-border-color) calc(var(--wrapper-border)/2);
     border-left: solid var(--wrapper-border-color) calc(var(--wrapper-border)/2);
-    border-right: dashed;
-    border-bottom: dashed;
+    border-right: transparent rgb(0, 0, 0, 1) var(--wrapper-border);
+    border-bottom: transparent rgb(0, 0, 0, 1) var(--wrapper-border);
+    /* border-right: dashed rgb(0, 0, 0, 1) var(--wrapper-border); */
+    /* border-bottom: dashed rgb(0, 0, 0, 1) var(--wrapper-border); */
 
     /* height: 100%; */
 }
@@ -145,24 +151,77 @@
 .brdr {
     position: absolute;
     transition: opacity 0.3s;
-    /* opacity: 0; */
+    opacity: 0;
 }
 
 .brdr-bottom {
-    width: 100%;
-    bottom: 0;
+    width: calc(100% + var(--wrapper-border));
+    bottom: calc(var(--wrapper-border) * -1);
     border-bottom: solid var(--wrapper-border-color) var(--wrapper-border);
 }
 
 .brdr-right {
-    height: 100%;
+    height: calc(100% + var(--wrapper-border));
     top: 0;
-    right: 0;
+    right: calc(var(--wrapper-border) * -1);
+    ;
     border-right: solid var(--wrapper-border-color) var(--wrapper-border);
+}
+
+.brdr.brdr-dashed {
+    border-bottom-style: dashed;
+    border-right-style: dashed;
+    border-color: var(--wrapper-border-color);
 }
 
 .brdr.edit {
     opacity: 0;
+}
+
+.fake-border {
+    pointer-events: none;
+    position: absolute;
+    border-style: dashed;
+    border-width: var(--wrapper-border);
+}
+
+#fake-border-game {
+    /* position: absolute; */
+    /* border-style: dashed; */
+    border-color: pink;
+    opacity: 0.5;
+    /* border-width: var(--wrapper-border); */
+    border-top-width: calc(var(--wrapper-border) * 0.5);
+    border-left-width: calc(var(--wrapper-border) * 0.5);
+    bottom: calc(var(--wrapper-border) * -1);
+    right: calc(var(--wrapper-border) * -1);
+
+    height: calc(100% - var(--top-legend-height) - var(--wrapper-border) * 0.5);
+    width: calc(100% - var(--side-legend-width) - var(--wrapper-border) * 0.5);
+}
+
+#fake-border-side {
+    border-color: skyblue;
+    opacity: 0.5;
+    bottom: calc(var(--wrapper-border) * -1);
+    left: 0;
+    border-top-width: calc(var(--wrapper-border) * 0.5);
+    border-right-width: calc(var(--wrapper-border) * 0.5);
+
+    width: calc(var(--side-legend-width) + var(--wrapper-border) * 1.5);
+    height: calc(100% - var(--top-legend-height) - var(--wrapper-border) * 0.5);
+}
+
+#fake-border-top {
+    border-color: greenyellow;
+    opacity: 0.5;
+    top: 0;
+    right: calc(var(--wrapper-border) * -1);
+    border-bottom-width: calc(var(--wrapper-border) * 0.5);
+    border-left-width: calc(var(--wrapper-border) * 0.5);
+
+    height: calc(var(--top-legend-height) + var(--wrapper-border) * 1.5);
+    width: calc(100% - var(--side-legend-width) - var(--wrapper-border) * 0.5);
 }
 
 /* =================== OLD EXPANDER STYLE =================== */
@@ -258,15 +317,15 @@
 .expander:hover {
     height: calc(var(--cell-size));
     width: calc(var(--cell-size));
-} 
+}
 
 .reducer:hover {
     background-color: red;
-} 
+}
 
 .expander:hover {
     background-color: greenyellow;
-} 
+}
 
 #reduce-height {
     left: calc(var(--wrapper-border) * -1);
@@ -275,7 +334,8 @@
 }
 
 #expand-height {
-    left: calc(var(--wrapper-border) * -1);;
+    left: calc(var(--wrapper-border) * -1);
+    ;
     bottom: 0;
     transform: translate(calc(-100%), calc(100%));
 }
@@ -301,7 +361,16 @@
 .manipulator {
     --man-border: 2px;
     --man-width: calc(var(--cell-size) * 0.3);
+    --man-width: var(--wrapper-border);
+    --man-width-increase: calc(var(--man-width) * 2);
     --man-length: calc(var(--cell-size) * 1.5);
+    --man-length-increase: calc(var(--man-length) * 2);
+
+    --man-pos-on-border: calc((var(--wrapper-border) + var(--man-width)) * -0.5);
+    --man-pos-on-border-increased: calc((var(--wrapper-border) + var(--man-width-increase)) * -0.5);
+    --man-pos-on-half: calc((var(--full-size) - var(--man-length)) * 0.5);
+    --man-pos-on-half-increased: calc((var(--full-size) - var(--man-length-increase)) * 0.5);
+    --full-size: calc(100% + var(--wrapper-border));
 
     border: solid var(--man-border) black;
     border-radius: calc(var(--man-width) * 10);
@@ -315,50 +384,50 @@
 }
 
 .manipulator-height {
-    --man-h-left: calc(50% - var(--man-length) / 2);
-    --man-h-bottom: calc((var(--wrapper-border) - var(--man-width))/2);
-
     cursor: s-resize;
     width: var(--man-length);
     height: var(--man-width);
-    left: var(--man-h-left);
-    bottom: var(--man-h-bottom);
+    left: var(--man-pos-on-half);
+    bottom: var(--man-pos-on-border);
 }
 
 .manipulator-height:hover,
 .manipulator-height.dragging {
+    width: var(--man-length-increase);
+    /* height: var(--man-width-increase); */
+    left: var(--man-pos-on-half-increased);
+    /* bottom: var(--man-pos-on-border-increased); */
     opacity: 0;
 }
 
-.manipulator-height:hover + .ghost,
+.manipulator-height:hover+.ghost,
 .ghost-height.dragging {
-    width: calc(var(--man-length) * 2);
-    left: calc(50% - var(--man-length));
+    width: var(--man-length-increase);
+    /* height: var(--man-width-increase); */
+    left: var(--man-pos-on-half-increased);
+    /* bottom: var(--man-pos-on-border-increased); */
     opacity: 1;
 }
 
 .manipulator-width {
-    --man-v-top: calc(50% - var(--man-length) / 2);
-    --man-v-right: calc((var(--wrapper-border) - var(--man-width))/2);
-
     cursor: e-resize;
     width: var(--man-width);
     height: var(--man-length);
-    top: var(--man-v-top);
-    right: var(--man-v-right);
+    top: var(--man-pos-on-half);
+    right: var(--man-pos-on-border);
 }
 
 .manipulator-width:hover,
 .manipulator-width.dragging {
-    /* height: calc(var(--man-length) * 2);
-    top: calc(50% - var(--man-length)); */
+    height: var(--man-length-increase);
+    top: var(--man-pos-on-half-increased);
     opacity: 0;
 }
 
-.manipulator-width:hover + .ghost,
+.manipulator-width:hover+.ghost,
 .ghost-width.dragging {
-    height: calc(var(--man-length) * 2);
-    top: calc(50% - var(--man-length));
+    height: var(--man-length-increase);
+    top: var(--man-pos-on-half-increased);
     opacity: 1;
 }
 
@@ -366,15 +435,22 @@
     cursor: se-resize;
     width: var(--man-width);
     height: var(--man-width);
-    right: 0;
-    bottom: 0;
-    transform: translate(calc(50% - var(--wrapper-border)), calc(50% - var(--wrapper-border)));
+    bottom: var(--man-pos-on-border);
+    right: var(--man-pos-on-border);
 }
 
 .manipulator-diag:hover,
 .manipulator-diag.dragging {
-    width: calc(var(--man-width) * 2);
-    height: calc(var(--man-width) * 2);
+    opacity: 0;
+}
+
+.manipulator-diag:hover+.ghost,
+.ghost-diag.dragging {
+    width: var(--man-width-increase);
+    height: var(--man-width-increase);
+    bottom: var(--man-pos-on-border-increased);
+    right: var(--man-pos-on-border-increased);
+    opacity: 1;
 }
 
 /* ================================================================ */
@@ -399,10 +475,11 @@
     align-items: center;
 }
 
-.cell[data-translation] {
+/* .cell[data-translation] {
     transform: translateX(var(--translation));
     background-color: pink;
-}
+    
+} */
 
 .separator {
     background-color: var(--cell-border-color);

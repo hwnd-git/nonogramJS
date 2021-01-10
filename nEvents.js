@@ -1,19 +1,23 @@
 import * as script from './nScript.js';
 import * as utils from './nUtils.js'
 
+//TODO: podczas manipulacji jednym manipulatorem ukryć pozostałe
+
+
 
 const wholeWrapper = document.getElementById('wrapper-whole');
 const wholeGrid = document.getElementById('whole-grid');
 const wrapperLeft = document.getElementById('wrapper-left');
 const wrapperGame = document.getElementById('wrapper-game');
 const wrapperTop = document.getElementById('wrapper-top');
-const brdrRight = document.getElementById('brdr-right');
-const brdrBottom = document.getElementById('brdr-bottom');
-
+const brdrRightSwitchable = document.getElementById('brdr-right-switchable');
+const brdrBottomSwitchable = document.getElementById('brdr-bottom-switchable');
 const mHeight = document.getElementById('manipulator-height');
 const mHeightGhost = document.getElementById('manipulator-height-ghost');
 const mWidth = document.getElementById('manipulator-width');
 const mWidthGhost = document.getElementById('manipulator-width-ghost');
+const mDiag = document.getElementById('manipulator-diag');
+const mDiagGhost = document.getElementById('manipulator-diag-ghost');
 
 
 let draggingHeight = false;
@@ -35,7 +39,6 @@ export function injectEventHandlers() {
 
     let widthExpander = document.getElementById('expand-width');
     widthExpander.addEventListener('click', expanderWidthClicked)
-    //widthExpander.addEventListener(dr)
 
     let heightExpander = document.getElementById('expand-height');
     heightExpander.addEventListener('click', expanderHeightClicked)
@@ -58,9 +61,11 @@ export function injectEventHandlers() {
     mHeight.addEventListener('drag', manipulatorHeightDrag);
     mHeight.addEventListener('dragend', manipulatorHeightDragEnd);
 
-    let diagManipulator = document.getElementById('manipulator-diag');
-    diagManipulator.addEventListener('mouseenter', manipulatorDiagonalHovered);
-    diagManipulator.addEventListener('mouseleave', manipulatorDiagonalExit);
+    mDiag.addEventListener('mouseenter', manipulatorDiagonalHovered);
+    mDiag.addEventListener('mouseleave', manipulatorDiagonalExit);
+    mDiag.addEventListener('dragstart', manipulatorDiagDragStart);
+    mDiag.addEventListener('drag', manipulatorDiagDrag);
+    mDiag.addEventListener('dragend', manipulatorDiagDragEnd);
 }
 
 function expanderDiaHovered() {
@@ -102,19 +107,19 @@ function reducerHeightClicked() {
 }
 
 function manipulatorHeightHovered() {
-    brdrBottom.classList.add('edit');
+    brdrBottomSwitchable.classList.add('edit');
 }
 
 function manipulatorHeightExit() {
-    if (!draggingHeight) brdrBottom.classList.remove('edit');
+    if (!draggingHeight) brdrBottomSwitchable.classList.remove('edit');
 }
 
 function manipulatorWidthHovered() {
-    brdrRight.classList.add('edit');
+    brdrRightSwitchable.classList.add('edit');
 }
 
 function manipulatorWidthExit() {
-    if (!draggingWidth) brdrRight.classList.remove('edit');
+    if (!draggingWidth) brdrRightSwitchable.classList.remove('edit');
 }
 
 function manipulatorDiagonalHovered() {
@@ -136,7 +141,7 @@ function manipulatorHeightDragStart(e) {
 
     manipulatorHeightHovered();
 
-    dragEl = document.getElementById('manipulator-height');
+    dragEl = mHeight;
 
     // prevX = posX = e.clientX;
     prevY = posY = e.clientY;
@@ -153,8 +158,27 @@ function manipulatorWidthDragStart(e) {
 
     manipulatorWidthHovered();
 
-    dragEl = document.getElementById('manipulator-width');
+    dragEl = mWidth;
 
+    prevX = posX = e.clientX;
+
+    startMouseTracking();
+}
+
+function manipulatorDiagDragStart(e) {
+    console.log('start diag');
+    
+    draggingHeight = true;
+    draggingWidth = true;
+    mDiag.classList.add('dragging')
+    mDiagGhost.classList.add('dragging')
+
+    manipulatorWidthHovered();
+    manipulatorHeightHovered();
+
+    dragEl = mDiag;
+
+    prevY = posY = e.clientY;
     prevX = posX = e.clientX;
 
     startMouseTracking();
@@ -174,6 +198,17 @@ function manipulatorWidthDrag(e) {
     utils.changeWidthOfElement(wholeGrid, incrementX);
     
     prevX = posX;
+}
+
+function manipulatorDiagDrag(e) {
+    let incrementX = posX - prevX;
+    let incrementY = posY - prevY;
+
+    utils.changeWidthOfElement(wholeGrid, incrementX);
+    utils.changeHeightOfElement(wholeGrid, incrementY);
+    
+    prevX = posX;
+    prevY = posY;
 }
 
 function manipulatorHeightDragEnd() {
@@ -196,6 +231,19 @@ function manipulatorWidthDragEnd() {
     endMouseTracking();
 
     console.log('end width');
+}
+
+function manipulatorDiagDragEnd() {
+    draggingWidth = false;
+    draggingHeight = false;
+    mDiag.classList.remove('dragging')
+    mDiagGhost.classList.remove('dragging')
+
+    manipulatorWidthExit();
+    manipulatorHeightExit();
+    endMouseTracking();
+
+    console.log('end diag');
 }
 
 function startMouseTracking() {
