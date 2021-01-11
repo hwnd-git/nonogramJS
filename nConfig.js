@@ -24,3 +24,4 @@ export function updateSetting(setting, newVal) {
     setting.value = newVal;
     utils.setCSSVariable(setting.cssName, newVal);
 }
+

@@ -35,6 +35,10 @@ let prevY = 0;
 let posX = 0;
 let posY = 0;
 
+$('#xxx').draggable({ cursor: "crosshair" });    //jQuery
+console.log(document.querySelector('#xxx'));
+
+
 export function injectEventHandlers() {
     let diagExpander = document.getElementById('expand-diag');
     diagExpander.addEventListener("mouseenter", expanderDiaHovered);
@@ -72,8 +76,9 @@ export function injectEventHandlers() {
     mDiag.addEventListener('dragend', manipulatorDiagDragEnd);
 
     drop.addEventListener('dragenter', dragEnterH);
-    // drop.addEventListener('dragover', dragOverH);
+    drop.addEventListener('dragover', dragOverH);
     drop.addEventListener('dragleave', dragLeaveH);
+    drop.addEventListener('drop', dragDropH);
 }
 
 function expanderDiaHovered() {
@@ -92,18 +97,42 @@ function expanderDiaLeft() {
     expandVertical.classList.remove('expanded');
 }
 
-function dragEnterH() {
+//TODO: odnośnie draggingu czytaj tutaj:
+// https://developer.mozilla.org/en-US/docs/Web/API/Document/drag_event
+// https://jsfiddle.net/radonirinamaminiaina/zfnj5rv4/
+// widać że to co jest draggowane można namierzyć poprzez event.target
+
+
+//TODO: wygląda na to że zmienić kursor podczas drag/drop można tylko z jQuery:
+// https://javascriptio.com/view/705644/changing-cursor-while-dragging
+// https://api.jqueryui.com/draggable/#option-cursor
+// https://jsfiddle.net/wpcbM/3/
+
+function dragEnterH(e) {
     console.log('dragenter');
+    e.preventDefault();
+    // e.dataTransfer.dropEffect = "copy";
+    e.dataTransfer.dropEffect = 'move';
+    e.dataTransfer.effectAllowed = 'move';
     
+    drop.classList.add('target');
+    mHeightPersistent.classList.add('ontarget', 'reduce');
 }
 
-function dragOverH() {
+function dragOverH(e) {
+    e.preventDefault();
     console.log('dragover');
-    
+
 }
 
 function dragLeaveH() {
     console.log('dragexit');
+    drop.classList.remove('target')
+    mHeightPersistent.classList.remove('ontarget', 'reduce');
+}
+
+function dragDropH() {
+    console.log('dropped');
     
 }
 
@@ -181,6 +210,14 @@ function manipulatorHeightDragStart(e) {
     mHeightPersistent.classList.add('dragging');
     hideAllManipulatorsExceptDragged();
 
+    e.dataTransfer.dropEffect = 'move';
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.mozCursor = 'move';
+    console.log('drag start: ', e.dataTransfer);
+
+    // mHeight.style.pointerEvents = 'none';
+    // mHeightPersistent.style.pointerEvents = 'none';
+
     dragEl = mHeight;
     manipulatorHeightHovered();
 
@@ -214,7 +251,7 @@ function manipulatorDiagDragStart(e) {
     mDiag.classList.add('dragging')
     mDiagPersistent.classList.add('dragging')
     hideAllManipulatorsExceptDragged();
-
+    
     manipulatorWidthHovered();
     manipulatorHeightHovered();
 
@@ -227,31 +264,44 @@ function manipulatorDiagDragStart(e) {
 }
 
 function manipulatorHeightDrag(e) {
-    let incrementY = posY - prevY;
+    // let incrementY = posY - prevY;
 
-    utils.changeHeightOfElement(wholeGrid, incrementY);
+    
+    // utils.changeHeightOfElement(wholeGrid, incrementY);
+    e.dataTransfer.dropEffect = 'move';
+    e.dataTransfer.effectAllowed = 'move';
+    utils.setHeightOfElementInclMainPadding(wholeGrid, posY);
 
-    prevY = posY;
+    // prevY = posY;
 }
 
 function manipulatorWidthDrag(e) {
-    let incrementX = posX - prevX;
+    // let incrementX = posX - prevX;
 
-    utils.changeWidthOfElement(wholeGrid, incrementX);
+    // let posDiv = document.getElementById('pos');
+    // posDiv.innerText = `x: ${posX}, y: ${posY}`;
+    // posDiv.style.top = posY + "px";
+    // posDiv.style.left = posX + "px";
 
-    prevX = posX;
+    // utils.changeWidthOfElement(wholeGrid, incrementX);
+    utils.setWidthOfElementInclMainPadding(wholeGrid, posX)
+
+    // prevX = posX;
 }
 
 function manipulatorDiagDrag(e) {
-    let incrementX = posX - prevX;
-    let incrementY = posY - prevY;
+    // let incrementX = posX - prevX;
+    // let incrementY = posY - prevY;
 
-    utils.changeWidthOfElement(wholeGrid, incrementX);
-    utils.changeHeightOfElement(wholeGrid, incrementY);
+    // utils.changeWidthOfElement(wholeGrid, incrementX);
+    // utils.changeHeightOfElement(wholeGrid, incrementY);
 
-    prevX = posX;
-    prevY = posY;
-    console.log('tracking: ', posX, posY);
+    utils.setHeightOfElementInclMainPadding(wholeGrid, posY);
+    utils.setWidthOfElementInclMainPadding(wholeGrid, posX)
+
+    // prevX = posX;
+    // prevY = posY;
+    // console.log('tracking: ', posX, posY);
 }
 
 function manipulatorHeightDragEnd() {

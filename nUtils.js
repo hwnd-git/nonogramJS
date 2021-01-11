@@ -1,6 +1,7 @@
 import * as eq from './nEquationSolver.js';
 
 const cssUnits = ['px', 'pt', 'cm', 'mm', 'in', 'pc'];
+const mainContainer = document.getElementById('main-container');
 
 export function getCSSVariable(varName, sourceElement = document.documentElement) {
     let variable = getComputedStyle(sourceElement).getPropertyValue(varName);
@@ -113,6 +114,20 @@ export function changeHeightOfElement(element, changeValue) {
     element.style.height = element.getBoundingClientRect().height + changeValue + "px";
 }
 
+export function setHeightOfElementInclMainPadding(element, setValue) {
+    let topPadding = window.getComputedStyle(mainContainer).getPropertyValue('padding-top');
+    topPadding = parseInt(topPadding);
+    
+    element.style.height = setValue - topPadding + "px";
+}
+
 export function changeWidthOfElement(element, changeValue) {
     element.style.width = element.getBoundingClientRect().width + changeValue + "px";
+}
+
+export function setWidthOfElementInclMainPadding(element, setValue) {
+    let leftPadding = window.getComputedStyle(mainContainer).getPropertyValue('padding-left');
+    leftPadding = parseInt(leftPadding);
+    
+    element.style.width = setValue - leftPadding + "px";
 }
