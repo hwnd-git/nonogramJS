@@ -408,7 +408,7 @@
 }
 
 .manipulator-height {
-    cursor: s-resize;
+    /* cursor: s-resize; */
     width: var(--man-length);
     height: var(--man-width);
     left: var(--man-pos-on-half);

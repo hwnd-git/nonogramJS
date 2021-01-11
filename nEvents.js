@@ -35,8 +35,19 @@ let prevY = 0;
 let posX = 0;
 let posY = 0;
 
-$('#xxx').draggable({ cursor: "crosshair" });    //jQuery
+$(mHeight).draggable({
+    cursor: "crosshair",
+    axis: "y" });    //jQuery
+mHeight.style.opacity = 1;
+mHeight.style.backgroundColor = 'pink'
 console.log(document.querySelector('#xxx'));
+
+$('#xxx').droppable({
+    cursor: "move",
+    drop: function(e, ui) {
+        console.log('dropped');
+        
+    } });
 
 
 export function injectEventHandlers() {
@@ -63,11 +74,11 @@ export function injectEventHandlers() {
     mWidth.addEventListener('drag', manipulatorWidthDrag);
     mWidth.addEventListener('dragend', manipulatorWidthDragEnd);
 
-    mHeight.addEventListener('mouseenter', manipulatorHeightHovered);
-    mHeight.addEventListener('mouseleave', manipulatorHeightExit);
-    mHeight.addEventListener('dragstart', manipulatorHeightDragStart);
-    mHeight.addEventListener('drag', manipulatorHeightDrag);
-    mHeight.addEventListener('dragend', manipulatorHeightDragEnd);
+    // mHeight.addEventListener('mouseenter', manipulatorHeightHovered);
+    // mHeight.addEventListener('mouseleave', manipulatorHeightExit);
+    // mHeight.addEventListener('dragstart', manipulatorHeightDragStart);
+    // mHeight.addEventListener('drag', manipulatorHeightDrag);
+    // mHeight.addEventListener('dragend', manipulatorHeightDragEnd);
 
     mDiag.addEventListener('mouseenter', manipulatorDiagonalHovered);
     mDiag.addEventListener('mouseleave', manipulatorDiagonalExit);
