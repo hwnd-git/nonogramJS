@@ -5,6 +5,9 @@ import * as utils from './nUtils.js'
 
 //TODO: zwiększyć zakres chwytania manipulatorów
 
+//TODO: przerobić resizowanie tak żeby nie zmieniało się o inkrement przesunięcia (bo powoduje lagi), tylko żeby
+// dopasowywało się do położenia myszki.
+
 const wholeWrapper = document.getElementById('wrapper-whole');
 const wholeGrid = document.getElementById('whole-grid');
 const wrapperLeft = document.getElementById('wrapper-left');
@@ -18,6 +21,8 @@ const mWidth = document.getElementById('manipulator-width');
 const mWidthPersistent = document.getElementById('manipulator-width-persistent');
 const mDiag = document.getElementById('manipulator-diag');
 const mDiagPersistent = document.getElementById('manipulator-diag-persistent');
+
+const drop = document.getElementById('dropH');
 
 let draggingHeight = false;
 let draggingWidth = false;
@@ -65,6 +70,10 @@ export function injectEventHandlers() {
     mDiag.addEventListener('dragstart', manipulatorDiagDragStart);
     mDiag.addEventListener('drag', manipulatorDiagDrag);
     mDiag.addEventListener('dragend', manipulatorDiagDragEnd);
+
+    drop.addEventListener('dragenter', dragEnterH);
+    // drop.addEventListener('dragover', dragOverH);
+    drop.addEventListener('dragleave', dragLeaveH);
 }
 
 function expanderDiaHovered() {
@@ -81,6 +90,21 @@ function expanderDiaLeft() {
 
     expandHorizontal.classList.remove('expanded');
     expandVertical.classList.remove('expanded');
+}
+
+function dragEnterH() {
+    console.log('dragenter');
+    
+}
+
+function dragOverH() {
+    console.log('dragover');
+    
+}
+
+function dragLeaveH() {
+    console.log('dragexit');
+    
 }
 
 function expanderWidthClicked() {
@@ -118,7 +142,9 @@ function manipulatorWidthHovered() {
 }
 
 function manipulatorWidthExit() {
-    if (!draggingWidth) brdrRightSwitchable.classList.remove('edit');
+    if (!draggingWidth) {
+        brdrRightSwitchable.classList.remove('edit');
+    }
 }
 
 function manipulatorDiagonalHovered() {
@@ -135,6 +161,7 @@ function showAllManipulators() {
     const manipulators = document.querySelectorAll('.manipulator');
     for (let manipulator of manipulators) {
         manipulator.classList.remove('hidden');
+        manipulator.classList.add('showing');
     }
 }
 
@@ -154,9 +181,8 @@ function manipulatorHeightDragStart(e) {
     mHeightPersistent.classList.add('dragging');
     hideAllManipulatorsExceptDragged();
 
-    manipulatorHeightHovered();
-
     dragEl = mHeight;
+    manipulatorHeightHovered();
 
     // prevX = posX = e.clientX;
     prevY = posY = e.clientY;
@@ -167,14 +193,13 @@ function manipulatorHeightDragStart(e) {
 function manipulatorWidthDragStart(e) {
     console.log('start width');
 
-    draggingHeight = true;
+    draggingWidth = true;
     mWidth.classList.add('dragging')
     mWidthPersistent.classList.add('dragging')
     hideAllManipulatorsExceptDragged();
 
-    manipulatorWidthHovered();
-
     dragEl = mWidth;
+    manipulatorWidthHovered();
 
     prevX = posX = e.clientX;
 
@@ -226,6 +251,7 @@ function manipulatorDiagDrag(e) {
 
     prevX = posX;
     prevY = posY;
+    console.log('tracking: ', posX, posY);
 }
 
 function manipulatorHeightDragEnd() {
@@ -275,7 +301,7 @@ function startMouseTracking() {
         event = event || window.event;
         posX = event.pageX;
         posY = event.pageY;
-    };
+    }
 }
 
 function endMouseTracking() {

@@ -149,6 +149,7 @@
 .brdr {
     position: absolute;
     transition: opacity 0.3s;
+    
     /* opacity: 0; */
 }
 
@@ -157,6 +158,7 @@
     /* width: 100%; */
     bottom: calc(var(--wrapper-border) * -1);
     border-bottom: solid var(--wrapper-border-color) var(--wrapper-border);
+    border-color: green;
 }
 
 .brdr-right {
@@ -165,6 +167,7 @@
     top: 0;
     right: calc(var(--wrapper-border) * -1);
     border-right: solid var(--wrapper-border-color) var(--wrapper-border);
+    border-color: blue;
 }
 
 /* .brdr.brdr-dashed {
@@ -182,6 +185,7 @@
     position: absolute;
     border-style: dashed;
     border-width: var(--wrapper-border);
+    border-color: red;
 }
 
 #fake-border-game {
@@ -378,13 +382,17 @@
     border-radius: calc(var(--man-width) * 10);
     background-color: white;
     position: absolute;
-    transition: 0.3s;
+}
+
+.manipulator:not(.persistent) {
+    transition: all 0s;
+    opacity: 0;
 }
 
 .persistent {
     pointer-events: none;
     background-color: red;
-    /* transition: 0.3s; */
+    transition: 0.3s;
 }
 
 .manipulator-height {
@@ -458,9 +466,9 @@
 }
 
 .manipulator.hidden {
-    opacity: 0;
-    /* background-color: red; */
+    opacity: 0.5;
 }
+
 
 /* ================================================================ */
 /* =========================== CELLS ============================== */
@@ -509,7 +517,7 @@
 /* ================================================================ */
 
 .drop {
-    --drop-width: 120px;
+    --drop-width: 250px;
 
     position: absolute;
     border: solid black 3px;
@@ -517,7 +525,7 @@
     width: var(--drop-width);
     height: calc(var(--cell-size)*0.75);
 
-    left: 50%;
+    left: 45%;
     top: 400px;
     transform: translate(-50%);
 }
