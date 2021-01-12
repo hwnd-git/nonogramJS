@@ -75,21 +75,82 @@ export function injectEventHandlers() {
 function setDraggables() {
     //destroy() - niszczy dragabla
 
+    
     let manipulators = $('.manipulator');
-    manipulators.draggable({
-        addClasses: false,
-        // grid: [50, 50],
-        classes: {
-            "ui-draggable": "xxx"
-        },
-        // containment: wrapperGame,
-        axis: "y",
-        // revert: true,
-        cursor: "grabbing",
-        // delay: 100,
-        stop: dragStop,
-        drag: dragDuring,
-    });
+    console.log(manipulators);
+    
+    manipulators.each(function() {
+        let man = this;
+        let manWidthIncreaseMultiplicator = parseInt(utils.getCSSVariable('--man-width-multiplicator', man));
+        console.log(manWidthIncreaseMultiplicator);
+        let bounds = man.getBoundingClientRect();
+        let yMid = (bounds.bottom - bounds.top) / 2;
+        let xMid = (bounds.right - bounds.left) / 2;
+        let borderWidth = parseInt(utils.getCSSVariable('--wrapper-border'));
+        // let yOffset = (bounds.height - borderWidth) / 2;
+        let yOffset = bounds.height / 2;
+        // let xOffset = (bounds.width + borderWidth) / 2;
+        let xOffset = bounds.width / 2;
+
+        let cursorOffset = {};
+        let dragDirection = '';
+
+        if (bounds.width > bounds.height) { //height manipulator
+            console.log('height');
+            cursorOffset = { top: yOffset };
+            dragDirection = 'y';
+        } else if (bounds.width < bounds.height) { //width manipulator
+            console.log('width');
+            cursorOffset = { left: xOffset };
+            dragDirection = 'x';
+        } else {    //diag manipulator
+            console.log('diag');
+            yOffset *= manWidthIncreaseMultiplicator;
+            xOffset *= manWidthIncreaseMultiplicator;
+            cursorOffset = { top: yOffset, left: xOffset };
+        }
+
+        console.log(cursorOffset);
+        
+
+        $(man).draggable({
+            addClasses: false,
+            // grid: [50, 50],
+            // classes: {
+            //     "ui-draggable": "xxx"
+            // },
+            cursorAt: cursorOffset,
+            // containment: wrapperGame,
+            axis: dragDirection,
+            // revert: true,
+            // cursor: "grabbing",
+            // delay: 100,
+            start: dragStart,
+            stop: dragStop,
+            drag: dragDuring,
+        });
+    })
+
+    // manipulators.draggable({
+    //     addClasses: false,
+    //     // grid: [50, 50],
+    //     classes: {
+    //         "ui-draggable": "xxx"
+    //     },
+    //     // cursorAt: { top: 50 },
+    //     // containment: wrapperGame,
+    //     axis: "y",
+    //     // revert: true,
+    //     cursor: "grabbing",
+    //     // delay: 100,
+    //     start: dragStart,
+    //     stop: dragStop,
+    //     drag: dragDuring,
+    // });
+}
+
+function dragStart(event, ui) {
+    // $(event.target).draggable( "option", "cursorAt", { top: 50 } );
 }
 
 function dragStop(event, ui) {
@@ -102,7 +163,7 @@ function dragStop(event, ui) {
 }
 
 function dragDuring(event, ui) {
-
+    
     /** @type {HTMLElement} */
     let draggedElement = event.target;
     let bounds = draggedElement.getBoundingClientRect();
@@ -114,9 +175,11 @@ function dragDuring(event, ui) {
     let yChange = yOriginal - yCurrent;
 
     console.log(yChange);
+    console.log(ui);
     
-    // utils.setHeightOfElementInclMainPadding(wholeGrid, midPos - borderWidth/2);
-    utils.setHeightOfElementInclMainPadding(wholeGrid, event.clientY);
+    
+    // utils.setHeightOfElementInclMainPadding(wholeGrid, midPos - borderWidth/2); //ramka nie nadąża za manipulatorem
+    utils.setHeightOfElementInclMainPadding(wholeGrid, event.clientY - borderWidth / 2);  //manipulator zoffsetowany od ramki, jeśli nierówno chwycony
 
     //place dragged element in the middle of the mouse
 }
