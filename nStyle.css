@@ -35,12 +35,12 @@
     --wrapper-border-color: rgb(0, 0, 0);
 }
 
-#xxx {
+/* #xxx {
     position: absolute;
     height: 100px;
     width: 100px;
     background-color: pink;
-}
+} */
 
 #main-container {
     display: flex;
@@ -390,12 +390,14 @@
     border-radius: calc(var(--man-width) * 10);
     background-color: white;
     position: absolute;
+
+    /* transition: all 0.3s; */
 }
 
-.manipulator:not(.persistent) {
+/* .manipulator:not(.persistent) {
     transition: all 0s;
     opacity: 0;
-}
+} */
 
 .persistent {
     pointer-events: none;
@@ -408,7 +410,7 @@
 }
 
 .manipulator-height {
-    /* cursor: s-resize; */
+    cursor: s-resize;
     width: var(--man-length);
     height: var(--man-width);
     left: var(--man-pos-on-half);
@@ -416,13 +418,15 @@
 }
 
 .manipulator-height:hover,
-.manipulator-height.dragging {
+.manipulator-height.dragging,
+.manipulator-height.ui-draggable-dragging {
     width: var(--man-length-increase);
     left: var(--man-pos-on-half-increased);
+    /* cursor: "grabbing"; */
 
     /* height: var(--man-width-increase); */
     /* bottom: var(--man-pos-on-border-increased); */
-    opacity: 0;
+    /* opacity: 0; */
 }
 
 .manipulator-height:hover+.persistent,
@@ -446,7 +450,7 @@
 .manipulator-width.dragging {
     height: var(--man-length-increase);
     top: var(--man-pos-on-half-increased);
-    opacity: 0;
+    /* opacity: 0; */
 }
 
 .manipulator-width:hover+.persistent,
@@ -466,7 +470,7 @@
 
 .manipulator-diag:hover,
 .manipulator-diag.dragging {
-    opacity: 0;
+    /* opacity: 0; */
 }
 
 .manipulator-diag:hover+.persistent,

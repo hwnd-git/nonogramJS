@@ -1,5 +1,7 @@
 import * as eq from './nEquationSolver.js';
 
+//TODO: not all functions here are used -> perform cleanup
+
 const cssUnits = ['px', 'pt', 'cm', 'mm', 'in', 'pc'];
 const mainContainer = document.getElementById('main-container');
 
