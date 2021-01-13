@@ -17,6 +17,18 @@ export function getCSSVariable(varName, sourceElement = document.documentElement
     }
 }
 
+export function lockAbsolutePosition(/** @type {HTMLElement} */ element) {
+    let bounds = element.getBoundingClientRect();
+    
+    // element.style.top = bounds.top + "px";
+    // element.style.left = bounds.left + "px";
+    
+    element.style.width = bounds.width + "px";
+    element.style.height = bounds.height + "px";
+    // element.style.backgroundColor = 'red';
+    element.style.position = 'absolute';
+}
+
 export function setCSSVariable(varName, value, sourceElement = document.documentElement) {
     sourceElement.style.setProperty(varName, value);
 }

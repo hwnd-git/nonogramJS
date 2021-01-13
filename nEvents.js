@@ -10,6 +10,7 @@ import * as utils from './nUtils.js'
 
 const wholeWrapper = document.getElementById('wrapper-whole');
 const wholeGrid = document.getElementById('whole-grid');
+const gameGrid = document.getElementById('game-grid');
 const wrapperLeft = document.getElementById('wrapper-left');
 const wrapperGame = document.getElementById('wrapper-game');
 const wrapperTop = document.getElementById('wrapper-top');
@@ -35,21 +36,6 @@ let prevY = 0;
 let posX = 0;
 let posY = 0;
 
-// $(mHeight).draggable({
-//     cursor: "crosshair",
-//     axis: "y" });    //jQuery
-// mHeight.style.opacity = 1;
-// mHeight.style.backgroundColor = 'pink'
-// console.log(document.querySelector('#xxx'));
-
-// $('#xxx').droppable({
-//     cursor: "move",
-//     drop: function(e, ui) {
-//         console.log('dropped');
-        
-//     } });
-
-
 export function injectEventHandlers() {
     let diagExpander = document.getElementById('expand-diag');
     diagExpander.addEventListener("mouseenter", expanderDiaHovered);
@@ -68,18 +54,24 @@ export function injectEventHandlers() {
     let heightReducer = document.getElementById('reduce-height');
     heightReducer.addEventListener('click', reducerHeightClicked);
 
+    mWidth.addEventListener('mouseenter', manipulatorWidthHovered);
+    mWidth.addEventListener('mouseleave', manipulatorWidthExit);
+    mHeight.addEventListener('mouseenter', manipulatorHeightHovered);
+    mHeight.addEventListener('mouseleave', manipulatorHeightExit);
+    mDiag.addEventListener('mouseenter', manipulatorDiagonalHovered);
+    mDiag.addEventListener('mouseleave', manipulatorDiagonalExit);
+
     setDraggables();
-   
+
 }
 
 function setDraggables() {
     //destroy() - niszczy dragabla
 
-    
     let manipulators = $('.manipulator');
     console.log(manipulators);
-    
-    manipulators.each(function() {
+
+    manipulators.each(function () {
         let man = this;
         let manWidthIncreaseMultiplicator = parseInt(utils.getCSSVariable('--man-width-multiplicator', man));
         console.log(manWidthIncreaseMultiplicator);
@@ -95,23 +87,28 @@ function setDraggables() {
         let cursorOffset = {};
         let dragDirection = '';
 
-        if (bounds.width > bounds.height) { //height manipulator
-            console.log('height');
-            cursorOffset = { top: yOffset };
-            dragDirection = 'y';
-        } else if (bounds.width < bounds.height) { //width manipulator
-            console.log('width');
-            cursorOffset = { left: xOffset };
-            dragDirection = 'x';
-        } else {    //diag manipulator
-            console.log('diag');
-            yOffset *= manWidthIncreaseMultiplicator;
-            xOffset *= manWidthIncreaseMultiplicator;
-            cursorOffset = { top: yOffset, left: xOffset };
-        }
+        let identify = man.id.replace('manipulator-', '');
 
-        console.log(cursorOffset);
-        
+        switch (identify) {
+            case 'height':
+                cursorOffset = { top: yOffset };
+                dragDirection = 'y';
+                break;
+
+            case 'width':
+                cursorOffset = { left: xOffset };
+                dragDirection = 'x';
+                break;
+
+            case 'diag':
+                yOffset *= manWidthIncreaseMultiplicator;
+                xOffset *= manWidthIncreaseMultiplicator;
+                cursorOffset = { top: yOffset, left: xOffset };
+                break;
+
+            default:
+                break;
+        }
 
         $(man).draggable({
             addClasses: false,
@@ -120,37 +117,112 @@ function setDraggables() {
             //     "ui-draggable": "xxx"
             // },
             cursorAt: cursorOffset,
-            // containment: wrapperGame,
+            // containment: $('.limiter'),
             axis: dragDirection,
             // revert: true,
-            // cursor: "grabbing",
+            cursor: "grabbing",
             // delay: 100,
             start: dragStart,
             stop: dragStop,
             drag: dragDuring,
         });
     })
+}
 
-    // manipulators.draggable({
-    //     addClasses: false,
-    //     // grid: [50, 50],
-    //     classes: {
-    //         "ui-draggable": "xxx"
-    //     },
-    //     // cursorAt: { top: 50 },
-    //     // containment: wrapperGame,
-    //     axis: "y",
-    //     // revert: true,
-    //     cursor: "grabbing",
-    //     // delay: 100,
-    //     start: dragStart,
-    //     stop: dragStop,
-    //     drag: dragDuring,
-    // });
+function createDragLimiters(draggingType) {
+    createBordersLimiter();
+    createManipulatorLimiter(draggingType);
+}
+
+function createManipulatorLimiter(draggingType) {
+    if (document.getElementById('drag-limiter-manipulators')) return;
+    let dragLimit = document.createElement('div');
+    dragLimit.id = 'drag-limiter-manipulators';
+    dragLimit.classList.add('limiter');
+    let separatorSpacing = parseInt(utils.getCSSVariable('--separator-spacing'));
+    let gameWidth = parseInt(utils.getCSSVariable('--stage-cols-no'));
+    let gameHeight = parseInt(utils.getCSSVariable('--stage-rows-no'));
+
+    //TODO: set maximum bounds for limiter
+
+    gameGrid.appendChild(dragLimit);
+    switch (draggingType) {
+        case 'height':
+            // dragLimit.style.gridArea = `1 / 1 / span ${separatorSpacing} / span ${gameWidth}`;
+            dragLimit.style.gridArea = `${separatorSpacing + 1} / 1 / -1 / -1`;
+            // dragLimit.style.top = '50px';
+            utils.lockAbsolutePosition(dragLimit);
+            dragLimit.style.height = '1000px';
+            //console.log($('.limiter').get(0));
+            break;
+
+        case 'width':
+            dragLimit.style.gridArea = `1 / ${separatorSpacing + 1} / -1 / -1`;
+            utils.lockAbsolutePosition(dragLimit);
+            dragLimit.style.width = '1000px';
+            break;
+
+        case 'diag':
+            dragLimit.style.gridArea = `${separatorSpacing + 1} / ${separatorSpacing + 1} / -1 / -1`;
+            utils.lockAbsolutePosition(dragLimit);
+            dragLimit.style.height = '1000px';
+            dragLimit.style.width = '1000px';
+            break;
+
+        default:
+            break;
+    }
+
+    //to ustawienie ustawi contanment, ale zakres containmentu jest przeliczany od razu po rozpoczęciu draga
+    //czyli w tym przypadku mimo że ustawimy containment, to jego zakres będzie pusty
+    $(".ui-draggable-dragging").draggable( "option", "containment", $('.limiter')); 
+    //dopiero tutaj wymuszamy na obiekcie uiDraggable, żeby jeszcze raz przeliczył containment box
+    $(".ui-draggable-dragging").data('uiDraggable')._setContainment();  
+    
+}
+
+function createBordersLimiter() {
+    if (document.getElementById('drag-limiter-borders')) return;
+    let dragLimit = document.createElement('div');
+    dragLimit.id = 'drag-limiter-borders';
+    let separatorSpacing = parseInt(utils.getCSSVariable('--separator-spacing'));
+
+    dragLimit.style.gridArea = `1 / 1 / span ${separatorSpacing} / span ${separatorSpacing}`;
+    gameGrid.appendChild(dragLimit);
+}
+
+function deleteDragLimits() {
+    document.getElementById('drag-limiter-borders').remove();
 }
 
 function dragStart(event, ui) {
     // $(event.target).draggable( "option", "cursorAt", { top: 50 } );
+
+    /** @type {HTMLElement} */
+    let draggedElement = event.target;
+    draggedElement.style.transition = '0s';
+    draggedElement.style.cursor = 'grabbing';
+    hideAllManipulatorsExceptDragged();
+
+    let draggingType = draggedElement.id.replace('manipulator-', '');
+    createDragLimiters(draggingType);
+    switch (draggingType) {
+        case 'height':
+            draggingHeight = true;
+            break;
+
+        case 'width':
+            draggingWidth = true;
+            break;
+
+        case 'diag':
+            draggingHeight = true;
+            draggingWidth = true;
+            break;
+
+        default:
+            break;
+    }
 }
 
 function dragStop(event, ui) {
@@ -159,29 +231,50 @@ function dragStop(event, ui) {
 
     // let draggedElement = document.getElementById();
     let draggedElement = event.target;
-    draggedElement.removeAttribute('style');
+    draggedElement.removeAttribute('style');    //resetuje wszystkie inline atrybuty
+
+    draggingHeight = false;
+    draggingWidth = false;
+    showAllManipulators();
+    manipulatorDiagonalExit();
+    deleteDragLimits();
 }
 
 function dragDuring(event, ui) {
-    
+
     /** @type {HTMLElement} */
     let draggedElement = event.target;
-    let bounds = draggedElement.getBoundingClientRect();
-    let midPos = bounds.top + (bounds.bottom - bounds.top) / 2;
     let borderWidth = parseInt(utils.getCSSVariable('--wrapper-border'));
+    const dragLimit = document.getElementById('drag-limiter-borders');
+    const limitBounds = dragLimit.getBoundingClientRect();
+    const heightLimit = limitBounds.bottom;
+    const widthLimit = limitBounds.right;
 
-    let yOriginal = ui.originalPosition.top;
-    let yCurrent = ui.position.top;
-    let yChange = yOriginal - yCurrent;
+    let identify = draggedElement.id.replace('manipulator-', '');
 
-    console.log(yChange);
-    console.log(ui);
-    
-    
-    // utils.setHeightOfElementInclMainPadding(wholeGrid, midPos - borderWidth/2); //ramka nie nadąża za manipulatorem
-    utils.setHeightOfElementInclMainPadding(wholeGrid, event.clientY - borderWidth / 2);  //manipulator zoffsetowany od ramki, jeśli nierówno chwycony
+    let newHeight = event.clientY - borderWidth / 2;
+    let newWidth = event.clientX - borderWidth / 2;
 
-    //place dragged element in the middle of the mouse
+    newHeight = Math.max(newHeight, heightLimit);
+    newWidth = Math.max(newWidth, widthLimit)
+
+    switch (identify) {
+        case 'height':
+            utils.setHeightOfElementInclMainPadding(wholeGrid, newHeight);
+            break;
+
+        case 'width':
+            utils.setWidthOfElementInclMainPadding(wholeGrid, newWidth);
+            break;
+
+        case 'diag':
+            utils.setHeightOfElementInclMainPadding(wholeGrid, newHeight);
+            utils.setWidthOfElementInclMainPadding(wholeGrid, newWidth);
+            break;
+
+        default:
+            break;
+    }
 }
 
 function expanderDiaHovered() {
@@ -243,12 +336,38 @@ function showAllManipulators() {
 }
 
 function hideAllManipulatorsExceptDragged() {
-    let manipulators = Array.from(document.querySelectorAll('.manipulator:not(.dragging)'));
+    let manipulators = Array.from(document.querySelectorAll('.manipulator:not(.ui-draggable-dragging)'));
 
     for (let manipulator of manipulators) {
         manipulator.classList.add('hidden');
     }
 }
 
+function manipulatorHeightHovered() {
+    brdrBottomSwitchable.classList.add('edit');
+}
 
+function manipulatorHeightExit() {
+    if (!draggingHeight) brdrBottomSwitchable.classList.remove('edit');
+}
+
+function manipulatorWidthHovered() {
+    brdrRightSwitchable.classList.add('edit');
+}
+
+function manipulatorWidthExit() {
+    if (!draggingWidth) {
+        brdrRightSwitchable.classList.remove('edit');
+    }
+}
+
+function manipulatorDiagonalHovered() {
+    manipulatorHeightHovered();
+    manipulatorWidthHovered();
+}
+
+function manipulatorDiagonalExit() {
+    manipulatorHeightExit();
+    manipulatorWidthExit();
+}
 

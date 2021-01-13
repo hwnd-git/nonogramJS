@@ -30,7 +30,7 @@
     --side-legend-reduction: calc((var(--side-cols-no) - 1) * var(--cell-border));
     --side-legend-width: calc(var(--side-legend-full-width) - var(--side-legend-reduction));
 
-    --wrapper-border: 40px;
+    --wrapper-border: 4px;
     /* powinno być wartością parzystą (często jest dzielone przez 2) */
     --wrapper-border-color: rgb(0, 0, 0);
 }
@@ -41,6 +41,17 @@
     width: 100px;
     background-color: pink;
 } */
+#drag-limiter-borders {
+    background-color: rgba(240, 150, 210, 0.431);
+}
+
+#drag-limiter-manipulators,
+.limiter {
+    /* position: absolute; */
+    border: solid 1px palevioletred;
+    /* width:100%; */
+    background-color: rgba(150, 207, 240, 0.431);
+}
 
 #main-container {
     display: flex;
@@ -149,6 +160,7 @@
 }
 
 #game-grid {
+    position: relative;
     display: grid;
     background-color: #fff;
 }
@@ -373,13 +385,13 @@
 
 .manipulator {
     --man-border: 2px;
-    --man-width: calc(var(--cell-size) * 0.3);
+    /* --man-width: calc(var(--cell-size) * 0.3); */
     --man-width: calc(var(--wrapper-border) * 3);
     --man-width-multiplicator: 2;
     --man-width-increased: calc(var(--man-width) * var(--man-width-multiplicator));
     /* --man-length: calc(var(--cell-size) * 1.5); */
     --man-length: calc(var(--man-width) * 5);
-    --man-length: calc(var(--man-width) * 2);
+    /* --man-length: calc(var(--man-width) * 2); */
     --man-length-increase: calc(var(--man-length) * 2);
     
     --full-size: calc(100% + var(--wrapper-border));
@@ -394,7 +406,8 @@
     background-color: white;
     position: absolute;
 
-    /* transition: all 0.3s; */
+    transition: width 0.3s, height 0.3s, opacity 0.3s;
+    transition: 0.3s;
 }
 
 /* .manipulator:not(.persistent) {
@@ -413,7 +426,7 @@
 }
 
 .manipulator-height {
-    /* cursor: s-resize; */
+    cursor: s-resize;
     width: var(--man-length);
     height: var(--man-width);
     left: var(--man-pos-on-half);
@@ -442,7 +455,7 @@
 }
 
 .manipulator-width {
-    /* cursor: e-resize; */
+    cursor: e-resize;
     width: var(--man-width);
     height: var(--man-length);
     top: var(--man-pos-on-half);
@@ -465,7 +478,7 @@
 }
 
 .manipulator-diag {
-    /* cursor: move; */
+    cursor: move;
     width: var(--man-width);
     height: var(--man-width);
     bottom: var(--man-pos-on-border);
