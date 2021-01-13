@@ -1,12 +1,7 @@
 import * as script from './nScript.js';
 import * as utils from './nUtils.js'
 
-//TODO: podczas manipulacji jednym manipulatorem ukryć pozostałe
-
-//TODO: zwiększyć zakres chwytania manipulatorów
-
-//TODO: przerobić resizowanie tak żeby nie zmieniało się o inkrement przesunięcia (bo powoduje lagi), tylko żeby
-// dopasowywało się do położenia myszki.
+//TODO: po najechaniu dragiem w obszar, gdzie już nie można bardziej zmienjszyć siatki, rozbłysnąć ten obszar na czerwono
 
 const wholeWrapper = document.getElementById('wrapper-whole');
 const wholeGrid = document.getElementById('whole-grid');
@@ -242,8 +237,15 @@ function dragStop(event, ui) {
 
 function dragDuring(event, ui) {
 
+    //TODO: scroll psuje draggowanie, jeśli koordynaty bierzemy z kursora, a nie ghosta
+
+    console.log('event: ', event);
+    console.log('ui: ', ui);
+    
+
     /** @type {HTMLElement} */
     let draggedElement = event.target;
+    const dragBounds = draggedElement.getBoundingClientRect();
     let borderWidth = parseInt(utils.getCSSVariable('--wrapper-border'));
     const dragLimit = document.getElementById('drag-limiter-borders');
     const limitBounds = dragLimit.getBoundingClientRect();
@@ -252,24 +254,46 @@ function dragDuring(event, ui) {
 
     let identify = draggedElement.id.replace('manipulator-', '');
 
-    let newHeight = event.clientY - borderWidth / 2;
-    let newWidth = event.clientX - borderWidth / 2;
+    let dragElMidY = dragBounds.top + dragBounds.height / 2;
+    let dragElMidX = dragBounds.left + dragBounds.width / 2;
 
-    newHeight = Math.max(newHeight, heightLimit);
-    newWidth = Math.max(newWidth, widthLimit)
+    let helperY = ui.position.top + dragBounds.height / 2;
+    let helperX = ui.position.left + dragBounds.width / 2;
+
+    let newHeightMouse = event.clientY - borderWidth / 2;
+    let newWidthMouse = event.clientX - borderWidth / 2;
+    
+    let newHeight = dragElMidY - borderWidth / 2;
+    let newWidth = dragElMidX - borderWidth / 2;
+
+    let newHeightHelper = helperY - borderWidth / 2;
+    let newWidthHelper = helperX - borderWidth / 2;
+
+    console.log('hMouse: ', newHeightMouse, 'hBounds: ', newHeight);
+
+    // if (newHeightMouse <= heightLimit) return false;
+
+    // newHeight = Math.max(newHeight, heightLimit);
+    // newWidth = Math.max(newWidth, widthLimit);
+
+    // newHeightMouse = Math.max(newHeightMouse, heightLimit);
+    // newWidthMouse = Math.max(newWidthMouse, widthLimit);
+
+    // newHeightHelper = Math.max(newHeightHelper, heightLimit);
+    // newWidthHelper = Math.max(newWidthHelper, widthLimit);
 
     switch (identify) {
         case 'height':
-            utils.setHeightOfElementInclMainPadding(wholeGrid, newHeight);
+            utils.setHeightOfElement(wholeGrid, newHeightHelper, false);
             break;
 
         case 'width':
-            utils.setWidthOfElementInclMainPadding(wholeGrid, newWidth);
+            utils.setWidthOfElement(wholeGrid, newWidthHelper, false);
             break;
 
         case 'diag':
-            utils.setHeightOfElementInclMainPadding(wholeGrid, newHeight);
-            utils.setWidthOfElementInclMainPadding(wholeGrid, newWidth);
+            utils.setHeightOfElement(wholeGrid, newHeightHelper, false);
+            utils.setWidthOfElement(wholeGrid, newWidthHelper, false);
             break;
 
         default:

@@ -128,20 +128,27 @@ export function changeHeightOfElement(element, changeValue) {
     element.style.height = element.getBoundingClientRect().height + changeValue + "px";
 }
 
-export function setHeightOfElementInclMainPadding(element, setValue) {
-    let topPadding = window.getComputedStyle(mainContainer).getPropertyValue('padding-top');
-    topPadding = parseInt(topPadding);
+export function setHeightOfElement(element, setValue, includeMainPadding = true) {
+    if (includeMainPadding) {
+        let topPadding = window.getComputedStyle(mainContainer).getPropertyValue('padding-top');
+        topPadding = parseInt(topPadding);
+        element.style.height = setValue - topPadding + "px";
+    } else {
+        element.style.height = setValue + "px";
+    }
     
-    element.style.height = setValue - topPadding + "px";
 }
 
 export function changeWidthOfElement(element, changeValue) {
     element.style.width = element.getBoundingClientRect().width + changeValue + "px";
 }
 
-export function setWidthOfElementInclMainPadding(element, setValue) {
-    let leftPadding = window.getComputedStyle(mainContainer).getPropertyValue('padding-left');
-    leftPadding = parseInt(leftPadding);
-    
-    element.style.width = setValue - leftPadding + "px";
+export function setWidthOfElement(element, setValue, includeMainPadding = true) {
+    if (includeMainPadding) {
+        let leftPadding = window.getComputedStyle(mainContainer).getPropertyValue('padding-left');
+        leftPadding = parseInt(leftPadding);
+        element.style.width = setValue - leftPadding + "px";
+    } else {
+        element.style.width = setValue + "px";
+    }
 }
