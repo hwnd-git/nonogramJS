@@ -125,19 +125,22 @@ function setDraggables() {
 }
 
 function createDragLimiters(draggingType) {
-    createBordersLimiter();
+    //createBordersLimiter();
     createManipulatorLimiter(draggingType);
 }
 
 function createManipulatorLimiter(draggingType) {
-    if (document.getElementById('drag-limiter-manipulators')) return;
+    if (document.getElementById('drag-limiter')) return;
     let dragLimit = document.createElement('div');
-    dragLimit.id = 'drag-limiter-manipulators';
+    dragLimit.id = 'drag-limiter';
     dragLimit.classList.add('limiter');
+    let firstManipulator = document.querySelector('.manipulator');
     let separatorSpacing = parseInt(utils.getCSSVariable('--separator-spacing'));
-    let gameWidth = parseInt(utils.getCSSVariable('--stage-cols-no'));
-    let gameHeight = parseInt(utils.getCSSVariable('--stage-rows-no'));
+    let manipulatorSize = utils.getCSSVariable('--man-width', firstManipulator);
+    let manipulatorSizeMultiplier = utils.getCSSVariable('--man-width-multiplicator', firstManipulator);
+    let wrapperBorderWidth = utils.getCSSVariable('--wrapper-border');
 
+    let dragLimitAreaReduction = utils.calcEval(`calc(${manipulatorSize} - ${wrapperBorderWidth})/2`);
     //TODO: set maximum bounds for limiter
 
     gameGrid.appendChild(dragLimit);
@@ -148,6 +151,8 @@ function createManipulatorLimiter(draggingType) {
             // dragLimit.style.top = '50px';
             utils.lockAbsolutePosition(dragLimit);
             dragLimit.style.height = '1000px';
+            
+            dragLimit.style.transform = `translateY(-${dragLimitAreaReduction})`;
             //console.log($('.limiter').get(0));
             break;
 
@@ -155,6 +160,8 @@ function createManipulatorLimiter(draggingType) {
             dragLimit.style.gridArea = `1 / ${separatorSpacing + 1} / -1 / -1`;
             utils.lockAbsolutePosition(dragLimit);
             dragLimit.style.width = '1000px';
+
+            dragLimit.style.transform = `translateX(-${dragLimitAreaReduction})`;
             break;
 
         case 'diag':
@@ -162,6 +169,9 @@ function createManipulatorLimiter(draggingType) {
             utils.lockAbsolutePosition(dragLimit);
             dragLimit.style.height = '1000px';
             dragLimit.style.width = '1000px';
+
+            dragLimitAreaReduction = utils.calcEval(`calc(${manipulatorSize} * ${manipulatorSizeMultiplier} - ${wrapperBorderWidth})/2`);
+            dragLimit.style.transform = `translate(-${dragLimitAreaReduction}, -${dragLimitAreaReduction})`;
             break;
 
         default:
@@ -187,7 +197,8 @@ function createBordersLimiter() {
 }
 
 function deleteDragLimits() {
-    document.getElementById('drag-limiter-borders').remove();
+    // document.getElementById('drag-limiter-borders').remove();
+    document.getElementById('drag-limiter').remove();
 }
 
 function dragStart(event, ui) {
@@ -239,48 +250,22 @@ function dragDuring(event, ui) {
 
     //TODO: scroll psuje draggowanie, jeśli koordynaty bierzemy z kursora, a nie ghosta
 
-    console.log('event: ', event);
-    console.log('ui: ', ui);
+    // console.log('event: ', event);
+    // console.log('ui: ', ui);
     
 
     /** @type {HTMLElement} */
     let draggedElement = event.target;
     const dragBounds = draggedElement.getBoundingClientRect();
     let borderWidth = parseInt(utils.getCSSVariable('--wrapper-border'));
-    const dragLimit = document.getElementById('drag-limiter-borders');
-    const limitBounds = dragLimit.getBoundingClientRect();
-    const heightLimit = limitBounds.bottom;
-    const widthLimit = limitBounds.right;
 
     let identify = draggedElement.id.replace('manipulator-', '');
-
-    let dragElMidY = dragBounds.top + dragBounds.height / 2;
-    let dragElMidX = dragBounds.left + dragBounds.width / 2;
 
     let helperY = ui.position.top + dragBounds.height / 2;
     let helperX = ui.position.left + dragBounds.width / 2;
 
-    let newHeightMouse = event.clientY - borderWidth / 2;
-    let newWidthMouse = event.clientX - borderWidth / 2;
-    
-    let newHeight = dragElMidY - borderWidth / 2;
-    let newWidth = dragElMidX - borderWidth / 2;
-
     let newHeightHelper = helperY - borderWidth / 2;
     let newWidthHelper = helperX - borderWidth / 2;
-
-    console.log('hMouse: ', newHeightMouse, 'hBounds: ', newHeight);
-
-    // if (newHeightMouse <= heightLimit) return false;
-
-    // newHeight = Math.max(newHeight, heightLimit);
-    // newWidth = Math.max(newWidth, widthLimit);
-
-    // newHeightMouse = Math.max(newHeightMouse, heightLimit);
-    // newWidthMouse = Math.max(newWidthMouse, widthLimit);
-
-    // newHeightHelper = Math.max(newHeightHelper, heightLimit);
-    // newWidthHelper = Math.max(newWidthHelper, widthLimit);
 
     switch (identify) {
         case 'height':

@@ -385,8 +385,8 @@
 
 .manipulator {
     --man-border: 2px;
-    /* --man-width: calc(var(--cell-size) * 0.3); */
-    --man-width: calc(var(--wrapper-border) * 3);
+    /* --man-width: calc(var(--cell-size) * 0.5); */
+    --man-width: calc(var(--wrapper-border) * 4);
     --man-width-multiplicator: 2;
     --man-width-increased: calc(var(--man-width) * var(--man-width-multiplicator));
     /* --man-length: calc(var(--cell-size) * 1.5); */
