@@ -5,22 +5,23 @@
 }
 
 :root {
-    --cell-size: 40px;
-    --cell-border: 1px;
+    --cell-size: 30px;
+    --cell-border: 5px;
     --cell-radius: 0px;
     /* --cell-border-color: #808080; */
     --cell-border-color: #aaaaaa;
     --cell-size-reduced: calc(var(--cell-size) - var(--cell-border));
 
-    --separator-width: 1px;
+    --separator-width: 4px;
     --separator-spacing: 5;
 
     --outer-border: 2px;
     --expander-size: calc(var(--cell-size) * 0.75);
     --top-rows-no: 3;
     --side-cols-no: 3;
-    --stage-cols-no: 14;
-    --stage-rows-no: 11;
+    --stage-cols-no: 24;
+    --stage-rows-no: 25;
+    --max-size: 25;
 
     --top-legend-full-height: calc(var(--top-rows-no) * var(--cell-size));
     --top-legend-reduction: calc((var(--top-rows-no) - 1) * var(--cell-border));
@@ -30,7 +31,7 @@
     --side-legend-reduction: calc((var(--side-cols-no) - 1) * var(--cell-border));
     --side-legend-width: calc(var(--side-legend-full-width) - var(--side-legend-reduction));
 
-    --wrapper-border: 2px;
+    --wrapper-border: 6px;
     /* powinno być wartością parzystą (często jest dzielone przez 2) */
     --wrapper-border-color: rgb(0, 0, 0);
 }

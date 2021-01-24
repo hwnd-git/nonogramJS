@@ -19,10 +19,10 @@ export function getCSSVariable(varName, sourceElement = document.documentElement
 
 export function lockAbsolutePosition(/** @type {HTMLElement} */ element) {
     let bounds = element.getBoundingClientRect();
-    
+
     // element.style.top = bounds.top + "px";
     // element.style.left = bounds.left + "px";
-    
+
     element.style.width = bounds.width + "px";
     element.style.height = bounds.height + "px";
     // element.style.backgroundColor = 'red';
@@ -72,7 +72,7 @@ export function getSeparatorNo(separatorDiv) {
     if (idSplit.length > 3) {   //gameGrid V separator (has more id segments)
         let sepNo2 = parseInt(idSplit.splice(-1)[0]);    //splice odcina i zwraca ostatni element tablicy (tablica zostaje odcięta)
         let sepNo1 = parseInt(idSplit.splice(-1)[0]);
-        sepNo = {no1: sepNo1, no2: sepNo2};
+        sepNo = { no1: sepNo1, no2: sepNo2 };
     } else {
         sepNo = parseInt(idSplit.splice(-1)[0]);
     }
@@ -136,7 +136,7 @@ export function setHeightOfElement(element, setValue, includeMainPadding = true)
     } else {
         element.style.height = setValue + "px";
     }
-    
+
 }
 
 export function changeWidthOfElement(element, changeValue) {
@@ -152,3 +152,61 @@ export function setWidthOfElement(element, setValue, includeMainPadding = true) 
         element.style.width = setValue + "px";
     }
 }
+
+export function getWidth(element) {
+    const bounds = element.getBoundingClientRect();
+    return bounds.width;
+}
+
+export function getHeight(element) {
+    const bounds = element.getBoundingClientRect();
+    return bounds.height;
+}
+
+export function evaluateStageSize(legendSize, stageCellsQty) {
+    const twoWrappersThickness = 2 * parseInt(getCSSVariable('--wrapper-border'));
+    const cellSize = parseInt(getCSSVariable('--cell-size'));
+    const cellBorder = parseInt(getCSSVariable('--cell-border'));
+
+    const legendWidth = cellSize + (cellSize - cellBorder) * (legendSize - 1);
+    
+    const separatorSpacing = parseInt(getCSSVariable('--separator-spacing'));
+    const separatorQty = Math.floor((stageCellsQty - 1) / separatorSpacing);
+    const separatorWidth = parseInt(getCSSVariable('--separator-width'));
+    const totalSeparatorWidth = separatorQty * separatorWidth;
+
+    const separatedGroupFullWidth = cellSize + (cellSize - cellBorder) * (separatorSpacing - 1); 
+    const fullGroupsQty = parseInt(stageCellsQty / separatorSpacing);
+    const totalGroupsWidth = separatedGroupFullWidth * fullGroupsQty;
+
+    const partialGroupCellsQty = stageCellsQty % separatorSpacing;
+    const partialGroupWidth = cellSize * partialGroupCellsQty - Math.max((partialGroupCellsQty - 1), 0) * cellBorder;
+
+    const gameGridWidth = totalGroupsWidth + partialGroupWidth + totalSeparatorWidth;
+    
+    return gameGridWidth + legendWidth + twoWrappersThickness;
+}
+
+// export function calculateStageHeight(topLegendSize, stageRowsQty) {
+//     const twoWrappersThickness = 2 * parseInt(getCSSVariable('--wrapper-border'));
+//     const cellSize = parseInt(getCSSVariable('--cell-size'));
+//     const cellBorder = parseInt(getCSSVariable('--cell-border'));
+
+//     const legendHeight = cellSize + (cellSize - cellBorder) * (topLegendSize - 1);
+    
+//     const separatorSpacing = parseInt(getCSSVariable('--separator-spacing'));
+//     const separatorQty = Math.floor((stageRowsQty - 1) / separatorSpacing);
+//     const separatorWidth = parseInt(getCSSVariable('--separator-width'));
+//     const totalSeparatorWidth = separatorQty * separatorWidth;
+
+//     const separatedGroupFullWidth = cellSize + (cellSize - cellBorder) * (separatorSpacing - 1); 
+//     const fullGroupsQty = parseInt(stageRowsQty / separatorSpacing);
+//     const totalGroupsWidth = separatedGroupFullWidth * fullGroupsQty;
+
+//     const partialGroupCellsQty = stageRowsQty % separatorSpacing;
+//     const partialGroupWidth = cellSize * partialGroupCellsQty - Math.max((partialGroupCellsQty - 1), 0) * cellBorder;
+
+//     const gameGridWidth = totalGroupsWidth + partialGroupWidth + totalSeparatorWidth;
+    
+//     return gameGridWidth + legendHeight + twoWrappersThickness;
+// }

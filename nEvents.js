@@ -139,9 +139,17 @@ function createManipulatorLimiter(draggingType) {
     let manipulatorSize = utils.getCSSVariable('--man-width', firstManipulator);
     let manipulatorSizeMultiplier = utils.getCSSVariable('--man-width-multiplicator', firstManipulator);
     let wrapperBorderWidth = utils.getCSSVariable('--wrapper-border');
+    let maxSize = utils.getCSSVariable('--max-size');
 
     let dragLimitAreaReduction = utils.calcEval(`calc(${manipulatorSize} - ${wrapperBorderWidth})/2`);
     //TODO: set maximum bounds for limiter
+
+    let wholeWrapperBounds = wholeWrapper.getBoundingClientRect();
+    console.log('width: ', wholeWrapperBounds.width);
+    console.log('height: ', wholeWrapperBounds.height);
+    
+    console.log('widthCalc: ', utils.evaluateStageSize(3, 25));
+
 
     gameGrid.appendChild(dragLimit);
     switch (draggingType) {
@@ -211,7 +219,7 @@ function dragStart(event, ui) {
     hideAllManipulatorsExceptDragged();
 
     let draggingType = draggedElement.id.replace('manipulator-', '');
-    createDragLimiters(draggingType);
+    createManipulatorLimiter(draggingType);
     switch (draggingType) {
         case 'height':
             draggingHeight = true;
