@@ -139,47 +139,55 @@ function createManipulatorLimiter(draggingType) {
     let manipulatorSize = utils.getCSSVariable('--man-width', firstManipulator);
     let manipulatorSizeMultiplier = utils.getCSSVariable('--man-width-multiplicator', firstManipulator);
     let wrapperBorderWidth = utils.getCSSVariable('--wrapper-border');
-    let maxSize = utils.getCSSVariable('--max-size');
 
-    let dragLimitAreaReduction = utils.calcEval(`calc(${manipulatorSize} - ${wrapperBorderWidth})/2`);
-    //TODO: set maximum bounds for limiter
+    const maxSize = utils.getCSSVariable('--max-size');
+    const topLegendSize = utils.getCSSVariable('--top-rows-no');
+    const sideLegendSize = utils.getCSSVariable('--side-cols-no');
 
-    let wholeWrapperBounds = wholeWrapper.getBoundingClientRect();
-    console.log('width: ', wholeWrapperBounds.width);
-    console.log('height: ', wholeWrapperBounds.height);
-    
-    console.log('widthCalc: ', utils.evaluateStageSize(3, 25));
+    let dragLimitAreaResize = utils.calcEval(`calc(${manipulatorSize} - ${wrapperBorderWidth})/2`);
+    dragLimitAreaResize = parseInt(dragLimitAreaResize);
 
+    let dragLimitAreaResizeDiag = utils.calcEval(`calc(${manipulatorSize} * ${manipulatorSizeMultiplier} - ${wrapperBorderWidth})/2`);
+    dragLimitAreaResizeDiag = parseInt(dragLimitAreaResizeDiag);
+
+    const minWidth = utils.evaluateStageSize(sideLegendSize, separatorSpacing);
+    const minHeight = utils.evaluateStageSize(topLegendSize, separatorSpacing);
+    const maxWidth = utils.evaluateStageSize(sideLegendSize, maxSize);
+    const maxHeight = utils.evaluateStageSize(topLegendSize, maxSize);
+    const limitAreaHeight = maxHeight - minHeight;
+    const limitAreaWidth = maxWidth - minWidth;
 
     gameGrid.appendChild(dragLimit);
+    const maxDragLimitHeight = `${limitAreaHeight + 2 * dragLimitAreaResize + parseInt(wrapperBorderWidth)}px`;
+    const maxDragLimitWidth = `${limitAreaWidth + 2 * dragLimitAreaResize + parseInt(wrapperBorderWidth)}px`;
+    const maxDragLimitHeightDiag = `${limitAreaHeight + 2 * dragLimitAreaResizeDiag + parseInt(wrapperBorderWidth)}px`;
+    const maxDragLimitWidthDiag = `${limitAreaWidth + 2 * dragLimitAreaResizeDiag + parseInt(wrapperBorderWidth)}px`;
+
     switch (draggingType) {
         case 'height':
-            // dragLimit.style.gridArea = `1 / 1 / span ${separatorSpacing} / span ${gameWidth}`;
             dragLimit.style.gridArea = `${separatorSpacing + 1} / 1 / -1 / -1`;
-            // dragLimit.style.top = '50px';
             utils.lockAbsolutePosition(dragLimit);
-            dragLimit.style.height = '1000px';
-            
-            dragLimit.style.transform = `translateY(-${dragLimitAreaReduction})`;
-            //console.log($('.limiter').get(0));
+      
+            dragLimit.style.height = maxDragLimitHeight;
+            dragLimit.style.transform = `translateY(-${dragLimitAreaResize}px)`;
             break;
 
         case 'width':
             dragLimit.style.gridArea = `1 / ${separatorSpacing + 1} / -1 / -1`;
             utils.lockAbsolutePosition(dragLimit);
-            dragLimit.style.width = '1000px';
 
-            dragLimit.style.transform = `translateX(-${dragLimitAreaReduction})`;
+            dragLimit.style.width = maxDragLimitWidth;
+            dragLimit.style.transform = `translateX(-${dragLimitAreaResize}px)`;
             break;
 
         case 'diag':
             dragLimit.style.gridArea = `${separatorSpacing + 1} / ${separatorSpacing + 1} / -1 / -1`;
             utils.lockAbsolutePosition(dragLimit);
-            dragLimit.style.height = '1000px';
-            dragLimit.style.width = '1000px';
 
-            dragLimitAreaReduction = utils.calcEval(`calc(${manipulatorSize} * ${manipulatorSizeMultiplier} - ${wrapperBorderWidth})/2`);
-            dragLimit.style.transform = `translate(-${dragLimitAreaReduction}, -${dragLimitAreaReduction})`;
+            dragLimit.style.height = maxDragLimitHeightDiag;
+            dragLimit.style.width = maxDragLimitWidthDiag;
+
+            dragLimit.style.transform = `translate(-${dragLimitAreaResizeDiag}px, -${dragLimitAreaResizeDiag}px)`;
             break;
 
         default:
@@ -188,10 +196,10 @@ function createManipulatorLimiter(draggingType) {
 
     //to ustawienie ustawi contanment, ale zakres containmentu jest przeliczany od razu po rozpoczęciu draga
     //czyli w tym przypadku mimo że ustawimy containment, to jego zakres będzie pusty
-    $(".ui-draggable-dragging").draggable( "option", "containment", $('.limiter')); 
+    $(".ui-draggable-dragging").draggable("option", "containment", $('.limiter'));
     //dopiero tutaj wymuszamy na obiekcie uiDraggable, żeby jeszcze raz przeliczył containment box
-    $(".ui-draggable-dragging").data('uiDraggable')._setContainment();  
-    
+    $(".ui-draggable-dragging").data('uiDraggable')._setContainment();
+
 }
 
 function createBordersLimiter() {
@@ -260,7 +268,7 @@ function dragDuring(event, ui) {
 
     // console.log('event: ', event);
     // console.log('ui: ', ui);
-    
+
 
     /** @type {HTMLElement} */
     let draggedElement = event.target;

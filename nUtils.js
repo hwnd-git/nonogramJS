@@ -19,14 +19,41 @@ export function getCSSVariable(varName, sourceElement = document.documentElement
 
 export function lockAbsolutePosition(/** @type {HTMLElement} */ element) {
     let bounds = element.getBoundingClientRect();
+    console.log(bounds)
 
+    resetStyles(element);
+    
+    element.style.position = 'absolute';
+
+    element.style.top = bounds.top + "px";
+    // element.style.bottom = bounds.bottom + "px";
+    element.style.left = bounds.left + "px";
+    // element.style.right = bounds.right + "px";
+
+    
     // element.style.top = bounds.top + "px";
+    // element.style.bottom = bounds.bottom + "px";
     // element.style.left = bounds.left + "px";
+    // element.style.right = bounds.right + "px";
 
+    // bounds = element.getBoundingClientRect();
+    // console.log(bounds)
+
+    // element.style.width = '500px'
+    // element.style.height = '500px'
+
+    // element.style.left = '100px'
+    // element.style.right = '0px'
+    // element.style.top = '100px'
+    // element.style.bottom = '0px'
+
+    
+    
     element.style.width = bounds.width + "px";
     element.style.height = bounds.height + "px";
-    // element.style.backgroundColor = 'red';
-    element.style.position = 'absolute';
+    
+
+    document.body.appendChild(element);
 }
 
 export function setCSSVariable(varName, value, sourceElement = document.documentElement) {
@@ -161,6 +188,10 @@ export function getWidth(element) {
 export function getHeight(element) {
     const bounds = element.getBoundingClientRect();
     return bounds.height;
+}
+
+export function resetStyles(element) {
+    element.removeAttribute('style');
 }
 
 export function evaluateStageSize(legendSize, stageCellsQty) {

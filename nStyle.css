@@ -5,22 +5,22 @@
 }
 
 :root {
-    --cell-size: 30px;
-    --cell-border: 5px;
+    --cell-size: 35px;
+    --cell-border: 1px;
     --cell-radius: 0px;
     /* --cell-border-color: #808080; */
     --cell-border-color: #aaaaaa;
     --cell-size-reduced: calc(var(--cell-size) - var(--cell-border));
 
-    --separator-width: 4px;
+    --separator-width: 1px;
     --separator-spacing: 5;
 
     --outer-border: 2px;
     --expander-size: calc(var(--cell-size) * 0.75);
     --top-rows-no: 3;
     --side-cols-no: 3;
-    --stage-cols-no: 24;
-    --stage-rows-no: 25;
+    --stage-cols-no: 14;
+    --stage-rows-no: 14;
     --max-size: 25;
 
     --top-legend-full-height: calc(var(--top-rows-no) * var(--cell-size));
@@ -31,41 +31,37 @@
     --side-legend-reduction: calc((var(--side-cols-no) - 1) * var(--cell-border));
     --side-legend-width: calc(var(--side-legend-full-width) - var(--side-legend-reduction));
 
-    --wrapper-border: 6px;
+    --wrapper-border: 2px;
     /* powinno być wartością parzystą (często jest dzielone przez 2) */
     --wrapper-border-color: rgb(0, 0, 0);
 }
 
-/* #xxx {
+#test {
     position: absolute;
-    height: 100px;
-    width: 100px;
-    background-color: pink;
-} */
+    left: 0;
+    top: 0;
+    background: rgba(255, 0, 0, 0.267);
+    width: 500px;
+    height: 500px;
+}
+
 #drag-limiter-borders {
     background-color: rgba(240, 150, 210, 0.431);
 }
 
 #drag-limiter-manipulators,
 .limiter {
-    /* position: absolute; */
-    border: solid 1px palevioletred;
-    /* width:100%; */
     background-color: rgba(150, 207, 240, 0.431);
 }
 
 #main-container {
     display: flex;
-    /* justify-content: center; */
-    /* align-items: center; */
     padding-top: calc(var(--cell-size) + 10px);
     padding-left: calc(var(--cell-size) + 10px);
 }
 
 #wrapper-whole {
     position: relative;
-    /* border: solid skyblue 5px; */
-    /* overflow: hidden; */
 }
 
 #whole-grid {
@@ -86,14 +82,10 @@
     border: solid var(--wrapper-border-color) var(--wrapper-border);
     border-bottom: solid var(--wrapper-border-color) calc(var(--wrapper-border)/2);
     border-right: solid var(--wrapper-border-color) calc(var(--wrapper-border)/2);
-
-    /* height: 20px */
-    /* grid-template: flex; */
 }
 
 .legend {
     background-color: #dadada;
-    /* height: 100%; */
 }
 
 .wrapper {
@@ -125,9 +117,6 @@
 }
 
 #wrapper-left {
-    /* display: flex; */
-    /* justify-content: center; */
-
     grid-area: legend-side;
     border: solid var(--wrapper-border-color) var(--wrapper-border);
     border-top: solid var(--wrapper-border-color) calc(var(--wrapper-border)/2);
@@ -145,8 +134,6 @@
 }
 
 #wrapper-game {
-    /* display: flex; */
-
     grid-area: game-grid;
     border: solid var(--wrapper-border-color) var(--wrapper-border);
     border-top: solid var(--wrapper-border-color) calc(var(--wrapper-border)/2);
@@ -190,12 +177,6 @@
     /* border-color: blue; */
 }
 
-/* .brdr.brdr-dashed {
-    border-bottom-style: dashed;
-    border-right-style: dashed;
-    border-color: var(--wrapper-border-color);
-} */
-
 .brdr.edit {
     opacity: 0;
 }
@@ -210,11 +191,6 @@
 }
 
 #fake-border-game {
-    /* position: absolute; */
-    /* border-style: dashed; */
-    /* border-color: pink; */
-    /* opacity: 0.5; */
-    /* border-width: var(--wrapper-border); */
     border-top-style: solid;
     border-left-style: solid;
     border-top-width: calc(var(--wrapper-border) * 0.5);
@@ -227,8 +203,6 @@
 }
 
 #fake-border-side {
-    /* border-color: skyblue; */
-    /* opacity: 0.5; */
     bottom: calc(var(--wrapper-border) * -1);
     left: 0;
     border-top-width: calc(var(--wrapper-border) * 0.5);
@@ -239,8 +213,6 @@
 }
 
 #fake-border-top {
-    /* border-color: greenyellow; */
-    /* opacity: 0.5; */
     top: 0;
     right: calc(var(--wrapper-border) * -1);
     border-bottom-width: calc(var(--wrapper-border) * 0.5);
@@ -249,71 +221,6 @@
     height: calc(var(--top-legend-height) + var(--wrapper-border) * 1.5);
     width: calc(100% - var(--side-legend-width) - var(--wrapper-border) * 0.5);
 }
-
-/* =================== OLD EXPANDER STYLE =================== */
-/* .expander {
-    border: solid rgb(0, 0, 0) var(--wrapper-border);
-    transition: all 0.3s;
-    
-}
-
-#expand-width {
-    position: absolute;
-    cursor: e-resize;
-    height: calc(100%);
-    width: var(--expander-size);
-    right: 0;
-    bottom: 0;
-    transform: translateX(calc(100% - var(--wrapper-border)));
-}
-
-#expand-width:hover,
-#expand-width.expanded,
-#expand-width:hover~#expand-diag {
-    width: calc(var(--expander-size)*1.5);
-}
-
-#expand-height {
-    position: absolute;
-    cursor: s-resize;
-
-    height: var(--expander-size);
-    width: calc(100%);
-    bottom: 0;
-    right: 0;
-    transform: translateY(calc(100% - var(--wrapper-border)));
-}
-
-#expand-height:hover,
-#expand-height.expanded,
-#expand-height:hover~#expand-diag {
-    height: calc(var(--expander-size)*1.5);
-}
-
-#expand-diag {
-    position: absolute;
-    cursor: se-resize;
-    height: var(--expander-size);
-    width: var(--expander-size);
-    bottom: 0;
-    right: 0;
-    transform: translate(calc(100% - var(--wrapper-border)), calc(100% - var(--wrapper-border)));
-}
-
-#expand-diag:hover {
-    width: calc(var(--expander-size)*1.5);
-    height: calc(var(--expander-size)*1.5);
-}
-
-#expand-diag:hover~#expand-width {
-    width: calc(var(--expander-size)*1.5);
-}
-
-#expand-diag:hover~#expand-height {
-    height: calc(var(--expander-size)*1.5);
-} */
-
-/* =================== OLD EXPANDER STYLE =================== */
 
 .expander {
     cursor: cell;
@@ -384,6 +291,9 @@
     transform: translate(calc(100%), calc(100%));
 }
 
+/*TODO: manipulator max width ograniczyć w zależności od wielkości mapy
+czasem dla małej mapy, a grubej ramki, manipulator może być dłuższy niż plansza*/
+
 .manipulator {
     --man-border: 2px;
     /* --man-width: calc(var(--cell-size) * 0.5); */
@@ -411,11 +321,6 @@
     transition: 0.3s;
 }
 
-/* .manipulator:not(.persistent) {
-    transition: all 0s;
-    opacity: 0;
-} */
-
 .persistent {
     pointer-events: none;
     /* background-color: red; */
@@ -439,19 +344,12 @@
 .manipulator-height.ui-draggable-dragging {
     width: var(--man-length-increase);
     left: var(--man-pos-on-half-increased);
-    /* cursor: "grabbing"; */
-
-    /* height: var(--man-width-increase); */
-    /* bottom: var(--man-pos-on-border-increased); */
-    /* opacity: 0; */
 }
 
 .manipulator-height:hover+.persistent,
 .persistent-height.dragging {
     width: var(--man-length-increase);
     left: var(--man-pos-on-half-increased);
-    /* height: var(--man-width-increase); */
-    /* bottom: var(--man-pos-on-border-increased); */
     opacity: 1;
 }
 
@@ -468,7 +366,6 @@
 .manipulator-width.ui-draggable-dragging {
     height: var(--man-length-increase);
     top: var(--man-pos-on-half-increased);
-    /* opacity: 0; */
 }
 
 .manipulator-width:hover+.persistent,
@@ -493,7 +390,6 @@
     height: var(--man-width-increased);
     bottom: var(--man-pos-on-border-increased);
     right: var(--man-pos-on-border-increased);
-    /* opacity: 0; */
 }
 
 .manipulator-diag:hover+.persistent,
