@@ -3,6 +3,8 @@ import * as utils from './nUtils.js'
 
 //TODO: po najechaniu dragiem w obszar, gdzie już nie można bardziej zmienjszyć siatki, rozbłysnąć ten obszar na czerwono
 
+//TODO: BUG: wejście na manipulator i szybki gwałtowy ndrag czasem powoduje że krawędź mapy przestaje być przerywana
+
 const wholeWrapper = document.getElementById('wrapper-whole');
 const wholeGrid = document.getElementById('whole-grid');
 const gameGrid = document.getElementById('game-grid');
@@ -22,14 +24,6 @@ const drop = document.getElementById('dropH');
 
 let draggingHeight = false;
 let draggingWidth = false;
-
-let dragEl = document.createElement('div');
-
-let prevX = 0;
-let prevY = 0;
-
-let posX = 0;
-let posY = 0;
 
 export function injectEventHandlers() {
     let diagExpander = document.getElementById('expand-diag');
@@ -57,7 +51,6 @@ export function injectEventHandlers() {
     mDiag.addEventListener('mouseleave', manipulatorDiagonalExit);
 
     setDraggables();
-
 }
 
 function setDraggables() {
@@ -71,9 +64,6 @@ function setDraggables() {
         let manWidthIncreaseMultiplicator = parseInt(utils.getCSSVariable('--man-width-multiplicator', man));
         console.log(manWidthIncreaseMultiplicator);
         let bounds = man.getBoundingClientRect();
-        let yMid = (bounds.bottom - bounds.top) / 2;
-        let xMid = (bounds.right - bounds.left) / 2;
-        let borderWidth = parseInt(utils.getCSSVariable('--wrapper-border'));
         // let yOffset = (bounds.height - borderWidth) / 2;
         let yOffset = bounds.height / 2;
         // let xOffset = (bounds.width + borderWidth) / 2;
@@ -124,9 +114,19 @@ function setDraggables() {
     })
 }
 
-function createDragLimiters(draggingType) {
-    //createBordersLimiter();
-    createManipulatorLimiter(draggingType);
+function changeCursorOutOfBounds(e) {
+    const dragLimit = document.getElementById('drag-limiter');
+    const bounds = dragLimit.getBoundingClientRect();
+    
+    if (e.clientX > bounds.left && e.clientX < bounds.left + bounds.width) {
+        console.log ('xxx')
+        document.body.style.cursor = 'e-resize';
+    } else if (e.clientY > bounds.top && e.clientY < bounds.top + bounds.height) {
+        document.body.style.cursor = 'n-resize';
+    } else {
+        document.body.style.cursor = 'no-drop';
+    }
+
 }
 
 function createManipulatorLimiter(draggingType) {
@@ -134,6 +134,17 @@ function createManipulatorLimiter(draggingType) {
     let dragLimit = document.createElement('div');
     dragLimit.id = 'drag-limiter';
     dragLimit.classList.add('limiter');
+    dragLimit.addEventListener('mouseleave', function(event) {
+        document.body.style.cursor = 'no-drop';
+        if (draggingHeight && draggingWidth) {
+            document.body.addEventListener('mousemove', changeCursorOutOfBounds);
+        }
+    })
+    dragLimit.addEventListener('mouseenter', function() {
+        document.body.style.cursor = 'grabbing';
+        document.body.removeEventListener('mousemove', changeCursorOutOfBounds);
+    })
+
     let firstManipulator = document.querySelector('.manipulator');
     let separatorSpacing = parseInt(utils.getCSSVariable('--separator-spacing'));
     let manipulatorSize = utils.getCSSVariable('--man-width', firstManipulator);
@@ -168,6 +179,8 @@ function createManipulatorLimiter(draggingType) {
             dragLimit.style.gridArea = `${separatorSpacing + 1} / 1 / -1 / -1`;
             utils.lockAbsolutePosition(dragLimit);
       
+            dragLimit.style.left = '0px';
+            dragLimit.style.width = '100%';
             dragLimit.style.height = maxDragLimitHeight;
             dragLimit.style.transform = `translateY(-${dragLimitAreaResize}px)`;
             break;
@@ -176,6 +189,8 @@ function createManipulatorLimiter(draggingType) {
             dragLimit.style.gridArea = `1 / ${separatorSpacing + 1} / -1 / -1`;
             utils.lockAbsolutePosition(dragLimit);
 
+            dragLimit.style.top = '0px';
+            dragLimit.style.height = '100%';
             dragLimit.style.width = maxDragLimitWidth;
             dragLimit.style.transform = `translateX(-${dragLimitAreaResize}px)`;
             break;
@@ -202,28 +217,18 @@ function createManipulatorLimiter(draggingType) {
 
 }
 
-function createBordersLimiter() {
-    if (document.getElementById('drag-limiter-borders')) return;
-    let dragLimit = document.createElement('div');
-    dragLimit.id = 'drag-limiter-borders';
-    let separatorSpacing = parseInt(utils.getCSSVariable('--separator-spacing'));
-
-    dragLimit.style.gridArea = `1 / 1 / span ${separatorSpacing} / span ${separatorSpacing}`;
-    gameGrid.appendChild(dragLimit);
-}
-
 function deleteDragLimits() {
     // document.getElementById('drag-limiter-borders').remove();
+    document.body.removeEventListener('mousemove', changeCursorOutOfBounds);
     document.getElementById('drag-limiter').remove();
 }
 
 function dragStart(event, ui) {
-    // $(event.target).draggable( "option", "cursorAt", { top: 50 } );
-
     /** @type {HTMLElement} */
     let draggedElement = event.target;
     draggedElement.style.transition = '0s';
-    draggedElement.style.cursor = 'grabbing';
+    // draggedElement.style.cursor = 'grabbing';
+    // document.body.style.cursor = 'grabbing';
     hideAllManipulatorsExceptDragged();
 
     let draggingType = draggedElement.id.replace('manipulator-', '');
@@ -263,12 +268,10 @@ function dragStop(event, ui) {
 }
 
 function dragDuring(event, ui) {
-
     //TODO: scroll psuje draggowanie, jeśli koordynaty bierzemy z kursora, a nie ghosta
 
     // console.log('event: ', event);
     // console.log('ui: ', ui);
-
 
     /** @type {HTMLElement} */
     let draggedElement = event.target;

@@ -36,6 +36,12 @@
     --wrapper-border-color: rgb(0, 0, 0);
 }
 
+body {
+    border: solid 2px red;
+    /* cursor: grabbing; */
+    height: 100vh;
+}
+
 #test {
     position: absolute;
     left: 0;
@@ -243,7 +249,8 @@
 
     transition: all 0.3s;
 
-    /* opacity: 0; */
+    pointer-events: none;
+    opacity: 0;
 }
 
 .reducer:hover,
@@ -402,6 +409,7 @@ czasem dla małej mapy, a grubej ramki, manipulator może być dłuższy niż pl
 }
 
 .manipulator.hidden {
+    pointer-events: none;
     opacity: 0;
 }
 
