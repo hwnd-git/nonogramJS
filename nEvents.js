@@ -3,8 +3,6 @@ import * as utils from './nUtils.js'
 
 //TODO: po najechaniu dragiem w obszar, gdzie już nie można bardziej zmienjszyć siatki, rozbłysnąć ten obszar na czerwono
 
-//TODO: BUG: wejście na manipulator i szybki gwałtowy ndrag czasem powoduje że krawędź mapy przestaje być przerywana
-
 const wholeWrapper = document.getElementById('wrapper-whole');
 const wholeGrid = document.getElementById('whole-grid');
 const gameGrid = document.getElementById('game-grid');
@@ -126,7 +124,6 @@ function changeCursorOutOfBounds(e) {
     } else {
         document.body.style.cursor = 'no-drop';
     }
-
 }
 
 function createManipulatorLimiter(draggingType) {
@@ -218,7 +215,6 @@ function createManipulatorLimiter(draggingType) {
 }
 
 function deleteDragLimits() {
-    // document.getElementById('drag-limiter-borders').remove();
     document.body.removeEventListener('mousemove', changeCursorOutOfBounds);
     document.getElementById('drag-limiter').remove();
 }
@@ -235,14 +231,19 @@ function dragStart(event, ui) {
     createManipulatorLimiter(draggingType);
     switch (draggingType) {
         case 'height':
+            manipulatorHeightHovered();
             draggingHeight = true;
             break;
 
         case 'width':
+            console.log('dragStart')
+            manipulatorWidthHovered();
             draggingWidth = true;
             break;
 
         case 'diag':
+            manipulatorHeightHovered();
+            manipulatorWidthHovered();
             draggingHeight = true;
             draggingWidth = true;
             break;
@@ -384,7 +385,9 @@ function manipulatorWidthHovered() {
 }
 
 function manipulatorWidthExit() {
+    console.log('exitCheck')
     if (!draggingWidth) {
+        console.log('exit')
         brdrRightSwitchable.classList.remove('edit');
     }
 }
