@@ -1,8 +1,15 @@
 import * as script from './nScript.js';
-import * as utils from './nUtils.js'
+import * as utils from './nUtils.js';
+import * as drag from './jqDraggable.js';
 
 //TODO: po najechaniu dragiem w obszar, gdzie już nie można bardziej zmienjszyć siatki, rozbłysnąć ten obszar na czerwono
 
+//TODO: wszystko się sypie, jeśli pojawia się srollbar, a mapa nie mieści się w oknie przelądarki
+
+//TODO: height manipulator po puszczeniu jakoś dziwnie przez chwilę wibruje, ale tylko jeśli najpierw użyło się widthManipulatora
+
+
+const fullPage = document.getElementById('full-page');
 const wholeWrapper = document.getElementById('wrapper-whole');
 const wholeGrid = document.getElementById('whole-grid');
 const gameGrid = document.getElementById('game-grid');
@@ -17,8 +24,6 @@ const mWidth = document.getElementById('manipulator-width');
 const mWidthPersistent = document.getElementById('manipulator-width-persistent');
 const mDiag = document.getElementById('manipulator-diag');
 const mDiagPersistent = document.getElementById('manipulator-diag-persistent');
-
-const drop = document.getElementById('dropH');
 
 let draggingHeight = false;
 let draggingWidth = false;
@@ -48,14 +53,75 @@ export function injectEventHandlers() {
     mDiag.addEventListener('mouseenter', manipulatorDiagonalHovered);
     mDiag.addEventListener('mouseleave', manipulatorDiagonalExit);
 
+    //drag.setDraggables();
     setDraggables();
+    setDroppables();
+}
+
+function setDroppables() {
+    //destroy() - niszczy dragabla
+
+    let drops = $('.drop');
+    console.log('drops: ', drops);
+
+    drops.each(function () {
+        let drop = this;
+
+        // let identify = drop.id.replace('manipulator-', '');
+
+        // switch (identify) {
+        //     case 'height':
+        //         cursorOffset = { top: yOffset };
+        //         dragDirection = 'y';
+        //         break;
+
+        //     case 'width':
+        //         cursorOffset = { left: xOffset };
+        //         dragDirection = 'x';
+        //         break;
+
+        //     case 'diag':
+        //         yOffset *= manWidthIncreaseMultiplicator;
+        //         xOffset *= manWidthIncreaseMultiplicator;
+        //         cursorOffset = { top: yOffset, left: xOffset };
+        //         break;
+
+        //     default:
+        //         break;
+        // }
+
+        $(drop).droppable({
+            addClasses: false,
+            over: dragOver,
+            drop: dropOn
+            // stop: dragStop,
+            // drag: dragDuring,
+        });
+    })
+}
+
+function dragOver(event, ui) {
+    console.log(event.target);
+}
+
+function dropOn(event, ui) {
+    console.log('drop on');
+    const $this = $(this);
+    ui.draggable.position({
+        my: "center",
+        at: "center",
+        of: $this,
+        using: function (pos) {
+            $(this).animate(pos, 200, "linear");
+        }
+    });
 }
 
 function setDraggables() {
     //destroy() - niszczy dragabla
 
     let manipulators = $('.manipulator');
-    console.log(manipulators);
+    console.log('manipulators: ', manipulators);
 
     manipulators.each(function () {
         let man = this;
@@ -95,16 +161,8 @@ function setDraggables() {
 
         $(man).draggable({
             addClasses: false,
-            // grid: [50, 50],
-            // classes: {
-            //     "ui-draggable": "xxx"
-            // },
             cursorAt: cursorOffset,
-            // containment: $('.limiter'),
             axis: dragDirection,
-            // revert: true,
-            cursor: "grabbing",
-            // delay: 100,
             start: dragStart,
             stop: dragStop,
             drag: dragDuring,
@@ -115,14 +173,16 @@ function setDraggables() {
 function changeCursorOutOfBounds(e) {
     const dragLimit = document.getElementById('drag-limiter');
     const bounds = dragLimit.getBoundingClientRect();
-    
+
     if (e.clientX > bounds.left && e.clientX < bounds.left + bounds.width) {
-        console.log ('xxx')
-        document.body.style.cursor = 'e-resize';
+        // document.body.style.cursor = 'e-resize';
+        fullPage.style.cursor = 'e-resize';
     } else if (e.clientY > bounds.top && e.clientY < bounds.top + bounds.height) {
-        document.body.style.cursor = 'n-resize';
+        // document.body.style.cursor = 'n-resize';
+        fullPage.style.cursor = 'n-resize';
     } else {
-        document.body.style.cursor = 'no-drop';
+        // document.body.style.cursor = 'no-drop';
+        fullPage.style.cursor = 'no-drop';
     }
 }
 
@@ -131,15 +191,20 @@ function createManipulatorLimiter(draggingType) {
     let dragLimit = document.createElement('div');
     dragLimit.id = 'drag-limiter';
     dragLimit.classList.add('limiter');
-    dragLimit.addEventListener('mouseleave', function(event) {
-        document.body.style.cursor = 'no-drop';
+    dragLimit.style.cursor = 'grabbing';
+    dragLimit.addEventListener('mouseleave', function (event) {
+        // document.body.style.cursor = 'no-drop';
+        fullPage.style.cursor = 'no-drop';
         if (draggingHeight && draggingWidth) {
-            document.body.addEventListener('mousemove', changeCursorOutOfBounds);
+            // document.body.addEventListener('mousemove', changeCursorOutOfBounds);
+            fullPage.addEventListener('mousemove', changeCursorOutOfBounds);
         }
     })
-    dragLimit.addEventListener('mouseenter', function() {
-        document.body.style.cursor = 'grabbing';
-        document.body.removeEventListener('mousemove', changeCursorOutOfBounds);
+    dragLimit.addEventListener('mouseenter', function () {
+        // document.body.style.cursor = 'grabbing';
+        fullPage.style.cursor = 'grabbing';
+        // document.body.removeEventListener('mousemove', changeCursorOutOfBounds);
+        fullPage.removeEventListener('mousemove', changeCursorOutOfBounds);
     })
 
     let firstManipulator = document.querySelector('.manipulator');
@@ -175,7 +240,7 @@ function createManipulatorLimiter(draggingType) {
         case 'height':
             dragLimit.style.gridArea = `${separatorSpacing + 1} / 1 / -1 / -1`;
             utils.lockAbsolutePosition(dragLimit);
-      
+
             dragLimit.style.left = '0px';
             dragLimit.style.width = '100%';
             dragLimit.style.height = maxDragLimitHeight;
@@ -223,8 +288,6 @@ function dragStart(event, ui) {
     /** @type {HTMLElement} */
     let draggedElement = event.target;
     draggedElement.style.transition = '0s';
-    // draggedElement.style.cursor = 'grabbing';
-    // document.body.style.cursor = 'grabbing';
     hideAllManipulatorsExceptDragged();
 
     let draggingType = draggedElement.id.replace('manipulator-', '');
@@ -251,15 +314,18 @@ function dragStart(event, ui) {
         default:
             break;
     }
+
+    fullPage.style.cursor = 'grabbing';
 }
 
 function dragStop(event, ui) {
-    console.log(event);
-    console.log(ui);
+    // console.log(event);
+    // console.log(ui);
 
     // let draggedElement = document.getElementById();
     let draggedElement = event.target;
     draggedElement.removeAttribute('style');    //resetuje wszystkie inline atrybuty
+    fullPage.removeAttribute('style');
 
     draggingHeight = false;
     draggingWidth = false;
@@ -385,9 +451,9 @@ function manipulatorWidthHovered() {
 }
 
 function manipulatorWidthExit() {
-    console.log('exitCheck')
+    // console.log('exitCheck')
     if (!draggingWidth) {
-        console.log('exit')
+        // console.log('exit')
         brdrRightSwitchable.classList.remove('edit');
     }
 }
